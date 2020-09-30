@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 public class LoginFragment extends Fragment {
@@ -22,7 +23,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         loginViewModel =
-                ViewModelProviders.of(this).get(LoginViewModel.class);
+                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(LoginViewModel.class);
         View root = inflater.inflate(R.layout.fragment_login, container, false);
         final TextView textView = root.findViewById(R.id.text_login);
         loginViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
