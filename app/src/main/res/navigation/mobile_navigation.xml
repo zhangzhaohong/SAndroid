@@ -24,6 +24,12 @@
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
+        android:id="@+id/nav_httpTester"
+        android:name="com.tristana.sandroid.ui.httpTester.HttpTesterFragment"
+        android:label="@string/menu_httpTester"
+        tools:layout="@layout/fragment_http_tester" />
+
+    <fragment
         android:id="@+id/nav_login"
         android:name="com.tristana.sandroid.ui.login.LoginFragment"
         android:label="@string/menu_login"

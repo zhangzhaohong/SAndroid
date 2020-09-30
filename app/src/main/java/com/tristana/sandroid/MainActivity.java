@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 初始化页面监听
      * 页面切换后使用
-     * */
+     */
     private void initNavigationOnChangeListener(NavController navController) {
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 更新menu
      * 对于有些页面需要使用的menu进行处理
-     * */
+     */
     private void updateMenu() {
         if (menu != null) {
             MenuItem networkSetting = menu.findItem(R.id.network_setting);

@@ -18,4 +18,7 @@
     <string name="autoLogin">自动登录</string>
     <string name="login_title">登录</string>
     <string name="register_title">注册</string>
+    <string name="menu_request">请求</string>
+    <string name="default_url">https://www.baidu.com</string>
+    <string name="menu_httpTester">httpTester</string>
 </resources>
