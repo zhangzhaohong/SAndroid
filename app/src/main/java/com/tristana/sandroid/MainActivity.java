@@ -1,24 +1,31 @@
 package com.tristana.sandroid;
 
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +46,51 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_login)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        initNavigationOnChangeListener(navController);
+    }
+
+    /**
+     * 初始化页面监听
+     * 页面切换后使用
+     * */
+    private void initNavigationOnChangeListener(NavController navController) {
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                updateMenu();
+            }
+        });
+    }
+
+    /**
+     * 更新menu
+     * 对于有些页面需要使用的menu进行处理
+     * */
+    private void updateMenu() {
+        if (menu != null) {
+            MenuItem networkSetting = menu.findItem(R.id.network_setting);
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+            String label = Objects.requireNonNull(Objects.requireNonNull(navController.getCurrentDestination()).getLabel()).toString();
+            if (!label.equals(getString(R.string.menu_login))) {
+                networkSetting.setVisible(false);
+            } else {
+                networkSetting.setVisible(true);
+            }
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        this.menu = menu;
+        updateMenu();
         return true;
     }
 
