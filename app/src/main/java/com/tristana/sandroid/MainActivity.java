@@ -1,6 +1,8 @@
 package com.tristana.sandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 networkSetting.setVisible(true);
             }
+            networkSetting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                    return true;
+                }
+            });
         }
     }
 
