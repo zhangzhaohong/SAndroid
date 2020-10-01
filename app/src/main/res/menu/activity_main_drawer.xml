@@ -24,5 +24,9 @@
             android:id="@+id/nav_login"
             android:icon="@android:drawable/ic_dialog_info"
             android:title="@string/menu_login" />
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@android:drawable/ic_menu_send"
+            android:title="@string/menu_feedback" />
     </group>
 </menu>

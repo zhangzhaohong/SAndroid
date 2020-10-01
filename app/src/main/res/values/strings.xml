@@ -21,4 +21,9 @@
     <string name="menu_request">请求</string>
     <string name="default_url">https://www.baidu.com</string>
     <string name="menu_httpTester">httpTester</string>
+    <string name="menu_feedback">意见反馈</string>
+    <string name="feedback_title">标题</string>
+    <string name="feedback_content"><![CDATA[请输入您的意见…]]></string>
+    <string name="feedback_phoneNum">手机号码</string>
+    <string name="feedback_submit">提交</string>
 </resources>

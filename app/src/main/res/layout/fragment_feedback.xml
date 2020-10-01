@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feedback.FeedbackFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp"
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/feedback_title"
+                android:layout_margin="10dp"
+                android:id="@+id/feedbackTitle"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minLines="10"
+                android:id="@+id/feedbackContent"
+                android:gravity="top"
+                android:layout_margin="10dp"
+                android:hint="@string/feedback_content"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/feedback_phoneNum"
+                    android:layout_weight="6"
+                    android:id="@+id/feedbackPhoneNum"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/feedbackPhoneInvalid"
+                    android:layout_width="20dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_weight="1"
+                    android:background="@mipmap/warning" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="@string/feedback_submit"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/feedbackSubmit"
+                android:textColor="#3949AB"
+                android:background="@drawable/feedback_btn"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
