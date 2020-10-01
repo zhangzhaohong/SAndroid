@@ -61,7 +61,7 @@ public class FeedbackFragment extends Fragment {
         appCompatTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                feedbackViewModel.sendFeed(Objects.requireNonNull(title.getText()).toString(), Objects.requireNonNull(content.getText()).toString(), Objects.requireNonNull(phoneNum.getText()).toString());
+                feedbackViewModel.sendFeedBack(Objects.requireNonNull(title.getText()).toString(), Objects.requireNonNull(content.getText()).toString(), Objects.requireNonNull(phoneNum.getText()).toString());
             }
         });
         feedbackViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {

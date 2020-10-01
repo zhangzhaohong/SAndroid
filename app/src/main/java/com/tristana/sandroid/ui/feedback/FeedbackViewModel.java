@@ -16,20 +16,12 @@ public class FeedbackViewModel extends ViewModel {
         return mPhoneInvalid;
     }
 
-    public void setPhoneInvalid(MutableLiveData<Boolean> mPhoneInvalid) {
-        this.mPhoneInvalid = mPhoneInvalid;
-    }
-
     private MutableLiveData<Boolean> mPhoneInvalid;
 
     public MutableLiveData<String> getToast() {
         return mToast;
     }
-
-    public void setToast(MutableLiveData<String> mToast) {
-        this.mToast = mToast;
-    }
-
+    
     public FeedbackViewModel() {
         mToast = new MutableLiveData<>();
         mText = new MutableLiveData<>();
@@ -41,7 +33,7 @@ public class FeedbackViewModel extends ViewModel {
         return mText;
     }
 
-    public void sendFeed(String title, String content, String phoneNum) {
+    public void sendFeedBack(String title, String content, String phoneNum) {
         if (TextUtils.checkPhoneNumber(phoneNum)) {
             mToast.setValue("PHONE NUM 合法");
         } else {
