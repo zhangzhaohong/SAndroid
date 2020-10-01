@@ -9,4 +9,8 @@ public class TextUtils {
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
     }
+
+    public static boolean checkEmpty(String content) {
+        return content != null && !content.equals("");
+    }
 }

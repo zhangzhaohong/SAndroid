@@ -3,11 +3,9 @@ package com.tristana.sandroid.ui.feedback;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.tools.toast.ToastUtils;
