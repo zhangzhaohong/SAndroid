@@ -51,9 +51,10 @@
                     android:id="@+id/feedbackPhoneInvalid"
                     android:layout_width="20dp"
                     android:layout_height="50dp"
+                    android:padding="10dp"
                     android:layout_gravity="end|center_vertical"
                     android:layout_weight="1"
-                    android:background="@mipmap/warning" />
+                    android:background="@drawable/ic_warning" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
