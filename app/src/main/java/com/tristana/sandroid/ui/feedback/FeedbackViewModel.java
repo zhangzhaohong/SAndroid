@@ -21,7 +21,7 @@ public class FeedbackViewModel extends ViewModel {
     public MutableLiveData<String> getToast() {
         return mToast;
     }
-    
+
     public FeedbackViewModel() {
         mToast = new MutableLiveData<>();
         mText = new MutableLiveData<>();
