@@ -58,7 +58,7 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="60dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="@string/feedback_submit"
                 android:padding="10dp"
@@ -66,7 +66,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:id="@+id/feedbackSubmit"
-                android:textColor="#3949AB"
+                android:textColor="#050B2E"
                 android:background="@drawable/feedback_btn"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
