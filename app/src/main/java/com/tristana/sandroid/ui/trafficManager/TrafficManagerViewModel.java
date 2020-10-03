@@ -28,7 +28,7 @@ public class TrafficManagerViewModel extends ViewModel {
 
     private Boolean isRequest;
 
-    private int timeRequest = 10;
+    private int timeRequest = 60;
 
     public MutableLiveData<Boolean> getFinishStatus() {
         return mFinish;
