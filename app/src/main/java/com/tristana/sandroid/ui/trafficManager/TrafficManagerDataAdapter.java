@@ -27,6 +27,14 @@ public class TrafficManagerDataAdapter extends RecyclerView.Adapter<TrafficManag
 
     private Context context;
 
+    /**
+     * 必须在加载了一次以后使用
+     * */
+    public void setData(ArrayList<TrafficManagerModel> data) {
+        this.trafficManagerModel = data;
+        notifyDataSetChanged();
+    }
+
     public static class CustomViewHolder extends RecyclerView.ViewHolder {
         public AppCompatTextView roadId;
         public AppCompatTextView roadRedLightDuration;

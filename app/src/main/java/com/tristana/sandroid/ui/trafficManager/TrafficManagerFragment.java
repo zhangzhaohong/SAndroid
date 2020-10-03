@@ -67,4 +67,5 @@ public class TrafficManagerFragment extends Fragment {
         result.add(new TrafficManagerModel("111111", "200", "300", "400"));
         return result;
     }
+
 }
