@@ -28,6 +28,9 @@ public class TrafficManagerViewModel extends ViewModel {
 
     private Boolean isRequest;
 
+    /***
+     * 千万别把数值改小 要不然服务器容易炸
+     * */
     private int timeRequest = 60;
 
     public MutableLiveData<Boolean> getFinishStatus() {
