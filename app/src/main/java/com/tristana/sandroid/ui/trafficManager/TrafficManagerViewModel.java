@@ -126,14 +126,9 @@ public class TrafficManagerViewModel extends ViewModel {
             //延迟0毫秒（即立即执行）开始，每隔1000毫秒执行一次
             timer.schedule(new TimerTask() {
                 public void run() {
-                    if (needStop) {
-                        timer.schedule(new TimerTask() {
-                            public void run() {
-                                new Timber("TrafficManagerViewModel").d("页面退出，操作暂停！");
-                                mFinish.postValue(true);
-                                timer.cancel();
-                            }
-                        }, new Date(end));
+                    if (getNeedStop()) {
+                        new Timber("TrafficManagerViewModel").d("页面离开，停止计时操作！");
+                        timer.cancel();
                     }
                     //show是剩余时间，即要显示的时间
                     long show = end - System.currentTimeMillis();
