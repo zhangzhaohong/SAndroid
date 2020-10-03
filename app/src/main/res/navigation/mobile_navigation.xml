@@ -41,4 +41,10 @@
         android:label="@string/menu_feedback"
         tools:layout="@layout/fragment_feedback" />
 
+    <fragment
+        android:id="@+id/nav_trafficManager"
+        android:name="com.tristana.sandroid.ui.trafficManager.TrafficManagerFragment"
+        android:label="@string/menu_trafficManager"
+        tools:layout="@layout/fragment_traffic_manager" />
+
 </navigation>

@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_gallery,
                 R.id.nav_slideshow,
                 R.id.nav_login,
-                R.id.nav_feedback
+                R.id.nav_feedback,
+                R.id.nav_trafficManager
         )
                 .setOpenableLayout(drawer)
                 .build();
