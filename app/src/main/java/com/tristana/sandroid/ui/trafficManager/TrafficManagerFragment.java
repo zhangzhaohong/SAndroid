@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.trafficManager.TrafficManagerModel;
 import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.sandroid.tools.toast.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,28 @@ public class TrafficManagerFragment extends Fragment {
         trafficManagerViewModel =
                 ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(TrafficManagerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_traffic_manager, container, false);
+        trafficManagerViewModel.setNeedStop(false);
+        final RecyclerView trafficLightData = (RecyclerView) root.findViewById(R.id.trafficLightData);
+        trafficLightData.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(requireActivity());
+        trafficLightData.setLayoutManager(layoutManager);
+        mAdapter = new TrafficManagerDataAdapter(initData(), requireActivity());
+        trafficLightData.setAdapter(mAdapter);
+        trafficManagerViewModel.startRequest(requireActivity());
+        trafficManagerViewModel.getLightData().observe(getViewLifecycleOwner(), new Observer<ArrayList<TrafficManagerModel>>() {
+            @Override
+            public void onChanged(ArrayList<TrafficManagerModel> trafficManagerModels) {
+                timber.d("Data have changed!");
+                mAdapter.setData(trafficManagerModels);
+                trafficManagerViewModel.startTimer();
+            }
+        });
+        trafficManagerViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                ToastUtils.showToast(requireActivity(), s);
+            }
+        });
         trafficManagerViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -52,19 +75,35 @@ public class TrafficManagerFragment extends Fragment {
 
             }
         });
-        final RecyclerView trafficLightData = (RecyclerView) root.findViewById(R.id.trafficLightData);
-        trafficLightData.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(requireActivity());
-        trafficLightData.setLayoutManager(layoutManager);
-        mAdapter = new TrafficManagerDataAdapter(testData(), requireActivity());
-        trafficLightData.setAdapter(mAdapter);
+        trafficManagerViewModel.getFinishStatus().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean && !trafficManagerViewModel.getNeedStop()) {
+                    trafficManagerViewModel.startRequest(requireActivity());
+                }
+            }
+        });
         return root;
     }
 
-    private ArrayList<TrafficManagerModel> testData() {
+    @Override
+    public void onStop() {
+        timber.d("STOP");
+        trafficManagerViewModel.setNeedStop(true);
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        timber.d("RESUME");
+        trafficManagerViewModel.setNeedStop(false);
+        trafficManagerViewModel.startTimer();
+        super.onResume();
+    }
+
+    private ArrayList<TrafficManagerModel> initData() {
         ArrayList<TrafficManagerModel> result = new ArrayList<>();
         result.add(new TrafficManagerModel(getString(R.string.title_id), getString(R.string.title_red_duration), getString(R.string.title_yellow_duration), getString(R.string.title_green_duration)));
-        result.add(new TrafficManagerModel("111111", "200", "300", "400"));
         return result;
     }
 
