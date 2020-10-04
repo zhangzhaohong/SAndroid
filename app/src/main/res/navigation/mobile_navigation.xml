@@ -22,4 +22,47 @@
         android:name="com.tristana.sandroid.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_httpTester"
+        android:name="com.tristana.sandroid.ui.httpTester.HttpTesterFragment"
+        android:label="@string/menu_httpTester"
+        tools:layout="@layout/fragment_http_tester" />
+
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.tristana.sandroid.ui.login.LoginFragment"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/nav_feedback"
+        android:name="com.tristana.sandroid.ui.feedback.FeedbackFragment"
+        android:label="@string/menu_feedback"
+        tools:layout="@layout/fragment_feedback" />
+
+    <fragment
+        android:id="@+id/nav_trafficManager"
+        android:name="com.tristana.sandroid.ui.trafficManager.TrafficManagerFragment"
+        android:label="@string/menu_trafficManager"
+        tools:layout="@layout/fragment_traffic_manager" />
+
+    <fragment
+        android:id="@+id/nav_illegalManager"
+        android:name="com.tristana.sandroid.ui.illegalManager.IllegalManagerFragment"
+        android:label="@string/menu_illegalManager"
+        tools:layout="@layout/fragment_illegal_manager" />
+
+    <fragment
+        android:id="@+id/nav_videoPlayer"
+        android:name="com.tristana.sandroid.ui.illegalManager.fragment.video.player.VideoPlayerFragment"
+        android:label="@string/menu_videoPlayer"
+        tools:layout="@layout/fragment_video_player" />
+
+    <fragment
+        android:id="@+id/nav_imageViewer"
+        android:name="com.tristana.sandroid.ui.illegalManager.fragment.picture.viewer.ImageViewerFragment"
+        android:label="@string/menu_imageViewer"
+        tools:layout="@layout/fragment_image_viewer" />
+
 </navigation>

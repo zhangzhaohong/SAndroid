@@ -16,5 +16,25 @@
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_slideshow" />
+        <item
+            android:id="@+id/nav_httpTester"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="@string/menu_httpTester" />
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/menu_login" />
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@android:drawable/ic_menu_send"
+            android:title="@string/menu_feedback" />
+        <item
+            android:id="@+id/nav_trafficManager"
+            android:icon="@drawable/ic_traffic_light"
+            android:title="@string/menu_trafficManager" />
+        <item
+            android:id="@+id/nav_illegalManager"
+            android:icon="@drawable/ic_illegal"
+            android:title="@string/menu_illegalManager" />
     </group>
 </menu>
