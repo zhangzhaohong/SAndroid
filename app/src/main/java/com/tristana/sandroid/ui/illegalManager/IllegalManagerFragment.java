@@ -36,7 +36,7 @@ public class IllegalManagerFragment extends Fragment {
 
             }
         });
-        final ViewPager2 viewPager2 = (ViewPager2) root.findViewById(R.id.viewPager2);
+        final ViewPager2 viewPager2 = root.findViewById(R.id.viewPager2);
         viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         //适配器
         viewPager2.setAdapter(new FragmentStateAdapter(this) {
@@ -61,7 +61,7 @@ public class IllegalManagerFragment extends Fragment {
             }
         });
         //tab关联viewPager2
-        final TabLayout tabLayout = (TabLayout) root.findViewById(R.id.tabLayout);
+        final TabLayout tabLayout = root.findViewById(R.id.tabLayout);
         new TabLayoutMediator(tabLayout, viewPager2, true, true, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -77,7 +77,6 @@ public class IllegalManagerFragment extends Fragment {
                 }
             }
         }).attach();
-
         return root;
     }
 }

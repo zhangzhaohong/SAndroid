@@ -13,4 +13,5 @@ public class TextUtils {
     public static boolean checkEmpty(String content) {
         return content != null && !content.equals("");
     }
+
 }

@@ -42,14 +42,13 @@ public class TrafficManagerFragment extends Fragment {
                 ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(TrafficManagerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_traffic_manager, container, false);
         trafficManagerViewModel.setNeedStop(false);
-        final RecyclerView trafficLightData = (RecyclerView) root.findViewById(R.id.trafficLightData);
-        final AppCompatButton sortData = (AppCompatButton) root.findViewById(R.id.sortData);
+        final RecyclerView trafficLightData = root.findViewById(R.id.trafficLightData);
+        final AppCompatButton sortData = root.findViewById(R.id.sortData);
         trafficLightData.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(requireActivity());
         trafficLightData.setLayoutManager(layoutManager);
         mAdapter = new TrafficManagerDataAdapter(initData(), requireActivity());
         trafficLightData.setAdapter(mAdapter);
-        trafficManagerViewModel.startRequest(sortType);
         sortData.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -121,6 +120,7 @@ public class TrafficManagerFragment extends Fragment {
                 }
             }
         });
+        trafficManagerViewModel.startRequest(sortType);
         return root;
     }
 
