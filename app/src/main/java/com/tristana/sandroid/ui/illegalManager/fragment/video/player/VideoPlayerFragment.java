@@ -2,28 +2,20 @@ package com.tristana.sandroid.ui.illegalManager.fragment.video.player;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.MediaController;
-import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.tools.log.Timber;
-import com.tristana.sandroid.tools.toast.ToastUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.BundleCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 public class VideoPlayerFragment extends Fragment {
 
