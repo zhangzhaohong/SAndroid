@@ -36,4 +36,6 @@
     <string name="title_yellow_duration">黄灯时长(s)</string>
     <string name="data_default_int">0</string>
     <string name="menu_illegalManager">车辆违章</string>
+    <string name="title_illegal_video">违章视频</string>
+    <string name="title_illegal_picture">违章图片</string>
 </resources>
