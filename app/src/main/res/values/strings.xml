@@ -35,4 +35,5 @@
     <string name="title_green_duration">绿灯时长(s)</string>
     <string name="title_yellow_duration">黄灯时长(s)</string>
     <string name="data_default_int">0</string>
+    <string name="menu_illegalManager">车辆违章</string>
 </resources>

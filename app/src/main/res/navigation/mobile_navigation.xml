@@ -47,4 +47,10 @@
         android:label="@string/menu_trafficManager"
         tools:layout="@layout/fragment_traffic_manager" />
 
+    <fragment
+        android:id="@+id/nav_illegalManager"
+        android:name="com.tristana.sandroid.ui.illegalManager.IllegalManagerFragment"
+        android:label="@string/menu_illegalManager"
+        tools:layout="@layout/fragment_illegal_manager" />
+
 </navigation>
