@@ -34,6 +34,7 @@
                     android:id="@+id/play1"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
+                    android:padding="70dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/ic_play"/>
 

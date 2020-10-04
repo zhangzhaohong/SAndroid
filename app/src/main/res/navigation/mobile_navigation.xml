@@ -53,4 +53,16 @@
         android:label="@string/menu_illegalManager"
         tools:layout="@layout/fragment_illegal_manager" />
 
+    <fragment
+        android:id="@+id/nav_videoPlayer"
+        android:name="com.tristana.sandroid.ui.illegalManager.fragment.video.player.VideoPlayerFragment"
+        android:label="@string/menu_videoPlayer"
+        tools:layout="@layout/fragment_video_player" />
+
+    <fragment
+        android:id="@+id/nav_imageViewer"
+        android:name="com.tristana.sandroid.ui.illegalManager.fragment.picture.viewer.ImageViewerFragment"
+        android:label="@string/menu_imageViewer"
+        tools:layout="@layout/fragment_image_viewer" />
+
 </navigation>

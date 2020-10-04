@@ -38,4 +38,6 @@
     <string name="menu_illegalManager">车辆违章</string>
     <string name="title_illegal_video">违章视频</string>
     <string name="title_illegal_picture">违章图片</string>
+    <string name="menu_videoPlayer">视频预览</string>
+    <string name="menu_imageViewer">图片预览</string>
 </resources>

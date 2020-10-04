@@ -1,8 +1,9 @@
 package com.tristana.sandroid.ui.illegalManager.fragment.picture;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.tristana.sandroid.R;
+import com.tristana.sandroid.model.illegalManager.CardType;
 import com.tristana.sandroid.model.illegalManager.IllegalFileModel;
 
 import java.util.ArrayList;
@@ -18,24 +20,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class IllegalPictureDataAdapter extends RecyclerView.Adapter<IllegalPictureDataAdapter.CustomViewHolder> {
 
-    private Context context;
+    private Activity activity;
     private ArrayList<IllegalFileModel> data;
     private ArrayList<Bitmap> picList;
 
-    public IllegalPictureDataAdapter(ArrayList<IllegalFileModel> defaultData, ArrayList<Bitmap> picList, Context context) {
+    public IllegalPictureDataAdapter(ArrayList<IllegalFileModel> defaultData, ArrayList<Bitmap> picList, Activity activity) {
         this.data = defaultData;
         this.picList = picList;
-        this.context = context;
+        this.activity = activity;
     }
 
-    public void setData(ArrayList<IllegalFileModel> data, ArrayList<Bitmap> picList, Context context) {
+    public void setData(ArrayList<IllegalFileModel> data, ArrayList<Bitmap> picList, Activity activity) {
         this.data = data;
         this.picList = picList;
-        this.context = context;
+        this.activity = activity;
         notifyDataSetChanged();
     }
 
@@ -53,8 +57,8 @@ public class IllegalPictureDataAdapter extends RecyclerView.Adapter<IllegalPictu
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         holder.play1.setVisibility(View.GONE);
         holder.play2.setVisibility(View.GONE);
-        holder.pv1.setBackground(new BitmapDrawable(context.getResources(), picList.get(position * 2)));
-        holder.pv2.setBackground(new BitmapDrawable(context.getResources(), picList.get(position * 2 + 1)));
+        holder.pv1.setBackground(new BitmapDrawable(activity.getResources(), picList.get(position * 2)));
+        holder.pv2.setBackground(new BitmapDrawable(activity.getResources(), picList.get(position * 2 + 1)));
         holder.text1.setText(data.get(position * 2).getContent());
         holder.text2.setText(data.get(position * 2 + 1).getContent());
         RelativeLayout.LayoutParams pv1LayoutParams = (RelativeLayout.LayoutParams) holder.pv1.getLayoutParams();
@@ -63,6 +67,27 @@ public class IllegalPictureDataAdapter extends RecyclerView.Adapter<IllegalPictu
         RelativeLayout.LayoutParams pv2LayoutParams = (RelativeLayout.LayoutParams) holder.pv2.getLayoutParams();
         pv2LayoutParams.height = 300;
         holder.pv2.setLayoutParams(pv2LayoutParams);
+        holder.pv1.setOnClickListener(jumpToViewer(CardType.TYPE_LEFT, position));
+        holder.pv2.setOnClickListener(jumpToViewer(CardType.TYPE_RIGHT, position));
+    }
+
+    private View.OnClickListener jumpToViewer(final String cardType, final int position) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+                Bundle bundle = new Bundle();
+                switch (cardType) {
+                    case CardType.TYPE_LEFT:
+                        bundle.putString("ImageUrl", data.get(position * 2).getCover());
+                        break;
+                    case CardType.TYPE_RIGHT:
+                        bundle.putString("ImageUrl", data.get(position * 2 + 1).getCover());
+                        break;
+                }
+                navController.navigate(R.id.nav_imageViewer, bundle);
+            }
+        };
     }
 
     /**
