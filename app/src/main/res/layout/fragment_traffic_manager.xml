@@ -69,7 +69,8 @@
                         android:layout_gravity="end"
                         android:padding="10dp"
                         android:layout_weight="1"
-                        android:text="@string/traffic_manager_check_title"/>
+                        android:text="@string/traffic_manager_check_title"
+                        android:id="@+id/sortData"/>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

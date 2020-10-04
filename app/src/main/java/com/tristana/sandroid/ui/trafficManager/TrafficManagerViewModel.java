@@ -1,9 +1,9 @@
 package com.tristana.sandroid.ui.trafficManager;
 
-import android.content.Context;
+import android.os.Build;
 
-import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.trafficManager.TrafficManagerModel;
+import com.tristana.sandroid.model.trafficManager.TrafficSortType;
 import com.tristana.sandroid.tools.http.HttpUtils;
 import com.tristana.sandroid.tools.log.Timber;
 
@@ -12,10 +12,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -55,6 +57,12 @@ public class TrafficManagerViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<TrafficManagerModel>> mLightData;
 
+    public MutableLiveData<ArrayList<TrafficManagerModel>> getLightSortData() {
+        return mLightSortData;
+    }
+
+    private MutableLiveData<ArrayList<TrafficManagerModel>> mLightSortData;
+
     public MutableLiveData<String> getToast() {
         return mToast;
     }
@@ -66,6 +74,7 @@ public class TrafficManagerViewModel extends ViewModel {
         mToast = new MutableLiveData<>();
         mText = new MutableLiveData<>();
         mLightData = new MutableLiveData<>();
+        mLightSortData = new MutableLiveData<>();
         mFinish = new MutableLiveData<>(false);
         mText.setValue("This is traffic manager fragment");
     }
@@ -74,11 +83,12 @@ public class TrafficManagerViewModel extends ViewModel {
         return mText;
     }
 
-    public void startRequest(final Context context) {
+    public void startRequest(final String sortType) {
         final String url = "https://data.meternity.cn/api/v0/lightStatus.php";
         if (!isRequest && !needStop) {
             isRequest = true;
             new Thread(new Runnable() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void run() {
                     String[] data = new HttpUtils().getDataFromUrl(url);
@@ -91,7 +101,6 @@ public class TrafficManagerViewModel extends ViewModel {
                                 JSONArray trafficData = jsonObject.getJSONArray("status");
                                 new Timber("TrafficManagerViewModel").d("length" + trafficData.length());
                                 ArrayList<TrafficManagerModel> result = new ArrayList<>();
-                                result.add(new TrafficManagerModel(context.getString(R.string.title_id), context.getString(R.string.title_red_duration), context.getString(R.string.title_yellow_duration), context.getString(R.string.title_green_duration)));
                                 for (int i = 0; i < trafficData.length(); i++) {
                                     JSONObject tData = new JSONObject(trafficData.get(i).toString());
                                     new Timber("TrafficManagerViewModel").d("tData" + tData);
@@ -115,6 +124,46 @@ public class TrafficManagerViewModel extends ViewModel {
             }).start();
         } else {
             mToast.setValue("上一个请求正在进行中，请稍后重试！");
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void sortData(ArrayList<TrafficManagerModel> result, final String sortType) {
+        result.sort(new Comparator<TrafficManagerModel>() {
+            @Override
+            public int compare(TrafficManagerModel x, TrafficManagerModel y) {
+                switch (sortType) {
+                    case TrafficSortType.SORT_BY_ROAD_UP:
+                    case TrafficSortType.SORT_BY_ROAD_DOWN:
+                        return Integer.compare(getInteger(x.getId()), getInteger(y.getId()));
+                    case TrafficSortType.SORT_BY_RED_LIGHT_UP:
+                    case TrafficSortType.SORT_BY_RED_LIGHT_DOWN:
+                        return Integer.compare(getInteger(x.getRedDuration()), getInteger(y.getRedDuration()));
+                }
+                return 0;
+            }
+        });
+        switch (sortType) {
+            case TrafficSortType.SORT_BY_ROAD_DOWN:
+            case TrafficSortType.SORT_BY_RED_LIGHT_DOWN:
+                ArrayList<TrafficManagerModel> finalResult = new ArrayList<>();
+                for (int i = result.size(); i > 0; i--) {
+                    finalResult.add(result.get(i - 1));
+                }
+                result = finalResult;
+        }
+        mLightSortData.postValue(result);
+    }
+
+    private int getInteger(String input) {
+        try {
+            if (input == null || input.equals("")) {
+                return 0;
+            } else {
+                return Integer.parseInt(input);
+            }
+        } catch (Exception e) {
+            return 0;
         }
     }
 

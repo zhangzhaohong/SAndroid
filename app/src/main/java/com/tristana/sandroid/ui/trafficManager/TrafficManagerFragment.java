@@ -1,5 +1,6 @@
 package com.tristana.sandroid.ui.trafficManager;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,17 @@ import android.widget.AdapterView;
 
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.trafficManager.TrafficManagerModel;
+import com.tristana.sandroid.model.trafficManager.TrafficSortType;
 import com.tristana.sandroid.tools.log.Timber;
 import com.tristana.sandroid.tools.toast.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -27,6 +32,7 @@ public class TrafficManagerFragment extends Fragment {
     private TrafficManagerViewModel trafficManagerViewModel;
     private TrafficManagerDataAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private String sortType = TrafficSortType.SORT_BY_ROAD_UP;
 
     Timber timber = new Timber("TrafficManagerFragment");
 
@@ -37,17 +43,35 @@ public class TrafficManagerFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_traffic_manager, container, false);
         trafficManagerViewModel.setNeedStop(false);
         final RecyclerView trafficLightData = (RecyclerView) root.findViewById(R.id.trafficLightData);
+        final AppCompatButton sortData = (AppCompatButton) root.findViewById(R.id.sortData);
         trafficLightData.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(requireActivity());
         trafficLightData.setLayoutManager(layoutManager);
         mAdapter = new TrafficManagerDataAdapter(initData(), requireActivity());
         trafficLightData.setAdapter(mAdapter);
-        trafficManagerViewModel.startRequest(requireActivity());
+        trafficManagerViewModel.startRequest(sortType);
+        sortData.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                trafficManagerViewModel.sortData(Objects.requireNonNull(trafficManagerViewModel.getLightData().getValue()), sortType);
+            }
+        });
         trafficManagerViewModel.getLightData().observe(getViewLifecycleOwner(), new Observer<ArrayList<TrafficManagerModel>>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onChanged(ArrayList<TrafficManagerModel> trafficManagerModels) {
                 timber.d("Data have changed!");
-                mAdapter.setData(trafficManagerModels);
+                trafficManagerViewModel.sortData(Objects.requireNonNull(trafficManagerViewModel.getLightData().getValue()), sortType);
+            }
+        });
+        trafficManagerViewModel.getLightSortData().observe(getViewLifecycleOwner(), new Observer<ArrayList<TrafficManagerModel>>() {
+            @Override
+            public void onChanged(ArrayList<TrafficManagerModel> trafficManagerModels) {
+                ArrayList<TrafficManagerModel> finalResult = new ArrayList<>();
+                finalResult.add(new TrafficManagerModel(getString(R.string.title_id), getString(R.string.title_red_duration), getString(R.string.title_yellow_duration), getString(R.string.title_green_duration)));
+                finalResult.addAll(trafficManagerModels);
+                mAdapter.setData(finalResult);
                 trafficManagerViewModel.startTimer();
             }
         });
@@ -68,6 +92,20 @@ public class TrafficManagerFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 timber.d(l + " " + i);
+                switch (i) {
+                    case 0:
+                        sortType = TrafficSortType.SORT_BY_ROAD_UP;
+                        break;
+                    case 1:
+                        sortType = TrafficSortType.SORT_BY_ROAD_DOWN;
+                        break;
+                    case 2:
+                        sortType = TrafficSortType.SORT_BY_RED_LIGHT_UP;
+                        break;
+                    case 3:
+                        sortType = TrafficSortType.SORT_BY_RED_LIGHT_DOWN;
+                        break;
+                }
             }
 
             @Override
@@ -79,7 +117,7 @@ public class TrafficManagerFragment extends Fragment {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean && !trafficManagerViewModel.getNeedStop()) {
-                    trafficManagerViewModel.startRequest(requireActivity());
+                    trafficManagerViewModel.startRequest(sortType);
                 }
             }
         });
