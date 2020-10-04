@@ -83,4 +83,18 @@ public class VideoPlayerFragment extends Fragment {
             isPlaying = false;
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        timber.d("On Stop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        timber.d("On DestroyView");
+        videoView.stopPlayback();
+        videoView = null;
+    }
 }
