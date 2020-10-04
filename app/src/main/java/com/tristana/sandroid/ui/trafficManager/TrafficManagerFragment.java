@@ -63,6 +63,7 @@ public class TrafficManagerFragment extends Fragment {
             public void onChanged(ArrayList<TrafficManagerModel> trafficManagerModels) {
                 timber.d("Data have changed!");
                 trafficManagerViewModel.sortData(Objects.requireNonNull(trafficManagerViewModel.getLightData().getValue()), sortType);
+                trafficManagerViewModel.startTimer();
             }
         });
         trafficManagerViewModel.getLightSortData().observe(getViewLifecycleOwner(), new Observer<ArrayList<TrafficManagerModel>>() {
@@ -72,7 +73,6 @@ public class TrafficManagerFragment extends Fragment {
                 finalResult.add(new TrafficManagerModel(getString(R.string.title_id), getString(R.string.title_red_duration), getString(R.string.title_yellow_duration), getString(R.string.title_green_duration)));
                 finalResult.addAll(trafficManagerModels);
                 mAdapter.setData(finalResult);
-                trafficManagerViewModel.startTimer();
             }
         });
         trafficManagerViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {
