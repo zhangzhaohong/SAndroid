@@ -34,6 +34,7 @@ public class ImageViewerFragment extends Fragment {
             url = bundle.getString("ImageUrl");
         }
         final ZoomImageView imageViewer = root.findViewById(R.id.imageViewer);
+        imageViewer.placeholder(R.drawable.ic_pic_default);
         imageViewerViewModel.getPicList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Bitmap>>() {
             @Override
             public void onChanged(ArrayList<Bitmap> bitmaps) {
