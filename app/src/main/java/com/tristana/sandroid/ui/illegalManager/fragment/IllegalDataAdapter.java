@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +29,6 @@ public class IllegalDataAdapter extends RecyclerView.Adapter<IllegalDataAdapter.
     private Activity activity;
     private ArrayList<IllegalFileModel> data;
     private ArrayList<Bitmap> picList;
-    private FragmentManager supportFragmentManager;
     private String type;
 
     public IllegalDataAdapter(ArrayList<IllegalFileModel> defaultData, ArrayList<Bitmap> picList, Activity activity, String type) {
