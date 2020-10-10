@@ -1,60 +1,86 @@
 package com.tristana.sandroid.ui.login;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.tristana.sandroid.R;
+import com.tristana.sandroid.model.HandlerType;
 import com.tristana.sandroid.model.data.DataModel;
+import com.tristana.sandroid.tools.http.HttpUtils;
+import com.tristana.sandroid.tools.log.Timber;
 import com.tristana.sandroid.tools.sharedPreferences.SpUtils;
+import com.tristana.sandroid.tools.text.TextUtils;
 import com.tristana.sandroid.tools.toast.ToastUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
+
+    private boolean isRequest = false;
+
+    private Timber timber = new Timber("LoginFragment");
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(@NonNull Message message) {
+            switch (message.what) {
+                case HandlerType.TYPE_TOAST:
+                    ToastUtils.showToast(requireActivity(), message.obj.toString());
+                    break;
+                case HandlerType.TYPE_LOGIN_STATUS:
+                    timber.d("LOGIN STATUS!" + message.obj);
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                    navController.navigate(R.id.nav_home);
+                    break;
+            }
+            return false;
+        }
+    });
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         loginViewModel =
                 ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(LoginViewModel.class);
         View root = inflater.inflate(R.layout.fragment_login, container, false);
-        final AppCompatEditText username = (AppCompatEditText) root.findViewById(R.id.username);
-        final AppCompatEditText password = (AppCompatEditText) root.findViewById(R.id.password);
-        final AppCompatTextView login = (AppCompatTextView) root.findViewById(R.id.login);
-        final AppCompatCheckBox rememberPassword = (AppCompatCheckBox) root.findViewById(R.id.rememberPassWd);
-        final AppCompatCheckBox autoLogin = (AppCompatCheckBox) root.findViewById(R.id.autoLogin);
-        Object rememberStatus = SpUtils.get(requireActivity(), DataModel.REMEMBER_PASSWORD, false);
-        Object autoLoginStatus = SpUtils.get(requireActivity(), DataModel.AUTO_LOGIN, false);
+        final AppCompatEditText username = root.findViewById(R.id.username);
+        final AppCompatEditText password = root.findViewById(R.id.password);
+        final AppCompatTextView login = root.findViewById(R.id.login);
+        final AppCompatCheckBox rememberPassword = root.findViewById(R.id.rememberPassWd);
+        final AppCompatCheckBox autoLogin = root.findViewById(R.id.autoLogin);
+        final AppCompatTextView register = root.findViewById(R.id.register);
+        Boolean rememberStatus = (Boolean) SpUtils.get(requireActivity(), DataModel.REMEMBER_PASSWORD, false);
+        Boolean autoLoginStatus = (Boolean) SpUtils.get(requireActivity(), DataModel.AUTO_LOGIN, false);
         if (rememberStatus != null && autoLoginStatus != null) {
-            if ((Boolean) rememberStatus) {
-                rememberPassword.setChecked((Boolean) rememberStatus);
+            if (rememberStatus) {
+                rememberPassword.setChecked(true);
                 username.setText(Objects.requireNonNull(SpUtils.get(requireActivity(), DataModel.LAST_USERNAME, "")).toString());
                 password.setText(Objects.requireNonNull(SpUtils.get(requireActivity(), DataModel.LAST_PASSWORD, "")).toString());
             }
-            if ((Boolean) autoLoginStatus) {
-                autoLogin.setChecked((Boolean) autoLoginStatus);
+            if (autoLoginStatus) {
+                autoLogin.setChecked(true);
                 loginViewModel.doLogin(Objects.requireNonNull(username.getText()).toString(), Objects.requireNonNull(password.getText()).toString());
             }
         }
-        loginViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-            }
-        });
         loginViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -93,7 +119,69 @@ public class LoginFragment extends Fragment {
                 SpUtils.put(requireActivity(), DataModel.REMEMBER_PASSWORD, rememberPassword.isChecked());
             }
         });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                testHandler(Objects.requireNonNull(username.getText()).toString(), Objects.requireNonNull(password.getText()).toString());
+            }
+
+            private void testHandler(final String username, final String password) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (TextUtils.checkEmpty(username) && TextUtils.checkEmpty(password)) {
+                            if (!isRequest) {
+                                isRequest = true;
+                                String url = "https://data.meternity.cn/api/v0/login.php?account=" + username + "&password=" + password;
+                                timber.d(url);
+                                String[] data = new HttpUtils().getDataFromUrl(url);
+                                if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
+                                    sendMessage(HandlerType.TYPE_TOAST, "请求失败 code:" + data[0] + "\n" + data[1]);
+                                    sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
+                                } else {
+                                    String json = data[1];
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(json);
+                                        int code = Integer.parseInt(jsonObject.get("code").toString());
+                                        if (code == 0) {
+                                            sendMessage(HandlerType.TYPE_TOAST, jsonObject.getString("msg"));
+                                            sendMessage(HandlerType.TYPE_LOGIN_STATUS, true);
+                                        } else {
+                                            sendMessage(HandlerType.TYPE_TOAST, "登录失败 code:" + code + "\n" + jsonObject.getString("msg"));
+                                            sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        sendMessage(HandlerType.TYPE_TOAST, "JSONException" + "\n" + data[1]);
+                                        sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
+                                    }
+                                }
+                                isRequest = false;
+                            } else {
+                                sendMessage(HandlerType.TYPE_TOAST, "上一个请求正在进行中，请稍后重试！");
+                                sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
+                            }
+                        } else {
+                            sendMessage(HandlerType.TYPE_TOAST, "用户名密码不能为空！");
+                            sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
+                        }
+                    }
+                }).start();
+            }
+        });
         return root;
     }
 
+    private void sendMessage(int type, Object object) {
+        Message message = new Message();
+        message.what = type;
+        message.obj = object;
+        handler.sendMessage(message);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+    }
 }
