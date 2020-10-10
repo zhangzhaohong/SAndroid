@@ -60,6 +60,7 @@ public class IllegalManagerFragment extends Fragment {
                 return 2;
             }
         });
+        viewPager2.setOffscreenPageLimit(1);
         //tab关联viewPager2
         final TabLayout tabLayout = root.findViewById(R.id.tabLayout);
         new TabLayoutMediator(tabLayout, viewPager2, true, true, new TabLayoutMediator.TabConfigurationStrategy() {
