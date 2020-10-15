@@ -84,7 +84,7 @@ public class TrafficManagerViewModel extends ViewModel {
     }
 
     public void startRequest(final String sortType) {
-        final String url = "https://data.meternity.cn/api/v0/lightStatus.php";
+        final String url = "https://data.meternity.cn/api/v0/lightStatus.php?api_key=stiei20201014war";
         if (!isRequest && !needStop) {
             isRequest = true;
             new Thread(new Runnable() {

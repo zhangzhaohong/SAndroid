@@ -132,7 +132,7 @@ public class LoginFragment extends Fragment {
                         if (TextUtils.checkEmpty(username) && TextUtils.checkEmpty(password)) {
                             if (!isRequest) {
                                 isRequest = true;
-                                String url = "https://data.meternity.cn/api/v0/login.php?account=" + username + "&password=" + password;
+                                String url = "https://data.meternity.cn/api/v0/login.php?api_key=stiei20201014war&account=" + username + "&password=" + password;
                                 timber.d(url);
                                 String[] data = new HttpUtils().getDataFromUrl(url);
                                 if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
