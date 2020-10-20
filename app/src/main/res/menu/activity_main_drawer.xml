@@ -36,5 +36,9 @@
             android:id="@+id/nav_illegalManager"
             android:icon="@drawable/ic_illegal"
             android:title="@string/menu_illegalManager" />
+        <item
+            android:id="@+id/nav_envManager"
+            android:icon="@android:drawable/ic_dialog_map"
+            android:title="@string/menu_envManager" />
     </group>
 </menu>
