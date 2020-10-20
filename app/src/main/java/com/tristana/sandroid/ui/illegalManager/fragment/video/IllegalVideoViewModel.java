@@ -52,7 +52,7 @@ public class IllegalVideoViewModel extends ViewModel {
     }
 
     public void startRequest() {
-        final String url = "https://data.meternity.cn/api/v0/getVideoList.php";
+        final String url = "https://data.meternity.cn/api/v0/getVideoList.php?api_key=stiei20201014war";
         if (!isRequest) {
             isRequest = true;
             new Thread(new Runnable() {

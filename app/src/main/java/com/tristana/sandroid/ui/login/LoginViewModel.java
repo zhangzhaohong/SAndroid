@@ -47,7 +47,7 @@ public class LoginViewModel extends ViewModel {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String url = "https://data.meternity.cn/api/v0/login.php?account=" + userName + "&password=" + password;
+                        String url = "https://data.meternity.cn/api/v0/login.php?api_key=stiei20201014war&account=" + userName + "&password=" + password;
                         new Timber("LoginViewModel").d(url);
                         String[] data = new HttpUtils().getDataFromUrl(url);
                         if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
