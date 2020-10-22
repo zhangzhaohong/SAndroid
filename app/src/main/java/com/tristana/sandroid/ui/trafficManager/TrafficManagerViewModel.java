@@ -2,20 +2,19 @@ package com.tristana.sandroid.ui.trafficManager;
 
 import android.os.Build;
 
+import com.google.gson.Gson;
+import com.tristana.sandroid.model.trafficManager.LightStatusRespModel;
 import com.tristana.sandroid.model.trafficManager.TrafficManagerModel;
 import com.tristana.sandroid.model.trafficManager.TrafficSortType;
 import com.tristana.sandroid.tools.http.HttpUtils;
 import com.tristana.sandroid.tools.http.RequestInfo;
 import com.tristana.sandroid.tools.log.Timber;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -99,26 +98,19 @@ public class TrafficManagerViewModel extends ViewModel {
                     String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.REQUEST_LIGHT_LIST, urlParams, header);
                     if (Integer.parseInt(data[0]) <= 400) {
                         String json = data[1];
-                        try {
-                            JSONObject jsonObject = new JSONObject(json);
-                            int code = Integer.parseInt(jsonObject.get("code").toString());
-                            if (code == 0) {
-                                JSONArray trafficData = jsonObject.getJSONArray("status");
-                                new Timber("TrafficManagerViewModel").d("length" + trafficData.length());
-                                ArrayList<TrafficManagerModel> result = new ArrayList<>();
-                                for (int i = 0; i < trafficData.length(); i++) {
-                                    JSONObject tData = new JSONObject(trafficData.get(i).toString());
-                                    new Timber("TrafficManagerViewModel").d("tData" + tData);
-                                    result.add(new TrafficManagerModel(tData.getString("roadId"), tData.getString("redLightDuration"), tData.getString("yellowLightDuration"), tData.getString("greenLightDuration")));
-                                }
-                                new Timber("TrafficManagerViewModel").d("length_result" + result.size());
-                                mLightData.postValue(result);
-                            } else {
-                                mToast.postValue("请求失败！code：" + data[0] + "\n" + data[1]);
+                        Gson gson = new Gson();
+                        LightStatusRespModel lightStatusRespModel = gson.fromJson(json, LightStatusRespModel.class);
+                        int code = Integer.parseInt(lightStatusRespModel.getCode());
+                        if (code == 0) {
+                            List<LightStatusRespModel.StatusBean> status = lightStatusRespModel.getStatus();
+                            ArrayList<TrafficManagerModel> result = new ArrayList<>();
+                            for (int i = 0; i < status.size(); i ++) {
+                                LightStatusRespModel.StatusBean cData = status.get(i);
+                                result.add(new TrafficManagerModel(cData.getRoadId(), cData.getRedLightDuration(), cData.getYellowLightDuration(), cData.getGreenLightDuration()));
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            mToast.postValue("JSONException" + "\n" + data[1]);
+                            mLightData.postValue(result);
+                        } else {
+                            mToast.postValue("请求失败！code：" + data[0] + "\n" + data[1]);
                         }
                     } else {
                         mToast.postValue("请求失败！code：" + data[0] + "\n" + data[1]);

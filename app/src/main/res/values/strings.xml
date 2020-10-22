@@ -45,4 +45,8 @@
     <string name="title_env_2">湿度</string>
     <string name="data_env_1">32</string>
     <string name="data_env_2">80</string>
+    <string name="action_readFile">测试读文件</string>
+    <string name="action_writeFile">测试写文件</string>
+    <string name="action_textToArray">文字转数组</string>
+    <string name="action_arrayToText">数组转文字</string>
 </resources>

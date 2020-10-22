@@ -11,7 +11,11 @@ import android.view.View;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.tristana.sandroid.tools.array.ArrayUtils;
+import com.tristana.sandroid.tools.file.FileUtils;
+import com.tristana.sandroid.tools.log.Timber;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -31,11 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private Menu menu;
+    private Timber timber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        timber = new Timber("MainActivity");
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         AppCompatTextView title = (AppCompatTextView) toolbar.getChildAt(0);
@@ -112,8 +118,59 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         this.menu = menu;
+        initTestProject();
         updateMenu();
         return true;
+    }
+
+    private void initTestProject() {
+        MenuItem menu_read = menu.findItem(R.id.action_read);
+        MenuItem menu_write = menu.findItem(R.id.action_write);
+        MenuItem menu_textToArray = menu.findItem(R.id.action_textToArray);
+        MenuItem menu_arrayToText = menu.findItem(R.id.action_arrayToText);
+        menu_read.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                ArrayList<String> data = new FileUtils().readLine(MainActivity.this, "data_TEST");
+                for (int i = 0; i < data.size(); i++) {
+                    timber.d("Data_read[" + i + "] " + data.get(i));
+                }
+                return true;
+            }
+        });
+        menu_write.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                new FileUtils().writeData(MainActivity.this, "data_TEST", "This is the data!" + System.currentTimeMillis());
+                return true;
+            }
+        });
+        menu_textToArray.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                String data = "111,222,333,444,555";
+                ArrayList<Object> result = new ArrayUtils().textToArrayList(data);
+                for (int i = 0; i < result.size(); i++) {
+                    timber.d("Data_textToArray[" + i + "] " + result.get(i));
+                }
+                return true;
+            }
+        });
+        menu_arrayToText.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                ArrayList<String> data = new ArrayList<>();
+                data.add("111");
+                data.add("222");
+                data.add("333");
+                data.add("444");
+                data.add("555");
+                data.add("666");
+                String result = new ArrayUtils().arrayListToString(data);
+                timber.d("Data_arrayToText: " + result);
+                return true;
+            }
+        });
     }
 
     @Override
