@@ -5,56 +5,69 @@ import android.graphics.BitmapFactory;
 
 import com.tristana.sandroid.tools.log.Timber;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HttpsURLConnection;
+import okhttp3.Call;
+import okhttp3.ConnectionPool;
+import okhttp3.Dispatcher;
+import okhttp3.Dns;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HttpUtils {
-    public String[] getDataFromUrl(final String urlString) {
+    public String[] getDataFromUrlByOkHttp3(String requestInfo, Map<String, Object> params, Map<String, Object> header) {
         final String[] result = {null, null};
-        try {
-            int code = 0;
-            InputStream inputStreams = null;
-            StringBuilder stringBuilder = new StringBuilder();
-            URL url = new URL(urlString);
-            URLConnection connection = null;
-            try {
-                connection = url.openConnection();
-                connection.setConnectTimeout(5000);
-            } catch (IOException e) {
-                e.printStackTrace();
-                result[0] = "-1";
-                result[1] = e.toString();
+        String url = null;
+        //1.第一步创建OkHttpClient对象
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequestsPerHost(128);
+        dispatcher.setMaxRequests(128);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newBuilder().dispatcher(dispatcher)
+                .connectionPool(new ConnectionPool(64, 10, TimeUnit.MINUTES))
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .dns(Dns.SYSTEM)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .build();
+        //初始化参数
+        if (requestInfo.equals(RequestInfo.IS_TEST)) {
+            if (params != null && !params.isEmpty()) {
+                url = Objects.requireNonNull(params.get("url")).toString();
+            } else {
+                result[0] = "-2";
+                result[1] = "url非法！";
             }
-            if (!Objects.equals(result[0], "-1")) {
-                if (urlString.startsWith("https:")) {
-                    HttpsURLConnection urlConnection = (HttpsURLConnection) connection;
-                    code = Objects.requireNonNull(urlConnection).getResponseCode();
-                    inputStreams = urlConnection.getInputStream();
-                } else if (urlString.startsWith("http:")) {
-                    HttpURLConnection urlConnection = (HttpURLConnection) connection;
-                    code = Objects.requireNonNull(urlConnection).getResponseCode();
-                    inputStreams = urlConnection.getInputStream();
-                }
-                if (code <= 400) {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStreams));
-                    String data;
-                    while ((data = bufferedReader.readLine()) != null) {
-                        stringBuilder.append(data);
-                    }
-                    result[0] = Integer.toString(code);
-                    result[1] = stringBuilder.toString();
-                } else {
-                    result[0] = Integer.toString(code);
-                }
+        } else {
+            url = RequestInfo.REQUEST_URL + requestInfo;
+            url = appendParams(url, params);
+        }
+        //2.第二步创建request
+        Request.Builder builder = new Request.Builder();
+        Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
+        if (header != null && !header.isEmpty()) {
+            for (String key : header.keySet()) {
+                requestBuilder = requestBuilder.addHeader(key, Objects.requireNonNull(header.get(key)).toString());
+            }
+        }
+        final Request request = requestBuilder.build();
+        //3.新建一个Call对象
+        final Call call = okHttpClient.newCall(request);
+        //4.同步请求网络execute()
+        try {
+            Response response = call.execute();
+            if (response.isSuccessful()) {
+                String resp = response.body().string();
+                new Timber("getDataFromUrlByOkHttp3").d(resp);
+                result[0] = String.valueOf(response.code());
+                result[1] = resp;
+            } else {
+                throw new IOException("Unexpected code " + response);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,31 +77,110 @@ public class HttpUtils {
         return result;
     }
 
+    /**
+     * 拼接参数
+     *
+     * @param url
+     * @param params
+     * @return
+     */
+    private String appendParams(String url, Map<String, Object> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(url).append("?");
+        if (params != null && !params.isEmpty()) {
+            for (String key : params.keySet()) {
+                sb.append(key).append("=").append(params.get(key)).append("&");
+            }
+        }
+        sb = sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
     public static Bitmap getBitmap(String url) {
-        URL imageURL = null;
         Bitmap bitmap = null;
         new Timber("getBitMap").d("Get Bitmap from " + url);
+        //1.第一步创建OkHttpClient对象
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequestsPerHost(128);
+        dispatcher.setMaxRequests(128);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newBuilder().dispatcher(dispatcher)
+                .connectionPool(new ConnectionPool(64, 10, TimeUnit.MINUTES))
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .dns(Dns.SYSTEM)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .build();
+        //2.第二步创建request
+        Request.Builder builder = new Request.Builder();
+        Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
+        final Request request = requestBuilder.build();
+        //3.新建一个Call对象
+        final Call call = okHttpClient.newCall(request);
+        //4.同步请求网络execute()
         try {
-            imageURL = new URL(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (imageURL == null) {
-                return null;
+            Response response = call.execute();
+            if (response.isSuccessful()) {
+                bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+            } else {
+                throw new IOException("Unexpected code " + response);
             }
-            HttpURLConnection conn = (HttpURLConnection) imageURL
-                    .openConnection();
-            conn.setDoInput(true);
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            bitmap = BitmapFactory.decodeStream(is);
-            is.close();
-
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return bitmap;
+    }
+
+    public String[] postDataFromUrlByOkHttp3(String url, Map<String, Object> params, Map<String, Object> header) {
+        final String[] result = {null, null};
+        //1.第一步创建OkHttpClient对象
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequestsPerHost(128);
+        dispatcher.setMaxRequests(128);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newBuilder().dispatcher(dispatcher)
+                .connectionPool(new ConnectionPool(64, 10, TimeUnit.MINUTES))
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .dns(Dns.SYSTEM)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .build();
+        //2.创建 FormBody 添加需要的键值对
+        FormBody.Builder formBodyBuilder = new FormBody.Builder();
+        if (params != null && !params.isEmpty()) {
+            for (String key : params.keySet()) {
+                formBodyBuilder.add(key, Objects.requireNonNull(params.get(key)).toString());
+                new Timber("postDataFromUrlByOkHttp3").i("KEY Name:" + key + "  VALUE:" + params.get(key));
+            }
+        }
+        //3.第二步创建request
+        Request.Builder builder = new Request.Builder();
+        Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
+        if (header != null && !header.isEmpty()) {
+            for (String key : header.keySet()) {
+                requestBuilder = requestBuilder.addHeader(key, Objects.requireNonNull(header.get(key)).toString());
+            }
+        }
+        final Request request = requestBuilder.post(formBodyBuilder.build()).build();
+        //4.新建一个Call对象
+        final Call call = okHttpClient.newCall(request);
+        //5.同步请求网络execute()
+        try {
+            Response response = call.execute();
+            if (response.isSuccessful()) {
+                String resp = response.body().string();
+                new Timber("getDataFromUrlByOkHttp3").d(resp);
+                result[0] = String.valueOf(response.code());
+                result[1] = resp;
+            } else {
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            result[0] = "-1";
+            result[1] = e.toString();
+        }
+        return result;
     }
 
 }

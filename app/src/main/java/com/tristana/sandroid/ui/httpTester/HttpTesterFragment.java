@@ -40,7 +40,14 @@ public class HttpTesterFragment extends Fragment {
         appCompatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                httpTesterViewModel.startRequest(Objects.requireNonNull(appCompatEditText.getText()).toString());
+                httpTesterViewModel.startGetRequest(Objects.requireNonNull(appCompatEditText.getText()).toString());
+            }
+        });
+        appCompatButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                httpTesterViewModel.startPostRequest(Objects.requireNonNull(appCompatEditText.getText()).toString());
+                return true;
             }
         });
         httpTesterViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {

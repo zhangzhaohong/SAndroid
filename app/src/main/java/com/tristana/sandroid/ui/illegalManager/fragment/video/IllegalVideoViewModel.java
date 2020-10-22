@@ -4,12 +4,15 @@ import android.graphics.Bitmap;
 
 import com.tristana.sandroid.model.illegalManager.IllegalFileModel;
 import com.tristana.sandroid.tools.http.HttpUtils;
+import com.tristana.sandroid.tools.http.RequestInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -52,13 +55,15 @@ public class IllegalVideoViewModel extends ViewModel {
     }
 
     public void startRequest() {
-        final String url = "https://data.meternity.cn/api/v0/getVideoList.php?api_key=stiei20201014war";
         if (!isRequest) {
             isRequest = true;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String[] data = new HttpUtils().getDataFromUrl(url);
+                    Map<String, Object> header = new HashMap<>();
+                    Map<String, Object> urlParams = new HashMap<>();
+                    urlParams.put("api_key", RequestInfo.REQUEST_API_KEY);
+                    String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.REQUEST_VIDEO_LIST, urlParams, header);
                     if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
                         mText.postValue("请求失败 code:" + data[0] + "\n" + data[1]);
                     } else {
