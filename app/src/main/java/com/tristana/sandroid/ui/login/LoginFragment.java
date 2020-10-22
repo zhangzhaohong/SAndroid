@@ -12,6 +12,7 @@ import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
 import com.tristana.sandroid.model.data.DataModel;
 import com.tristana.sandroid.tools.http.HttpUtils;
+import com.tristana.sandroid.tools.http.RequestInfo;
 import com.tristana.sandroid.tools.log.Timber;
 import com.tristana.sandroid.tools.sharedPreferences.SpUtils;
 import com.tristana.sandroid.tools.text.TextUtils;
@@ -20,6 +21,8 @@ import com.tristana.sandroid.tools.toast.ToastUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -132,9 +135,12 @@ public class LoginFragment extends Fragment {
                         if (TextUtils.checkEmpty(username) && TextUtils.checkEmpty(password)) {
                             if (!isRequest) {
                                 isRequest = true;
-                                String url = "https://data.meternity.cn/api/v0/login.php?api_key=stiei20201014war&account=" + username + "&password=" + password;
-                                timber.d(url);
-                                String[] data = new HttpUtils().getDataFromUrl(url);
+                                Map<String, Object> header = new HashMap<>();
+                                Map<String, Object> urlParams = new HashMap<>();
+                                urlParams.put("api_key", RequestInfo.REQUEST_API_KEY);
+                                urlParams.put("account", username);
+                                urlParams.put("password", password);
+                                String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.REQUEST_LOGIN, urlParams, header);
                                 if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
                                     sendMessage(HandlerType.TYPE_TOAST, "请求失败 code:" + data[0] + "\n" + data[1]);
                                     sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);

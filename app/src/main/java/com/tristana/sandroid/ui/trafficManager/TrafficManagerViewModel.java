@@ -5,6 +5,7 @@ import android.os.Build;
 import com.tristana.sandroid.model.trafficManager.TrafficManagerModel;
 import com.tristana.sandroid.model.trafficManager.TrafficSortType;
 import com.tristana.sandroid.tools.http.HttpUtils;
+import com.tristana.sandroid.tools.http.RequestInfo;
 import com.tristana.sandroid.tools.log.Timber;
 
 import org.json.JSONArray;
@@ -14,6 +15,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,14 +87,16 @@ public class TrafficManagerViewModel extends ViewModel {
     }
 
     public void startRequest(final String sortType) {
-        final String url = "https://data.meternity.cn/api/v0/lightStatus.php?api_key=stiei20201014war";
         if (!isRequest && !needStop) {
             isRequest = true;
             new Thread(new Runnable() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void run() {
-                    String[] data = new HttpUtils().getDataFromUrl(url);
+                    Map<String, Object> header = new HashMap<>();
+                    Map<String, Object> urlParams = new HashMap<>();
+                    urlParams.put("api_key", RequestInfo.REQUEST_API_KEY);
+                    String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.REQUEST_LIGHT_LIST, urlParams, header);
                     if (Integer.parseInt(data[0]) <= 400) {
                         String json = data[1];
                         try {

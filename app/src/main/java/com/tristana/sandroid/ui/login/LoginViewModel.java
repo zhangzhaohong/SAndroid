@@ -1,11 +1,15 @@
 package com.tristana.sandroid.ui.login;
 
 import com.tristana.sandroid.tools.http.HttpUtils;
+import com.tristana.sandroid.tools.http.RequestInfo;
 import com.tristana.sandroid.tools.log.Timber;
 import com.tristana.sandroid.tools.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -47,9 +51,12 @@ public class LoginViewModel extends ViewModel {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String url = "https://data.meternity.cn/api/v0/login.php?api_key=stiei20201014war&account=" + userName + "&password=" + password;
-                        new Timber("LoginViewModel").d(url);
-                        String[] data = new HttpUtils().getDataFromUrl(url);
+                        Map<String, Object> header = new HashMap<>();
+                        Map<String, Object> urlParams = new HashMap<>();
+                        urlParams.put("api_key", RequestInfo.REQUEST_API_KEY);
+                        urlParams.put("account", userName);
+                        urlParams.put("password", password);
+                        String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.REQUEST_LOGIN, urlParams, header);
                         if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
                             mToast.postValue("请求失败 code:" + data[0] + "\n" + data[1]);
                         } else {
