@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import com.google.gson.Gson;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
 import com.tristana.sandroid.model.data.DataModel;
+import com.tristana.sandroid.model.login.LoginRespModel;
 import com.tristana.sandroid.tools.http.HttpUtils;
 import com.tristana.sandroid.tools.http.RequestInfo;
 import com.tristana.sandroid.tools.log.Timber;
@@ -146,19 +148,15 @@ public class LoginFragment extends Fragment {
                                     sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
                                 } else {
                                     String json = data[1];
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(json);
-                                        int code = Integer.parseInt(jsonObject.get("code").toString());
-                                        if (code == 0) {
-                                            sendMessage(HandlerType.TYPE_TOAST, jsonObject.getString("msg"));
-                                            sendMessage(HandlerType.TYPE_LOGIN_STATUS, true);
-                                        } else {
-                                            sendMessage(HandlerType.TYPE_TOAST, "登录失败 code:" + code + "\n" + jsonObject.getString("msg"));
-                                            sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                        sendMessage(HandlerType.TYPE_TOAST, "JSONException" + "\n" + data[1]);
+                                    Gson gson = new Gson();
+                                    LoginRespModel loginRespModel = gson.fromJson(json, LoginRespModel.class);
+                                    int code = Integer.parseInt(loginRespModel.getCode());
+                                    String msg = loginRespModel.getMsg();
+                                    if (code == 0) {
+                                        sendMessage(HandlerType.TYPE_TOAST, msg);
+                                        sendMessage(HandlerType.TYPE_LOGIN_STATUS, true);
+                                    } else {
+                                        sendMessage(HandlerType.TYPE_TOAST, "登录失败 code:" + code + "\n" + msg);
                                         sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
                                     }
                                 }

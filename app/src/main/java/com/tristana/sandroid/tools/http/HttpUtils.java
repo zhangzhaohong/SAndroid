@@ -20,7 +20,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HttpUtils {
+    private static Timber timber;
+    private static long time_1;
+    private static long time_2;
+    public HttpUtils() {
+        timber = new Timber("HttpUtils");
+    }
+
     public String[] getDataFromUrlByOkHttp3(String requestInfo, Map<String, Object> params, Map<String, Object> header) {
+        time_1 = System.currentTimeMillis();
         final String[] result = {null, null};
         String url = null;
         //1.第一步创建OkHttpClient对象
@@ -49,6 +57,7 @@ public class HttpUtils {
         }
         //2.第二步创建request
         Request.Builder builder = new Request.Builder();
+        timber.i("CurrentUrl:" + url);
         Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
         if (header != null && !header.isEmpty()) {
             for (String key : header.keySet()) {
@@ -63,7 +72,7 @@ public class HttpUtils {
             Response response = call.execute();
             if (response.isSuccessful()) {
                 String resp = response.body().string();
-                new Timber("getDataFromUrlByOkHttp3").d(resp);
+                timber.d(resp);
                 result[0] = String.valueOf(response.code());
                 result[1] = resp;
             } else {
@@ -74,6 +83,8 @@ public class HttpUtils {
             result[0] = "-1";
             result[1] = e.toString();
         }
+        time_2 = System.currentTimeMillis() - time_1;
+        timber.d("Request duration:" + time_2 + "ms");
         return result;
     }
 
@@ -97,8 +108,9 @@ public class HttpUtils {
     }
 
     public static Bitmap getBitmap(String url) {
+        time_1 = System.currentTimeMillis();
         Bitmap bitmap = null;
-        new Timber("getBitMap").d("Get Bitmap from " + url);
+        timber.i("Get Bitmap from " + url);
         //1.第一步创建OkHttpClient对象
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequestsPerHost(128);
@@ -113,6 +125,7 @@ public class HttpUtils {
                 .build();
         //2.第二步创建request
         Request.Builder builder = new Request.Builder();
+        timber.i("CurrentUrl:" + url);
         Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
         final Request request = requestBuilder.build();
         //3.新建一个Call对象
@@ -128,10 +141,13 @@ public class HttpUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        time_2 = System.currentTimeMillis() - time_1;
+        timber.d("Request duration:" + time_2 + "ms");
         return bitmap;
     }
 
     public String[] postDataFromUrlByOkHttp3(String url, Map<String, Object> params, Map<String, Object> header) {
+        time_1 = System.currentTimeMillis();
         final String[] result = {null, null};
         //1.第一步创建OkHttpClient对象
         Dispatcher dispatcher = new Dispatcher();
@@ -150,11 +166,12 @@ public class HttpUtils {
         if (params != null && !params.isEmpty()) {
             for (String key : params.keySet()) {
                 formBodyBuilder.add(key, Objects.requireNonNull(params.get(key)).toString());
-                new Timber("postDataFromUrlByOkHttp3").i("KEY Name:" + key + "  VALUE:" + params.get(key));
+                timber.d("KEY Name:" + key + "  VALUE:" + params.get(key));
             }
         }
         //3.第二步创建request
         Request.Builder builder = new Request.Builder();
+        timber.i("CurrentUrl:" + url);
         Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
         if (header != null && !header.isEmpty()) {
             for (String key : header.keySet()) {
@@ -169,7 +186,7 @@ public class HttpUtils {
             Response response = call.execute();
             if (response.isSuccessful()) {
                 String resp = response.body().string();
-                new Timber("getDataFromUrlByOkHttp3").d(resp);
+                timber.d(resp);
                 result[0] = String.valueOf(response.code());
                 result[1] = resp;
             } else {
@@ -180,6 +197,8 @@ public class HttpUtils {
             result[0] = "-1";
             result[1] = e.toString();
         }
+        time_2 = System.currentTimeMillis() - time_1;
+        timber.d("Request duration:" + time_2 + "ms");
         return result;
     }
 

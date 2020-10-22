@@ -1,12 +1,10 @@
 package com.tristana.sandroid.ui.login;
 
+import com.google.gson.Gson;
+import com.tristana.sandroid.model.login.LoginRespModel;
 import com.tristana.sandroid.tools.http.HttpUtils;
 import com.tristana.sandroid.tools.http.RequestInfo;
-import com.tristana.sandroid.tools.log.Timber;
 import com.tristana.sandroid.tools.text.TextUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,18 +59,15 @@ public class LoginViewModel extends ViewModel {
                             mToast.postValue("请求失败 code:" + data[0] + "\n" + data[1]);
                         } else {
                             String json = data[1];
-                            try {
-                                JSONObject jsonObject = new JSONObject(json);
-                                int code = Integer.parseInt(jsonObject.get("code").toString());
-                                if (code == 0) {
-                                    mToast.postValue(jsonObject.getString("msg"));
-                                    mLoginStatus.postValue(true);
-                                } else {
-                                    mToast.postValue("登录失败 code:" + code + "\n" + jsonObject.getString("msg"));
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                mToast.postValue("JSONException" + "\n" + data[1]);
+                            Gson gson = new Gson();
+                            LoginRespModel loginRespModel = gson.fromJson(json, LoginRespModel.class);
+                            int code = Integer.parseInt(loginRespModel.getCode());
+                            String msg = loginRespModel.getMsg();
+                            if (code == 0) {
+                                mToast.postValue(msg);
+                                mLoginStatus.postValue(true);
+                            } else {
+                                mToast.postValue("登录失败 code:" + code + "\n" + msg);
                             }
                         }
                         isRequest = false;

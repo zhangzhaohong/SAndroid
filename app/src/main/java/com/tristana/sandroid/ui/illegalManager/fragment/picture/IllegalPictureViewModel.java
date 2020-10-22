@@ -2,16 +2,15 @@ package com.tristana.sandroid.ui.illegalManager.fragment.picture;
 
 import android.graphics.Bitmap;
 
+import com.google.gson.Gson;
 import com.tristana.sandroid.model.illegalManager.IllegalFileModel;
+import com.tristana.sandroid.model.illegalManager.IllegalPicRespModel;
 import com.tristana.sandroid.tools.http.HttpUtils;
 import com.tristana.sandroid.tools.http.RequestInfo;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.lifecycle.LiveData;
@@ -68,20 +67,18 @@ public class IllegalPictureViewModel extends ViewModel {
                         mText.postValue("请求失败 code:" + data[0] + "\n" + data[1]);
                     } else {
 //                        mText.postValue(data[1]);
-                        try {
-                            JSONObject json = new JSONObject(data[1]);
-                            if (json.get("code").equals("0")) {
-                                JSONArray jsonArray = json.getJSONArray("data");
-                                ArrayList<IllegalFileModel> result = new ArrayList<>();
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonData = jsonArray.getJSONObject(i);
-                                    result.add(new IllegalFileModel(jsonData.getString("cover"), jsonData.getString("file"), jsonData.getString("content")));
-                                }
-                                fileList.postValue(result);
+                        String json = data[1];
+                        Gson gson = new Gson();
+                        IllegalPicRespModel illegalPicRespModel = gson.fromJson(json, IllegalPicRespModel.class);
+                        int code = Integer.parseInt(illegalPicRespModel.getCode());
+                        if (code == 0) {
+                            List<IllegalPicRespModel.DataBean> dataBeans = illegalPicRespModel.getData();
+                            ArrayList<IllegalFileModel> result = new ArrayList<>();
+                            for (int i = 0; i < dataBeans.size(); i++) {
+                                IllegalPicRespModel.DataBean cData = dataBeans.get(i);
+                                result.add(new IllegalFileModel(cData.getCover(), cData.getFile(), cData.getContent()));
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            mText.postValue("JSONException code:" + data[0] + "\n" + data[1]);
+                            fileList.postValue(result);
                         }
                     }
                     isRequest = false;
