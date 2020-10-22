@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.tristana.sandroid.tools.array.ArrayUtils;
 import com.tristana.sandroid.tools.file.FileUtils;
 import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.sandroid.tools.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -175,7 +176,11 @@ public class MainActivity extends AppCompatActivity {
         menu_delFile.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                new FileUtils().deleteFile(MainActivity.this,"data_TEST");
+                if (new FileUtils().deleteFile(MainActivity.this,"data_TEST")) {
+                    ToastUtils.showToast(MainActivity.this, "删除成功！");
+                } else {
+                    ToastUtils.showToast(MainActivity.this, "删除失败！");
+                }
                 return true;
             }
         });
