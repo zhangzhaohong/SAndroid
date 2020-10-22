@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         MenuItem menu_write = menu.findItem(R.id.action_write);
         MenuItem menu_textToArray = menu.findItem(R.id.action_textToArray);
         MenuItem menu_arrayToText = menu.findItem(R.id.action_arrayToText);
+        MenuItem menu_delFile = menu.findItem(R.id.action_delFile);
         menu_read.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -168,6 +169,13 @@ public class MainActivity extends AppCompatActivity {
                 data.add("666");
                 String result = new ArrayUtils().arrayListToString(data);
                 timber.d("Data_arrayToText: " + result);
+                return true;
+            }
+        });
+        menu_delFile.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                new FileUtils().deleteFile(MainActivity.this,"data_TEST");
                 return true;
             }
         });
