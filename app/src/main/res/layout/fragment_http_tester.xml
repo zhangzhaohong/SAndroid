@@ -16,16 +16,16 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/inputUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/inputUrl"
-                android:text="@string/default_url"/>
+                android:text="@string/default_url" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/requestUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/requestUrl"
-                android:text="@string/menu_request"/>
+                android:text="@string/menu_request" />
 
             <TextView
                 android:id="@+id/text_http_tester"

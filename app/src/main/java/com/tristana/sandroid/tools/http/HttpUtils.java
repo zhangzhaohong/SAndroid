@@ -23,8 +23,48 @@ public class HttpUtils {
     private static Timber timber;
     private static long time_1;
     private static long time_2;
+
     public HttpUtils() {
         timber = new Timber("HttpUtils");
+    }
+
+    public static Bitmap getBitmap(String url) {
+        time_1 = System.currentTimeMillis();
+        Bitmap bitmap = null;
+        timber.i("Get Bitmap from " + url);
+        //1.第一步创建OkHttpClient对象
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequestsPerHost(128);
+        dispatcher.setMaxRequests(128);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newBuilder().dispatcher(dispatcher)
+                .connectionPool(new ConnectionPool(64, 10, TimeUnit.MINUTES))
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .dns(Dns.SYSTEM)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .build();
+        //2.第二步创建request
+        Request.Builder builder = new Request.Builder();
+        timber.i("CurrentUrl:" + url);
+        Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
+        final Request request = requestBuilder.build();
+        //3.新建一个Call对象
+        final Call call = okHttpClient.newCall(request);
+        //4.同步请求网络execute()
+        try {
+            Response response = call.execute();
+            if (response.isSuccessful()) {
+                bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+            } else {
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        time_2 = System.currentTimeMillis() - time_1;
+        timber.d("Request duration:" + time_2 + "ms");
+        return bitmap;
     }
 
     public String[] getDataFromUrlByOkHttp3(String requestInfo, Map<String, Object> params, Map<String, Object> header) {
@@ -105,45 +145,6 @@ public class HttpUtils {
         }
         sb = sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
-    }
-
-    public static Bitmap getBitmap(String url) {
-        time_1 = System.currentTimeMillis();
-        Bitmap bitmap = null;
-        timber.i("Get Bitmap from " + url);
-        //1.第一步创建OkHttpClient对象
-        Dispatcher dispatcher = new Dispatcher();
-        dispatcher.setMaxRequestsPerHost(128);
-        dispatcher.setMaxRequests(128);
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.newBuilder().dispatcher(dispatcher)
-                .connectionPool(new ConnectionPool(64, 10, TimeUnit.MINUTES))
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .dns(Dns.SYSTEM)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .build();
-        //2.第二步创建request
-        Request.Builder builder = new Request.Builder();
-        timber.i("CurrentUrl:" + url);
-        Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
-        final Request request = requestBuilder.build();
-        //3.新建一个Call对象
-        final Call call = okHttpClient.newCall(request);
-        //4.同步请求网络execute()
-        try {
-            Response response = call.execute();
-            if (response.isSuccessful()) {
-                bitmap = BitmapFactory.decodeStream(response.body().byteStream());
-            } else {
-                throw new IOException("Unexpected code " + response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        time_2 = System.currentTimeMillis() - time_1;
-        timber.d("Request duration:" + time_2 + "ms");
-        return bitmap;
     }
 
     public String[] postDataFromUrlByOkHttp3(String url, Map<String, Object> params, Map<String, Object> header) {

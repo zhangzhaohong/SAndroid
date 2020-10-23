@@ -36,39 +36,10 @@ public class TrafficManagerViewModel extends ViewModel {
      * 千万别把数值改小 要不然服务器容易炸
      * */
     private int timeRequest = 60;
-
-    public MutableLiveData<Boolean> getFinishStatus() {
-        return mFinish;
-    }
-
     private MutableLiveData<Boolean> mFinish;
-
-    public void setNeedStop(Boolean needStop) {
-        this.needStop = needStop;
-    }
-
-    public Boolean getNeedStop() {
-        return needStop;
-    }
-
     private Boolean needStop;
-
-    public MutableLiveData<ArrayList<TrafficManagerModel>> getLightData() {
-        return mLightData;
-    }
-
     private MutableLiveData<ArrayList<TrafficManagerModel>> mLightData;
-
-    public MutableLiveData<ArrayList<TrafficManagerModel>> getLightSortData() {
-        return mLightSortData;
-    }
-
     private MutableLiveData<ArrayList<TrafficManagerModel>> mLightSortData;
-
-    public MutableLiveData<String> getToast() {
-        return mToast;
-    }
-
     private MutableLiveData<String> mToast;
 
     public TrafficManagerViewModel() {
@@ -79,6 +50,30 @@ public class TrafficManagerViewModel extends ViewModel {
         mLightSortData = new MutableLiveData<>();
         mFinish = new MutableLiveData<>(false);
         mText.setValue("This is traffic manager fragment");
+    }
+
+    public MutableLiveData<Boolean> getFinishStatus() {
+        return mFinish;
+    }
+
+    public Boolean getNeedStop() {
+        return needStop;
+    }
+
+    public void setNeedStop(Boolean needStop) {
+        this.needStop = needStop;
+    }
+
+    public MutableLiveData<ArrayList<TrafficManagerModel>> getLightData() {
+        return mLightData;
+    }
+
+    public MutableLiveData<ArrayList<TrafficManagerModel>> getLightSortData() {
+        return mLightSortData;
+    }
+
+    public MutableLiveData<String> getToast() {
+        return mToast;
     }
 
     public LiveData<String> getText() {
@@ -104,7 +99,7 @@ public class TrafficManagerViewModel extends ViewModel {
                         if (code == 0) {
                             List<LightStatusRespModel.StatusBean> status = lightStatusRespModel.getStatus();
                             ArrayList<TrafficManagerModel> result = new ArrayList<>();
-                            for (int i = 0; i < status.size(); i ++) {
+                            for (int i = 0; i < status.size(); i++) {
                                 LightStatusRespModel.StatusBean cData = status.get(i);
                                 result.add(new TrafficManagerModel(cData.getRoadId(), cData.getRedLightDuration(), cData.getYellowLightDuration(), cData.getGreenLightDuration()));
                             }

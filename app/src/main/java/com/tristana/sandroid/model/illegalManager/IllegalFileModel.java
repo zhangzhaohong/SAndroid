@@ -2,6 +2,16 @@ package com.tristana.sandroid.model.illegalManager;
 
 public class IllegalFileModel {
 
+    private String content;
+    private String cover;
+    private String file;
+
+    public IllegalFileModel(String cover, String file, String content) {
+        this.cover = cover;
+        this.file = file;
+        this.content = content;
+    }
+
     public String getContent() {
         return content;
     }
@@ -9,10 +19,6 @@ public class IllegalFileModel {
     public void setContent(String content) {
         this.content = content;
     }
-
-    private String content;
-
-    private String cover;
 
     public String getCover() {
         return cover;
@@ -28,13 +34,5 @@ public class IllegalFileModel {
 
     public void setFile(String file) {
         this.file = file;
-    }
-
-    private String file;
-
-    public IllegalFileModel(String cover, String file, String content) {
-        this.cover = cover;
-        this.file = file;
-        this.content = content;
     }
 }

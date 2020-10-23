@@ -18,13 +18,7 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
     private MutableLiveData<String> mToast;
-
-    public MutableLiveData<Boolean> getLoginStatus() {
-        return mLoginStatus;
-    }
-
     private MutableLiveData<Boolean> mLoginStatus;
-
     private boolean isRequest = false;
 
     public LoginViewModel() {
@@ -32,6 +26,10 @@ public class LoginViewModel extends ViewModel {
         mToast = new MutableLiveData<>();
         mLoginStatus = new MutableLiveData<>(false);
         mText.setValue("This is login fragment");
+    }
+
+    public MutableLiveData<Boolean> getLoginStatus() {
+        return mLoginStatus;
     }
 
     public MutableLiveData<String> getToast() {

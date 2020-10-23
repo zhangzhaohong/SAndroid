@@ -29,12 +29,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class TrafficManagerFragment extends Fragment {
 
+    Timber timber = new Timber("TrafficManagerFragment");
     private TrafficManagerViewModel trafficManagerViewModel;
     private TrafficManagerDataAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private String sortType = TrafficSortType.SORT_BY_ROAD_UP;
-
-    Timber timber = new Timber("TrafficManagerFragment");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

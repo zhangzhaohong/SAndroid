@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         menu_delFile.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                if (new FileUtils().deleteFile(MainActivity.this,"data_TEST")) {
+                if (new FileUtils().deleteFile(MainActivity.this, "data_TEST")) {
                     ToastUtils.showToast(MainActivity.this, "删除成功！");
                 } else {
                     ToastUtils.showToast(MainActivity.this, "删除失败！");

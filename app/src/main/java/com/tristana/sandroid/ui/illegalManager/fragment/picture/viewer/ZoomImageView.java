@@ -31,14 +31,15 @@ public class ZoomImageView extends AppCompatImageView implements ViewTreeObserve
         , View.OnTouchListener, ScaleGestureDetector.OnScaleGestureListener {
 
     private static final String TAG = "ZoomImageView";
+    /**
+     * 是否是Debug模式
+     */
+    private static boolean IS_DEBUG = false;
     private boolean isInit;
-
-
     /**
      * 缩放工具
      */
     private Matrix mMatrix;
-
     /**
      * 缩放的最小值
      */
@@ -52,32 +53,27 @@ public class ZoomImageView extends AppCompatImageView implements ViewTreeObserve
      */
     private float mMaxScale;
 
+    //--自由移动
     /**
      * 多点手势触 控缩放比率分析器
      */
     private ScaleGestureDetector mScaleGestureDetector;
-
-    //--自由移动
-
     /**
      * 记录上一次多点触控的数量
      */
     private int mLastPointereCount;
-
     private float mLastX;
     private float mLastY;
     private int mTouchSlop;
     private boolean isCanDrag;
     private boolean isCheckLeftAndRight;
     private boolean isCheckTopAndBottom;
-
     //----双击放大与缩小
     private GestureDetector mGestureDetector;
     private boolean isScaleing;
     private List<MotionEvent> events;
     private OnClickListener onClickListener;
     private int arae_img_id = -1;
-
 
     public ZoomImageView(Context context) {
         this(context, null);
@@ -86,6 +82,7 @@ public class ZoomImageView extends AppCompatImageView implements ViewTreeObserve
     public ZoomImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
 
     public ZoomImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -125,52 +122,15 @@ public class ZoomImageView extends AppCompatImageView implements ViewTreeObserve
         events = new ArrayList<>();
     }
 
-
-    private class AutoScaleRunnable implements Runnable {
-        /**
-         * 要缩放的目标值
-         */
-        private float mTargetScale;
-        private float x; //缩放的中心点x
-        private float y; //缩放的中心点y
-        private float tmpScale;
-
-        private final float BIGGER = 1.07f;
-        private final float SMALL = 0.93f;
-
-        public AutoScaleRunnable(float mTargetScale, float x, float y) {
-            this.mTargetScale = mTargetScale;
-            this.x = x;
-            this.y = y;
-
-            if (getScale() < mTargetScale) {
-                tmpScale = BIGGER;
-            } else {
-                tmpScale = SMALL;
-            }
-        }
-
-        @Override
-        public void run() {
-            mMatrix.postScale(tmpScale, tmpScale, x, y);
-            checkBorderAndCenterWhenScale();
-            setImageMatrix(mMatrix);
-
-
-            float currentScale = getScale();
-            if ((tmpScale > 1.0f && currentScale < mTargetScale)
-                    || (tmpScale < 1.0f && currentScale > mTargetScale)) {
-                postDelayed(this, 16);
-            } else {
-                float scale = mTargetScale / currentScale;
-                mMatrix.postScale(scale, scale, x, y);
-                checkBorderAndCenterWhenScale();
-                setImageMatrix(mMatrix);
-                isScaleing = false;
-            }
-        }
+    /**
+     * 打印日志
+     *
+     * @param value 要打印的日志
+     */
+    public static void log(String value) {
+        if (IS_DEBUG)
+            Log.w(TAG, value);
     }
-
 
     @Override
     protected void onAttachedToWindow() {
@@ -190,7 +150,7 @@ public class ZoomImageView extends AppCompatImageView implements ViewTreeObserve
 
     @Override
     public void onGlobalLayout() {
-        if(arae_img_id != -1){
+        if (arae_img_id != -1) {
             arae_img_id = -1;
             return;
         }
@@ -267,22 +227,6 @@ public class ZoomImageView extends AppCompatImageView implements ViewTreeObserve
             setImageMatrix(mMatrix);
             isInit = true;
         }
-    }
-
-
-    /**
-     * 是否是Debug模式
-     */
-    private static boolean IS_DEBUG = false;
-
-    /**
-     * 打印日志
-     *
-     * @param value 要打印的日志
-     */
-    public static void log(String value) {
-        if (IS_DEBUG)
-            Log.w(TAG, value);
     }
 
     /**
@@ -573,6 +517,50 @@ public class ZoomImageView extends AppCompatImageView implements ViewTreeObserve
         this.arae_img_id = resID;
         setScaleType(ImageView.ScaleType.CENTER);
         setImageResource(resID);
+    }
+
+    private class AutoScaleRunnable implements Runnable {
+        private final float BIGGER = 1.07f;
+        private final float SMALL = 0.93f;
+        /**
+         * 要缩放的目标值
+         */
+        private float mTargetScale;
+        private float x; //缩放的中心点x
+        private float y; //缩放的中心点y
+        private float tmpScale;
+
+        public AutoScaleRunnable(float mTargetScale, float x, float y) {
+            this.mTargetScale = mTargetScale;
+            this.x = x;
+            this.y = y;
+
+            if (getScale() < mTargetScale) {
+                tmpScale = BIGGER;
+            } else {
+                tmpScale = SMALL;
+            }
+        }
+
+        @Override
+        public void run() {
+            mMatrix.postScale(tmpScale, tmpScale, x, y);
+            checkBorderAndCenterWhenScale();
+            setImageMatrix(mMatrix);
+
+
+            float currentScale = getScale();
+            if ((tmpScale > 1.0f && currentScale < mTargetScale)
+                    || (tmpScale < 1.0f && currentScale > mTargetScale)) {
+                postDelayed(this, 16);
+            } else {
+                float scale = mTargetScale / currentScale;
+                mMatrix.postScale(scale, scale, x, y);
+                checkBorderAndCenterWhenScale();
+                setImageMatrix(mMatrix);
+                isScaleing = false;
+            }
+        }
     }
 
 }

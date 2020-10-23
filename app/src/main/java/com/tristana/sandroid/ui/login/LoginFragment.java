@@ -20,9 +20,6 @@ import com.tristana.sandroid.tools.sharedPreferences.SpUtils;
 import com.tristana.sandroid.tools.text.TextUtils;
 import com.tristana.sandroid.tools.toast.ToastUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
