@@ -6,43 +6,43 @@
     android:paddingBottom="10dp">
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/roadId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/data_default_int"
-        android:textColor="#2C377A"
-        android:gravity="center"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:id="@+id/roadId"/>
+        android:gravity="center"
+        android:text="@string/data_default_int"
+        android:textColor="#2C377A" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/roadRedLightDuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/data_default_int"
-        android:textColor="#2C377A"
-        android:gravity="center"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:id="@+id/roadRedLightDuration"/>
+        android:gravity="center"
+        android:text="@string/data_default_int"
+        android:textColor="#2C377A" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/roadYellowLightDuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/data_default_int"
-        android:textColor="#2C377A"
-        android:gravity="center"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:id="@+id/roadYellowLightDuration"/>
+        android:gravity="center"
+        android:text="@string/data_default_int"
+        android:textColor="#2C377A" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/roadGreenLightDuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/data_default_int"
-        android:textColor="#2C377A"
-        android:gravity="center"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:id="@+id/roadGreenLightDuration"/>
+        android:gravity="center"
+        android:text="@string/data_default_int"
+        android:textColor="#2C377A" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

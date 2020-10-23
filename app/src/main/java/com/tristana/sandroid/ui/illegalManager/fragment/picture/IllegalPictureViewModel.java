@@ -22,19 +22,8 @@ public class IllegalPictureViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
     private MutableLiveData<String> mToast;
-
-    public MutableLiveData<ArrayList<IllegalFileModel>> getFileList() {
-        return fileList;
-    }
-
     private MutableLiveData<ArrayList<IllegalFileModel>> fileList;
-
-    public MutableLiveData<ArrayList<Bitmap>> getPicList() {
-        return picList;
-    }
-
     private MutableLiveData<ArrayList<Bitmap>> picList;
-
     private boolean isRequest = false;
 
     public IllegalPictureViewModel() {
@@ -43,6 +32,14 @@ public class IllegalPictureViewModel extends ViewModel {
         mToast = new MutableLiveData<>();
         mText = new MutableLiveData<>();
         mText.setValue("This is illegalPicture fragment");
+    }
+
+    public MutableLiveData<ArrayList<IllegalFileModel>> getFileList() {
+        return fileList;
+    }
+
+    public MutableLiveData<ArrayList<Bitmap>> getPicList() {
+        return picList;
     }
 
     public LiveData<String> getText() {

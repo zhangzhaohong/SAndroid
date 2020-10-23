@@ -13,8 +13,8 @@
             android:id="@+id/imageViewer"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scaleType="matrix"
-            android:background="#000000"/>
+            android:background="#000000"
+            android:scaleType="matrix" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -5,7 +5,7 @@
         android:id="@+id/network_setting"
         android:orderInCategory="90"
         android:title="@string/network_setting"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"

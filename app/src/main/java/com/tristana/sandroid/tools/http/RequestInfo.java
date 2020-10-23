@@ -1,7 +1,5 @@
 package com.tristana.sandroid.tools.http;
 
-import okhttp3.MediaType;
-
 public class RequestInfo {
     public static final String TYPE_GET = "GET";
     public static final String TYPE_POST = "POST";

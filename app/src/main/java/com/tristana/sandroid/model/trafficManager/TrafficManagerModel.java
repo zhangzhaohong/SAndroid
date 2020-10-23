@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class TrafficManagerModel implements Serializable {
 
+    private String id;
+    private String redDuration;
+    private String yellowDuration;
+    private String greenDuration;
+
     public TrafficManagerModel(
             String id,
             String redDuration,
@@ -15,14 +20,6 @@ public class TrafficManagerModel implements Serializable {
         this.yellowDuration = yellowDuration;
         this.greenDuration = greenDuration;
     }
-
-    private String id;
-
-    private String redDuration;
-
-    private String yellowDuration;
-
-    private String greenDuration;
 
     public String getId() {
         return id;

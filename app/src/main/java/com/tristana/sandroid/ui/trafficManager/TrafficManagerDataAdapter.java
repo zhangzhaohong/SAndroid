@@ -27,36 +27,19 @@ public class TrafficManagerDataAdapter extends RecyclerView.Adapter<TrafficManag
 
     private Context context;
 
-    /**
-     * 必须在加载了一次以后使用
-     * */
-    public void setData(ArrayList<TrafficManagerModel> data) {
-        this.trafficManagerModel = data;
-        notifyDataSetChanged();
-    }
-
-    public static class CustomViewHolder extends RecyclerView.ViewHolder {
-        private AppCompatTextView roadId;
-        private AppCompatTextView roadRedLightDuration;
-        private AppCompatTextView roadYellowLightDuration;
-        private AppCompatTextView roadGreenLightDuration;
-        private LinearLayoutCompat linearLayoutCompat;
-
-        public CustomViewHolder(@NonNull View itemView) {
-            super(itemView);
-            linearLayoutCompat = (LinearLayoutCompat) itemView;
-            roadId = itemView.findViewById(R.id.roadId);
-            roadRedLightDuration = itemView.findViewById(R.id.roadRedLightDuration);
-            roadYellowLightDuration = itemView.findViewById(R.id.roadYellowLightDuration);
-            roadGreenLightDuration = itemView.findViewById(R.id.roadGreenLightDuration);
-        }
-    }
-
     public TrafficManagerDataAdapter(ArrayList<TrafficManagerModel> trafficManagerModel, Context context) {
         this.trafficManagerModel = trafficManagerModel;
         this.timber = new Timber("TrafficManagerDataAdapter");
         this.context = context;
         timber.d("TrafficManagerDataAdapter init!");
+    }
+
+    /**
+     * 必须在加载了一次以后使用
+     */
+    public void setData(ArrayList<TrafficManagerModel> data) {
+        this.trafficManagerModel = data;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -92,5 +75,22 @@ public class TrafficManagerDataAdapter extends RecyclerView.Adapter<TrafficManag
     @Override
     public int getItemCount() {
         return trafficManagerModel.size();
+    }
+
+    public static class CustomViewHolder extends RecyclerView.ViewHolder {
+        private AppCompatTextView roadId;
+        private AppCompatTextView roadRedLightDuration;
+        private AppCompatTextView roadYellowLightDuration;
+        private AppCompatTextView roadGreenLightDuration;
+        private LinearLayoutCompat linearLayoutCompat;
+
+        public CustomViewHolder(@NonNull View itemView) {
+            super(itemView);
+            linearLayoutCompat = (LinearLayoutCompat) itemView;
+            roadId = itemView.findViewById(R.id.roadId);
+            roadRedLightDuration = itemView.findViewById(R.id.roadRedLightDuration);
+            roadYellowLightDuration = itemView.findViewById(R.id.roadYellowLightDuration);
+            roadGreenLightDuration = itemView.findViewById(R.id.roadGreenLightDuration);
+        }
     }
 }

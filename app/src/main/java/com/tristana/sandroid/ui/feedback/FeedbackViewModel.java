@@ -11,22 +11,21 @@ public class FeedbackViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
     private MutableLiveData<String> mToast;
-
-    public MutableLiveData<Boolean> getPhoneInvalid() {
-        return mPhoneInvalid;
-    }
-
     private MutableLiveData<Boolean> mPhoneInvalid;
-
-    public MutableLiveData<String> getToast() {
-        return mToast;
-    }
 
     public FeedbackViewModel() {
         mToast = new MutableLiveData<>();
         mText = new MutableLiveData<>();
         mPhoneInvalid = new MutableLiveData<>(true);
         mText.setValue("This is feedback fragment");
+    }
+
+    public MutableLiveData<Boolean> getPhoneInvalid() {
+        return mPhoneInvalid;
+    }
+
+    public MutableLiveData<String> getToast() {
+        return mToast;
     }
 
     public LiveData<String> getText() {

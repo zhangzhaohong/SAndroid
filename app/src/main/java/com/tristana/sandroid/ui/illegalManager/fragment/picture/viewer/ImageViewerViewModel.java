@@ -13,17 +13,16 @@ import androidx.lifecycle.ViewModel;
 public class ImageViewerViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
-
-    public MutableLiveData<ArrayList<Bitmap>> getPicList() {
-        return picList;
-    }
-
     private MutableLiveData<ArrayList<Bitmap>> picList;
 
     public ImageViewerViewModel() {
         picList = new MutableLiveData<>();
         mText = new MutableLiveData<>();
         mText.setValue("This is videoPlayer fragment");
+    }
+
+    public MutableLiveData<ArrayList<Bitmap>> getPicList() {
+        return picList;
     }
 
     public LiveData<String> getText() {

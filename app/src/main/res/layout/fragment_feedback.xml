@@ -12,26 +12,26 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:paddingBottom="30dp"
             android:layout_margin="20dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp">
 
             <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/feedbackTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/feedback_title"
                 android:layout_margin="10dp"
-                android:id="@+id/feedbackTitle"/>
+                android:hint="@string/feedback_title" />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minLines="10"
                 android:id="@+id/feedbackContent"
-                android:gravity="top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:hint="@string/feedback_content"/>
+                android:gravity="top"
+                android:hint="@string/feedback_content"
+                android:minLines="10" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -40,35 +40,35 @@
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/feedbackPhoneNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/feedback_phoneNum"
                     android:layout_weight="6"
-                    android:inputType="phone"
-                    android:id="@+id/feedbackPhoneNum"/>
+                    android:hint="@string/feedback_phoneNum"
+                    android:inputType="phone" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/feedbackPhoneInvalid"
                     android:layout_width="20dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/ic_warning"
                     android:layout_gravity="end|center_vertical"
                     android:layout_weight="1"
+                    android:background="@drawable/ic_warning"
                     android:padding="10dp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/feedbackSubmit"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="@string/feedback_submit"
-                android:padding="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/feedback_btn"
                 android:gravity="center"
-                android:id="@+id/feedbackSubmit"
-                android:textColor="#050B2E"
-                android:background="@drawable/feedback_btn"/>
+                android:padding="10dp"
+                android:text="@string/feedback_submit"
+                android:textColor="#050B2E" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
