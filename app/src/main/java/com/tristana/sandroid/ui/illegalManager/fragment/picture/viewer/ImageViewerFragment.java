@@ -33,8 +33,7 @@ public class ImageViewerFragment extends Fragment {
         if (bundle != null) {
             url = bundle.getString("ImageUrl");
         }
-        final ZoomImageView imageViewer = root.findViewById(R.id.imageViewer);
-        imageViewer.placeholder(R.drawable.ic_pic_default);
+        final CustomZoomImageView imageViewer = root.findViewById(R.id.imageViewer);
         imageViewerViewModel.getPicList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Bitmap>>() {
             @Override
             public void onChanged(ArrayList<Bitmap> bitmaps) {
