@@ -295,14 +295,12 @@ public class CustomZoomImageView extends AppCompatImageView implements ViewTreeO
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        timber.d("注册OnGlobalLayoutListener");
         getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        timber.d("移除OnGlobalLayoutListener");
         getViewTreeObserver().removeOnGlobalLayoutListener(this);
     }
 
