@@ -33,16 +33,10 @@ public class ImageViewerFragment extends Fragment {
         if (bundle != null) {
             url = bundle.getString("ImageUrl");
         }
-        final CustomZoomImageView imageViewer = root.findViewById(R.id.imageViewer);
-        imageViewerViewModel.getPicList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Bitmap>>() {
-            @Override
-            public void onChanged(ArrayList<Bitmap> bitmaps) {
-                imageViewer.setImageBitmap(bitmaps.get(0));
-            }
-        });
-        if (TextUtils.checkEmpty(url)) {
-            imageViewerViewModel.startGetPic(url);
-        }
+        final CustomImageView imageViewer = root.findViewById(R.id.imageViewer);
+        imageViewer.setPlaceHolder(R.drawable.ic_pic_default);
+        imageViewer.setLoadingFailedPlaceHolder(R.drawable.ic_pic_failed);
+        imageViewer.loadImageFromUrl(url);
         return root;
     }
 
