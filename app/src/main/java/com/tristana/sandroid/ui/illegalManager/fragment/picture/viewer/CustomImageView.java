@@ -51,21 +51,43 @@ public class CustomImageView extends View {
     private boolean loadingFromNetWork = false;
     private boolean loadingFinish = false;
     private int loadingFailedPlaceHolderResId = 0;
+    private Boolean longPicStatus = false;
+    private Boolean isVertical = false;
 
     private void initViewSize() {
         viewWidth = getWidth();
         viewHeight = getHeight();
         if (viewWidth > 0 && viewHeight > 0) {
             isInit = true;
+            longPicStatus = checkLongPic();
+            isVertical = checkOrientation();
+            timber.i("[picInfo]" + "\n" +
+                    "onShowInfo:" + "\n" +
+                    "longPicStatus[" + longPicStatus + "]" + "\n" +
+                    "isVertical[" + isVertical + "]");
             scaleX = 1.0F * viewWidth / bmpWidth;
             scaleY = 1.0F * viewHeight / bmpHeight;
             if (loadingFromNetWork && !loadingFinish) {
                 scale = 1.0F;
+            } else if (longPicStatus) {
+                scale = Math.max(scaleX, scaleY);
             } else {
                 scale = Math.min(scaleX, scaleY);
             }
             dX = (float) (viewWidth - bmpWidth) / 2;
-            dY = (float) (viewHeight - bmpHeight) / 2;
+            if (longPicStatus)
+                dY = -(float) (viewHeight - bmpHeight) / 2;
+            else
+                dY = (float) (viewHeight - bmpHeight) / 2;
+            timber.i("[picDetail]" + "\n" +
+                    "onShowInfo:" + "\n" +
+                    "viewWidth[" + viewWidth + "]" + "\n" +
+                    "viewHeight[" + viewHeight + "]" + "\n" +
+                    "bmpWidth[" + bmpWidth + "]" + "\n" +
+                    "bmpHeight[" + bmpHeight + "]" + "\n" +
+                    "scaleX[" + scaleX + "]" + "\n" +
+                    "scaleY[" + scaleY + "]" + "\n" +
+                    "scale[" + scale + "]");
         }
     }
 
@@ -86,7 +108,39 @@ public class CustomImageView extends View {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             if (!loadingFromNetWork || loadingFromNetWork && loadingFinish) {
                 dX -= distanceX;
-                dY -= distanceY;
+                //如果当前图片高度大于view高度，则支持上下滑动
+                if (checkY()) {
+                    dY -= distanceY;
+                }
+                invalidate();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * 检查图片当前高度是不是大于view的高度
+         */
+        private boolean checkY() {
+            boolean status = false;
+            if (1.0F * scale * bmpHeight > viewHeight) {
+                status = true;
+            }
+            return status;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            timber.d("onDoubleTap");
+            if (!loadingFromNetWork || loadingFromNetWork && loadingFinish) {
+                if (scale < scaleMax) {
+                    scale = scaleMax;
+                } else if (longPicStatus) {
+                    scale = Math.max(scaleX, scaleY);
+                } else {
+                    scale = Math.min(scaleX, scaleY);
+                }
                 invalidate();
                 return true;
             } else {
@@ -176,12 +230,37 @@ public class CustomImageView extends View {
         setBitmapResource(getBitmap(resId));
     }
 
+    /**
+     * 设置bitmap图片资源，所有设置最终都会走到这里
+     */
     public void setBitmapResource(Bitmap bitmap) {
         this.bitmap = bitmap;
         this.bmpWidth = bitmap.getWidth();
         this.bmpHeight = bitmap.getHeight();
         initViewSize();
         invalidate();
+    }
+
+    /**
+     * 校验图片方向
+     */
+    private Boolean checkOrientation() {
+        boolean status = false;
+        if (bmpHeight > bmpWidth) {
+            status = true;
+        }
+        return status;
+    }
+
+    /**
+     * 检测是不是属于长图，即高度大于宽度*2
+     */
+    private Boolean checkLongPic() {
+        boolean status = false;
+        if (bmpHeight > 2 * bmpWidth) {
+            status = true;
+        }
+        return status;
     }
 
     public void setPlaceHolder(int resId) {
@@ -192,6 +271,9 @@ public class CustomImageView extends View {
         this.loadingFailedPlaceHolderResId = resId;
     }
 
+    /**
+     * 从URL读取图片
+     */
     public void loadImageFromUrl(final String url) {
         loadingFromNetWork = true;
         if (url == null)

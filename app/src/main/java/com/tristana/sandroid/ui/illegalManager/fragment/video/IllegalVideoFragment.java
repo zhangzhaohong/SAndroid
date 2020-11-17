@@ -28,13 +28,17 @@ public class IllegalVideoFragment extends Fragment {
     private IllegalVideoViewModel illegalVideoViewModel;
     private IllegalDataAdapter mAdapter;
     private GridLayoutManager gridLayoutManager;
+    private Boolean hasLoad = false;
 
     private Timber timber = new Timber("IllegalVideoFragment");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        illegalVideoViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(IllegalVideoViewModel.class);
+        if (illegalVideoViewModel == null)
+            illegalVideoViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(IllegalVideoViewModel.class);
+        else
+            hasLoad = true;
         View root = inflater.inflate(R.layout.fragment_illegal_video, container, false);
         RecyclerView illegalVidData = root.findViewById(R.id.illegalVidData);
         gridLayoutManager = new GridLayoutManager(requireActivity(), 2);
@@ -43,12 +47,6 @@ public class IllegalVideoFragment extends Fragment {
         ArrayList<Bitmap> picList = new ArrayList<>();
         mAdapter = new IllegalDataAdapter(defaultData, picList, requireActivity(), PageType.TYPE_VID);
         illegalVidData.setAdapter(mAdapter);
-        illegalVideoViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-            }
-        });
         illegalVideoViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -59,8 +57,8 @@ public class IllegalVideoFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<IllegalFileModel> illegalFileModels) {
                 timber.d("Data changed!" + illegalFileModels.size());
-                illegalVideoViewModel.startGetPic();
-//                mAdapter.setData(illegalFileModels, illegalPictureViewModel.getPicList().getValue(), requireActivity());
+                if (!hasLoad)
+                    illegalVideoViewModel.startGetPic();
             }
         });
         illegalVideoViewModel.getPicList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Bitmap>>() {
@@ -69,7 +67,8 @@ public class IllegalVideoFragment extends Fragment {
                 mAdapter.setData(illegalVideoViewModel.getFileList().getValue(), bitmaps, requireActivity(), PageType.TYPE_VID);
             }
         });
-        illegalVideoViewModel.startRequest();
+        if (!hasLoad)
+            illegalVideoViewModel.startRequest();
         return root;
     }
 }

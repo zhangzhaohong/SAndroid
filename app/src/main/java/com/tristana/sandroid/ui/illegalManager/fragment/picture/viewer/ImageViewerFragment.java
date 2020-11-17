@@ -1,6 +1,5 @@
 package com.tristana.sandroid.ui.illegalManager.fragment.picture.viewer;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +7,9 @@ import android.view.ViewGroup;
 
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.tools.log.Timber;
-import com.tristana.sandroid.tools.text.TextUtils;
-
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 public class ImageViewerFragment extends Fragment {
@@ -34,7 +29,7 @@ public class ImageViewerFragment extends Fragment {
             url = bundle.getString("ImageUrl");
         }
         final CustomImageView imageViewer = root.findViewById(R.id.imageViewer);
-        imageViewer.setPlaceHolder(R.drawable.ic_pic_default);
+        imageViewer.setPlaceHolder(R.drawable.ic_pic_loading);
         imageViewer.setLoadingFailedPlaceHolder(R.drawable.ic_pic_failed);
         imageViewer.loadImageFromUrl(url);
         return root;
