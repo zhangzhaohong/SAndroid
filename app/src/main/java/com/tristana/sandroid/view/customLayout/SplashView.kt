@@ -1,4 +1,4 @@
-package com.tristana.sandroid.view.linearLayout
+package com.tristana.sandroid.view.customLayout
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs) {
+    private var splashClickable: Boolean = false
     private var enterTextSplashOnClick: String = ""
     private var splashUrl: String = ""
     private var loadFromNetWorkStatus: Boolean = false
@@ -115,8 +116,9 @@ class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(co
         this.iconResId = resId
     }
 
-    private fun setSplashResIdWithUnit(resId: Int = 0, operation: () -> Unit = {}) {
+    private fun setSplashResIdWithUnit(resId: Int = 0, splashClickable: Boolean = false, operation: () -> Unit = {}) {
         this.splashResId = resId
+        this.splashClickable = splashClickable
         this.operation = operation
     }
 
@@ -186,10 +188,12 @@ class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(co
         if (bitmap == null)
             return
         this.splashPic.background = BitmapDrawable(context.resources, bitmap)
-        this.splashPic.setOnClickListener {
-            mTimer.cancel()
-            this.operation.invoke()
-            this.splashEnter.text = "进入体验"
+        if (splashClickable) {
+            this.splashPic.setOnClickListener {
+                mTimer.cancel()
+                this.operation.invoke()
+                this.splashEnter.text = "进入体验"
+            }
         }
     }
 
@@ -208,6 +212,7 @@ class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(co
             appNameTextSize: Long = 20,//splash底部app名称字体大小
             appVer: String = "",//splash底部所显示版本号
             splashResId: Int = 0,//splash广告位本地图片
+            splashClickable: Boolean = false,//splash是否允许点击跳转
             operation: () -> Unit = {},//点击广告位相关操作
             splashUrl: String = "",//splash广告位图片Url地址
             loadFromNetWorkStatus: Boolean = false//splash从网络加载内容
@@ -229,6 +234,7 @@ class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(co
         setSplashAppVer(appVer)
         setSplashResIdWithUnit(
                 splashResId,
+                splashClickable,
                 operation
         )
         loadFromNetwork(

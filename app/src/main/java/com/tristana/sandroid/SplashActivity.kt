@@ -5,9 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.tristana.sandroid.view.linearLayout.SplashView
+import com.tristana.sandroid.view.customLayout.SplashView
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -65,6 +64,7 @@ class SplashActivity : AppCompatActivity() {
                 20,
                 "v1.0",
                 R.drawable.splash,
+                false,
                 object : () -> Unit() {
                     override fun invoke() {
                         //on click splash, do nothing
