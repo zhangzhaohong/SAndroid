@@ -16,7 +16,6 @@ import com.tristana.sandroid.ui.illegalManager.fragment.IllegalDataAdapter;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,13 +27,17 @@ public class IllegalPictureFragment extends Fragment {
     private IllegalPictureViewModel illegalPictureViewModel;
     private IllegalDataAdapter mAdapter;
     private GridLayoutManager gridLayoutManager;
+    private Boolean hasLoad = false;
 
     private Timber timber = new Timber("IllegalPictureFragment");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        illegalPictureViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(IllegalPictureViewModel.class);
+        if (illegalPictureViewModel == null)
+            illegalPictureViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(IllegalPictureViewModel.class);
+        else
+            hasLoad = true;
         View root = inflater.inflate(R.layout.fragment_illegal_picture, container, false);
         RecyclerView illegalPicData = root.findViewById(R.id.illegalPicData);
         gridLayoutManager = new GridLayoutManager(requireActivity(), 2);
@@ -43,12 +46,6 @@ public class IllegalPictureFragment extends Fragment {
         ArrayList<Bitmap> picList = new ArrayList<>();
         mAdapter = new IllegalDataAdapter(defaultData, picList, requireActivity(), PageType.TYPE_PIC);
         illegalPicData.setAdapter(mAdapter);
-        illegalPictureViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-            }
-        });
         illegalPictureViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -59,8 +56,8 @@ public class IllegalPictureFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<IllegalFileModel> illegalFileModels) {
                 timber.d("Data changed!" + illegalFileModels.size());
-                illegalPictureViewModel.startGetPic();
-//                mAdapter.setData(illegalFileModels, illegalPictureViewModel.getPicList().getValue(), requireActivity());
+                if (!hasLoad)
+                    illegalPictureViewModel.startGetPic();
             }
         });
         illegalPictureViewModel.getPicList().observe(getViewLifecycleOwner(), new Observer<ArrayList<Bitmap>>() {
@@ -69,7 +66,8 @@ public class IllegalPictureFragment extends Fragment {
                 mAdapter.setData(illegalPictureViewModel.getFileList().getValue(), bitmaps, requireActivity(), PageType.TYPE_PIC);
             }
         });
-        illegalPictureViewModel.startRequest();
+        if (!hasLoad)
+            illegalPictureViewModel.startRequest();
         return root;
     }
 }

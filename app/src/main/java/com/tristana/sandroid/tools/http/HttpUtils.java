@@ -28,7 +28,7 @@ public class HttpUtils {
         timber = new Timber("HttpUtils");
     }
 
-    public static Bitmap getBitmap(String url) {
+    public Bitmap getBitmap(String url) {
         time_1 = System.currentTimeMillis();
         Bitmap bitmap = null;
         timber.i("Get Bitmap from " + url);

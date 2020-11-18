@@ -50,4 +50,7 @@
     <string name="action_textToArray">文字转数组</string>
     <string name="action_arrayToText">数组转文字</string>
     <string name="action_delFile">删除DATA文件</string>
+    <string name="title_activity_splash">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
