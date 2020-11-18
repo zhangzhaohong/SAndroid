@@ -94,7 +94,7 @@ public class IllegalPictureViewModel extends ViewModel {
             public void run() {
                 assert data != null;
                 for (int i = 0; i < data.size(); i++) {
-                    result.add(HttpUtils.getBitmap(data.get(i).getCover()));
+                    result.add(new HttpUtils().getBitmap(data.get(i).getCover()));
                 }
                 picList.postValue(result);
             }

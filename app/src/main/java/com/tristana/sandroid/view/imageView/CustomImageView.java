@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.illegalManager.fragment.picture.viewer;
+package com.tristana.sandroid.view.imageView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -106,7 +106,7 @@ public class CustomImageView extends View {
     private class GestureDetectorImpl extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (!loadingFromNetWork || loadingFromNetWork && loadingFinish) {
+            if (checkStatus()) {
                 dX -= distanceX;
                 //如果当前图片高度大于view高度，则支持上下滑动
                 if (checkY()) {
@@ -133,7 +133,7 @@ public class CustomImageView extends View {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             timber.d("onDoubleTap");
-            if (!loadingFromNetWork || loadingFromNetWork && loadingFinish) {
+            if (checkStatus()) {
                 if (scale < scaleMax) {
                     scale = scaleMax;
                 } else if (longPicStatus) {
@@ -152,7 +152,7 @@ public class CustomImageView extends View {
     private class ScaleGestureDetectorImpl extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            if (!loadingFromNetWork || loadingFromNetWork && loadingFinish) {
+            if (checkStatus()) {
                 scale *= detector.getScaleFactor();
                 scale = Math.max(scaleMin, Math.min(scaleMax, scale));
                 invalidate();
@@ -161,6 +161,14 @@ public class CustomImageView extends View {
                 return false;
             }
         }
+    }
+
+    private Boolean checkStatus() {
+        boolean status = false;
+        if (!loadingFromNetWork || loadingFinish) {
+            status = true;
+        }
+        return status;
     }
 
     private void checkBounds() {
@@ -213,6 +221,8 @@ public class CustomImageView extends View {
         Bitmap bitmap;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             Drawable drawable = ContextCompat.getDrawable(context, resId);
+            if (drawable == null)
+                return null;
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -227,7 +237,9 @@ public class CustomImageView extends View {
      * 设置图片资源
      */
     public void setPlaceHolderResource(int resId) {
-        setBitmapResource(getBitmap(resId));
+        Bitmap bitmap = getBitmap(resId);
+        if (bitmap != null)
+            setBitmapResource(bitmap);
     }
 
     /**
@@ -284,7 +296,7 @@ public class CustomImageView extends View {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Bitmap bitmap = HttpUtils.getBitmap(url);
+                Bitmap bitmap = new HttpUtils().getBitmap(url);
                 if (bitmap != null) {
                     loadingFinish = true;
                     setBitmapResource(bitmap);

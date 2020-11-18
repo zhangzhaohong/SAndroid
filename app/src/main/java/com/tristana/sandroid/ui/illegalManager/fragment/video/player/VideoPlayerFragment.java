@@ -10,6 +10,7 @@ import android.widget.MediaController;
 
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.sandroid.view.videoView.CustomVideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

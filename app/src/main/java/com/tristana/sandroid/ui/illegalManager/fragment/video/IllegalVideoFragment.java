@@ -16,7 +16,6 @@ import com.tristana.sandroid.ui.illegalManager.fragment.IllegalDataAdapter;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
