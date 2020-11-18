@@ -1,2 +1,3 @@
+include ':customViewLibrary'
 include ':app'
 rootProject.name = "SAndroid"

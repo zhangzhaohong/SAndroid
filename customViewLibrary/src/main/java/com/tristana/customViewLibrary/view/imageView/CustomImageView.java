@@ -1,4 +1,4 @@
-package com.tristana.sandroid.view.imageView;
+package com.tristana.customViewLibrary.view.imageView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,8 +13,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import com.tristana.sandroid.tools.http.HttpUtils;
-import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.customViewLibrary.tools.http.HttpUtils;
+import com.tristana.customViewLibrary.tools.log.Timber;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;

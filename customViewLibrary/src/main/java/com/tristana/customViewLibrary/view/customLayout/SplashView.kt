@@ -1,4 +1,4 @@
-package com.tristana.sandroid.view.customLayout
+package com.tristana.customViewLibrary.view.customLayout
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,8 +15,8 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
-import com.tristana.sandroid.R
-import com.tristana.sandroid.tools.http.HttpUtils
+import com.tristana.customViewLibrary.R
+import com.tristana.customViewLibrary.tools.http.HttpUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.tristana.sandroid.view.customLayout.SplashView
+import com.tristana.customViewLibrary.view.customLayout.SplashView
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

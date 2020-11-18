@@ -1,4 +1,4 @@
-package com.tristana.sandroid.view.videoView
+package com.tristana.customViewLibrary.view.videoView
 
 import android.content.Context
 import android.util.AttributeSet

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.tools.log.Timber;
-import com.tristana.sandroid.view.imageView.CustomImageView;
+import com.tristana.customViewLibrary.view.imageView.CustomImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
