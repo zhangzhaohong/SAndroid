@@ -3,12 +3,14 @@ package com.tristana.sandroid.ui.login;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.google.gson.Gson;
+import com.tristana.customViewLibrary.view.customLayout.CustomEditTextView;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
 import com.tristana.sandroid.model.data.DataModel;
@@ -26,7 +28,6 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -40,9 +41,9 @@ public class LoginFragment extends Fragment {
 
     private boolean isRequest = false;
 
-    private Timber timber = new Timber("LoginFragment");
+    private final Timber timber = new Timber("LoginFragment");
 
-    private Handler handler = new Handler(new Handler.Callback() {
+    private final Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             switch (message.what) {
@@ -64,12 +65,36 @@ public class LoginFragment extends Fragment {
         loginViewModel =
                 ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(LoginViewModel.class);
         View root = inflater.inflate(R.layout.fragment_login, container, false);
-        final AppCompatEditText username = root.findViewById(R.id.username);
-        final AppCompatEditText password = root.findViewById(R.id.password);
+        final CustomEditTextView username = root.findViewById(R.id.username);
+        final CustomEditTextView password = root.findViewById(R.id.password);
         final AppCompatTextView login = root.findViewById(R.id.login);
         final AppCompatCheckBox rememberPassword = root.findViewById(R.id.rememberPassWd);
         final AppCompatCheckBox autoLogin = root.findViewById(R.id.autoLogin);
         final AppCompatTextView register = root.findViewById(R.id.register);
+        username.initParameter(
+                R.drawable.ic_user_icon,
+                InputType.TYPE_CLASS_TEXT,
+                0,
+                1,
+                "请输入账号",
+                0,
+                0,
+                false,
+                R.drawable.ic_clear,
+                true
+        );
+        password.initParameter(
+                R.drawable.ic_password_icon,
+                InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT,
+                0,
+                1,
+                "请输入密码",
+                R.drawable.ic_show_password,
+                R.drawable.ic_hide_password,
+                true,
+                R.drawable.ic_clear,
+                true
+        );
         Boolean rememberStatus = (Boolean) SpUtils.get(requireActivity(), DataModel.REMEMBER_PASSWORD, false);
         Boolean autoLoginStatus = (Boolean) SpUtils.get(requireActivity(), DataModel.AUTO_LOGIN, false);
         if (rememberStatus != null && autoLoginStatus != null) {
@@ -80,7 +105,7 @@ public class LoginFragment extends Fragment {
             }
             if (autoLoginStatus) {
                 autoLogin.setChecked(true);
-                loginViewModel.doLogin(Objects.requireNonNull(username.getText()).toString(), Objects.requireNonNull(password.getText()).toString());
+                loginViewModel.doLogin(Objects.requireNonNull(username.getText()), Objects.requireNonNull(password.getText()));
             }
         }
         loginViewModel.getToast().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -92,15 +117,15 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginViewModel.doLogin(Objects.requireNonNull(username.getText()).toString(), Objects.requireNonNull(password.getText()).toString());
+                loginViewModel.doLogin(Objects.requireNonNull(username.getText()), Objects.requireNonNull(password.getText()));
             }
         });
         loginViewModel.getLoginStatus().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean && rememberPassword.isChecked()) {
-                    SpUtils.put(requireActivity(), DataModel.LAST_USERNAME, Objects.requireNonNull(username.getText()).toString());
-                    SpUtils.put(requireActivity(), DataModel.LAST_PASSWORD, Objects.requireNonNull(password.getText()).toString());
+                    SpUtils.put(requireActivity(), DataModel.LAST_USERNAME, Objects.requireNonNull(username.getText()));
+                    SpUtils.put(requireActivity(), DataModel.LAST_PASSWORD, Objects.requireNonNull(password.getText()));
                 }
             }
         });
@@ -124,7 +149,7 @@ public class LoginFragment extends Fragment {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                testHandler(Objects.requireNonNull(username.getText()).toString(), Objects.requireNonNull(password.getText()).toString());
+                testHandler(Objects.requireNonNull(username.getText()), Objects.requireNonNull(password.getText()));
             }
 
             private void testHandler(final String username, final String password) {

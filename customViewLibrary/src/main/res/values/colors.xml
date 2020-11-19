@@ -13,4 +13,5 @@
     <color name="transparent">#00000000</color>
     <!--白色 -->
     <color name="white">#FFFFFF</color>
+    <color name="edit_text_solid">#6F7AC1</color>
 </resources>
