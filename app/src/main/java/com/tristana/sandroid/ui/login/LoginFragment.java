@@ -32,28 +32,32 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
-
     private boolean isRequest = false;
-
     private final Timber timber = new Timber("LoginFragment");
+    private CustomEditTextView username;
+    private CustomEditTextView password;
+    private AppCompatCheckBox rememberPassword;
+    private AppCompatCheckBox autoLogin;
 
     private final Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             switch (message.what) {
-                case HandlerType.TYPE_TOAST:
+                case HandlerType.TYPE_TOAST_SUCCESS:
+                    password.dismissError();
                     ToastUtils.showToast(requireActivity(), message.obj.toString());
+                    break;
+                case HandlerType.TYPE_TOAST:
+                    password.showError(R.drawable.ic_warning, message.obj.toString(), true);
                     break;
                 case HandlerType.TYPE_LOGIN_STATUS:
                     timber.d("LOGIN STATUS!" + message.obj);
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-                    navController.navigate(R.id.nav_home);
+//                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+//                    navController.navigate(R.id.nav_home);
                     break;
             }
             return false;
@@ -65,12 +69,12 @@ public class LoginFragment extends Fragment {
         loginViewModel =
                 ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(LoginViewModel.class);
         View root = inflater.inflate(R.layout.fragment_login, container, false);
-        final CustomEditTextView username = root.findViewById(R.id.username);
-        final CustomEditTextView password = root.findViewById(R.id.password);
-        final AppCompatTextView login = root.findViewById(R.id.login);
-        final AppCompatCheckBox rememberPassword = root.findViewById(R.id.rememberPassWd);
-        final AppCompatCheckBox autoLogin = root.findViewById(R.id.autoLogin);
-        final AppCompatTextView register = root.findViewById(R.id.register);
+        username = root.findViewById(R.id.username);
+        password = root.findViewById(R.id.password);
+        AppCompatTextView login = root.findViewById(R.id.login);
+        rememberPassword = root.findViewById(R.id.rememberPassWd);
+        autoLogin = root.findViewById(R.id.autoLogin);
+        AppCompatTextView register = root.findViewById(R.id.register);
         username.initParameter(
                 R.drawable.ic_user_icon,
                 InputType.TYPE_CLASS_TEXT,
@@ -175,7 +179,7 @@ public class LoginFragment extends Fragment {
                                     int code = Integer.parseInt(loginRespModel.getCode());
                                     String msg = loginRespModel.getMsg();
                                     if (code == 0) {
-                                        sendMessage(HandlerType.TYPE_TOAST, msg);
+                                        sendMessage(HandlerType.TYPE_TOAST_SUCCESS, msg);
                                         sendMessage(HandlerType.TYPE_LOGIN_STATUS, true);
                                     } else {
                                         sendMessage(HandlerType.TYPE_TOAST, "登录失败 code:" + code + "\n" + msg);

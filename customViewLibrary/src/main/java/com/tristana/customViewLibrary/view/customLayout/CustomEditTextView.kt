@@ -18,9 +18,11 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import com.tristana.customViewLibrary.R
 import com.tristana.customViewLibrary.tools.log.Timber
+import com.tristana.customViewLibrary.tools.toast.ToastUtils
 
 class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs), TextWatcher {
 
+    private lateinit var inputWarning: AppCompatImageView
     private var hint: String = ""
     private var initStatus: Boolean = false
     private var enableShowPassword: Boolean = false
@@ -49,6 +51,7 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         inputEditText = this.findViewById(R.id.input_editText)
         inputShowPassword = this.findViewById(R.id.input_show_password)
         inputClearIcon = this.findViewById(R.id.input_clear_icon)
+        inputWarning = this.findViewById(R.id.input_warning)
     }
 
     private fun getBitmap(resId: Int): Bitmap? {
@@ -88,6 +91,7 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
     }
 
     private fun initView() {
+        this.inputWarning.visibility = View.GONE
         if (iconResId != 0) {
             this.inputIcon.visibility = View.VISIBLE
             this.inputIcon.background = BitmapDrawable(context.resources, getBitmap(iconResId))
@@ -150,6 +154,25 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
 
     fun getText(): String {
         return inputEditText.text.toString()
+    }
+
+    fun showError(resId: Int, msg: String, enableShowMsg: Boolean = false) {
+        if (!initStatus)
+            throw NullPointerException("Need to init view first!")
+        else {
+            this.inputWarning.visibility = View.VISIBLE
+            val bitmap = getBitmap(resId) ?: return
+            this.inputWarning.background = BitmapDrawable(context.resources, bitmap)
+            if (enableShowMsg) {
+                this.inputWarning.setOnClickListener {
+                    ToastUtils.showLongToast(context, msg)
+                }
+            }
+        }
+    }
+
+    fun dismissError() {
+        this.inputWarning.visibility = View.GONE
     }
 
     fun initParameter(
