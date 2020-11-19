@@ -1,6 +1,8 @@
 package com.tristana.sandroid.ui.illegalManager.fragment.picture;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.os.Build;
 
 import com.google.gson.Gson;
 import com.tristana.sandroid.model.illegalManager.IllegalFileModel;
@@ -94,10 +96,39 @@ public class IllegalPictureViewModel extends ViewModel {
             public void run() {
                 assert data != null;
                 for (int i = 0; i < data.size(); i++) {
-                    result.add(new HttpUtils().getBitmap(data.get(i).getCover()));
+                    result.add(compressBitmap(new HttpUtils().getBitmap(data.get(i).getCover())));
                 }
                 picList.postValue(result);
             }
         }).start();
     }
+
+    /**
+     * 得到bitmap的大小
+     */
+    public static int getBitmapSize(Bitmap bitmap) {
+        long result;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {    //API 19
+            result = bitmap.getAllocationByteCount();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {//API 12
+            result = bitmap.getByteCount();
+        } else {
+            // 在低版本中用一行的字节x高度
+            result = bitmap.getRowBytes() * bitmap.getHeight();                //earlier version
+        }
+        return (int) result / 1024 / 1024;
+    }
+
+    private Bitmap compressBitmap(Bitmap bitmap) {
+        float option = 1.0F;
+        Bitmap newBitmap = bitmap;
+        while (getBitmapSize(newBitmap) > 100 && (int) option * 10 > 0) {
+            option = (option * 10 - 1) / 10;
+            Matrix matrix = new Matrix();
+            matrix.postScale(option, option);
+            newBitmap = Bitmap.createBitmap(newBitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        }
+        return newBitmap;
+    }
+
 }

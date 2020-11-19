@@ -18,6 +18,7 @@ public class ImageViewerFragment extends Fragment {
     private ImageViewerViewModel imageViewerViewModel;
 
     private Timber timber = new Timber("ImageViewerFragment");
+    private CustomImageView imageViewer;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -29,11 +30,25 @@ public class ImageViewerFragment extends Fragment {
         if (bundle != null) {
             url = bundle.getString("ImageUrl");
         }
-        final CustomImageView imageViewer = root.findViewById(R.id.imageViewer);
+        imageViewer = root.findViewById(R.id.imageViewer);
         imageViewer.setPlaceHolder(R.drawable.ic_pic_loading);
         imageViewer.setLoadingFailedPlaceHolder(R.drawable.ic_pic_failed);
         imageViewer.loadImageFromUrl(url);
         return root;
     }
 
+    /**
+     * Called when the view previously created by {@link #onCreateView} has
+     * been detached from the fragment.  The next time the fragment needs
+     * to be displayed, a new view will be created.  This is called
+     * after {@link #onStop()} and before {@link #onDestroy()}.  It is called
+     * <em>regardless</em> of whether {@link #onCreateView} returned a
+     * non-null view.  Internally it is called after the view's state has
+     * been saved but before it has been removed from its parent.
+     */
+    @Override
+    public void onDestroyView() {
+        imageViewer.releaseBitmap();
+        super.onDestroyView();
+    }
 }

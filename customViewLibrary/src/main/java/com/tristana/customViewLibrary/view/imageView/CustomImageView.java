@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -44,8 +45,8 @@ public class CustomImageView extends View {
      * scaleMax为缩放最大值
      */
     private float scale = 1.0F;
-    final float scaleMin = 1.0F;
-    final float scaleMax = 3.0F;
+    private float scaleMin = 1.0F;
+    private float scaleMax = 3.0F;
     private final Paint mPainter = new Paint();
     private int placeHolderResId = 0;
     private boolean loadingFromNetWork = false;
@@ -67,6 +68,10 @@ public class CustomImageView extends View {
                     "isVertical[" + isVertical + "]");
             scaleX = 1.0F * viewWidth / bmpWidth;
             scaleY = 1.0F * viewHeight / bmpHeight;
+            if (viewWidth < bmpWidth && viewHeight < bmpHeight) {
+                scaleMin = 0.1F;
+                scaleMax = 1.0F;
+            }
             if (loadingFromNetWork && !loadingFinish) {
                 scale = 1.0F;
             } else if (longPicStatus) {
@@ -107,7 +112,9 @@ public class CustomImageView extends View {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             if (checkStatus()) {
-                dX -= distanceX;
+                if (checkX()) {
+                    dX -= distanceX;
+                }
                 //如果当前图片高度大于view高度，则支持上下滑动
                 if (checkY()) {
                     dY -= distanceY;
@@ -125,6 +132,17 @@ public class CustomImageView extends View {
         private boolean checkY() {
             boolean status = false;
             if (1.0F * scale * bmpHeight > viewHeight) {
+                status = true;
+            }
+            return status;
+        }
+
+        /**
+         * 检查图片当前宽度是不是大于view的宽度
+         */
+        private boolean checkX() {
+            boolean status = false;
+            if (1.0F * scale * bmpWidth > viewWidth) {
                 status = true;
             }
             return status;
@@ -217,6 +235,52 @@ public class CustomImageView extends View {
         canvas.restore();
     }
 
+    //回收Bitmap
+    private static void recycleBitmap(Bitmap... bitmaps) {
+        if (bitmaps == null) {
+            return;
+        }
+        for (Bitmap bm : bitmaps) {
+            if (null != bm && !bm.isRecycled()) {
+                bm.recycle();
+            }
+        }
+    }
+
+    public void releaseBitmap() {
+        recycleBitmap(bitmap);
+    }
+
+    /**
+     * 得到bitmap的大小
+     */
+    public static int getBitmapSize(Bitmap bitmap) {
+        long result;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {    //API 19
+            result = bitmap.getAllocationByteCount();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {//API 12
+            result = bitmap.getByteCount();
+        } else {
+            // 在低版本中用一行的字节x高度
+            result = bitmap.getRowBytes() * bitmap.getHeight();                //earlier version
+        }
+        return (int) result / 1024 / 1024;
+    }
+
+    private Bitmap compressBitmap(Bitmap bitmap) {
+        float option = 1.0F;
+        Bitmap newBitmap = bitmap;
+        timber.d("Result:" + getBitmapSize(newBitmap) + "MB");
+        while (getBitmapSize(newBitmap) > 100 && (int) option * 10 > 0) {
+            option = (option * 10 - 1) / 10;
+            Matrix matrix = new Matrix();
+            matrix.postScale(option, option);
+            newBitmap = Bitmap.createBitmap(newBitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        }
+        timber.d("Result:" + getBitmapSize(newBitmap) + "MB");
+        return newBitmap;
+    }
+
     private Bitmap getBitmap(int resId) {
         Bitmap bitmap;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
@@ -239,13 +303,15 @@ public class CustomImageView extends View {
     public void setPlaceHolderResource(int resId) {
         Bitmap bitmap = getBitmap(resId);
         if (bitmap != null)
-            setBitmapResource(bitmap);
+            setBitmapResource(bitmap, false);
     }
 
     /**
      * 设置bitmap图片资源，所有设置最终都会走到这里
      */
-    public void setBitmapResource(Bitmap bitmap) {
+    public void setBitmapResource(Bitmap bitmap, boolean needCompress) {
+        if (needCompress)
+            bitmap = compressBitmap(bitmap);
         this.bitmap = bitmap;
         this.bmpWidth = bitmap.getWidth();
         this.bmpHeight = bitmap.getHeight();
@@ -299,7 +365,7 @@ public class CustomImageView extends View {
                 Bitmap bitmap = new HttpUtils().getBitmap(url);
                 if (bitmap != null) {
                     loadingFinish = true;
-                    setBitmapResource(bitmap);
+                    setBitmapResource(bitmap, true);
                 } else {
                     loadingFinish = false;
                     if (loadingFailedPlaceHolderResId != 0) {
