@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.CountDownTimer
@@ -177,11 +178,44 @@ class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(co
                 withContext(Dispatchers.IO) {
                     bitmap = HttpUtils().getBitmap(splashUrl)
                     withContext(Dispatchers.Main) {
-                        updateSplash(bitmap)
+                        if (bitmap != null) {
+                            updateSplash(compressBitmap(bitmap!!))
+                        }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * 得到bitmap的大小
+     */
+    private fun getBitmapSize(bitmap: Bitmap): Int {
+        val result: Long = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> {    //API 19
+                bitmap.allocationByteCount.toLong()
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 -> { //API 12
+                bitmap.byteCount.toLong()
+            }
+            else -> {
+                // 在低版本中用一行的字节x高度
+                bitmap.rowBytes * bitmap.height.toLong() //earlier version
+            }
+        }
+        return result.toInt() / 1024 / 1024
+    }
+
+    private fun compressBitmap(bitmap: Bitmap): Bitmap? {
+        var option = 1.0f
+        var newBitmap = bitmap
+        while (getBitmapSize(newBitmap) > 100 && option.toInt() * 10 > 0) {
+            option = (option * 10 - 1) / 10
+            val matrix = Matrix()
+            matrix.postScale(option, option)
+            newBitmap = Bitmap.createBitmap(newBitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        }
+        return newBitmap
     }
 
     private fun updateSplash(bitmap: Bitmap?) {
