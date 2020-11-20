@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.text.Editable
 import android.text.InputType
@@ -12,13 +13,16 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import com.tristana.customViewLibrary.R
 import com.tristana.customViewLibrary.tools.log.Timber
-import com.tristana.customViewLibrary.tools.toast.ToastUtils
+
 
 class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs), TextWatcher {
 
@@ -165,10 +169,32 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
             this.inputWarning.background = BitmapDrawable(context.resources, bitmap)
             if (enableShowMsg) {
                 this.inputWarning.setOnClickListener {
-                    ToastUtils.showLongToast(context, msg)
+                    initPopWindow(msg, this.inputWarning)
+//                    ToastUtils.showLongToast(context, msg)
                 }
             }
         }
+    }
+
+    private fun initPopWindow(msg: String, view: View) {
+        val popupView: View = LayoutInflater.from(context).inflate(R.layout.item_popup_window, this, false)
+        val tipsTextView: AppCompatTextView = popupView.findViewById(R.id.tips_text)
+        //构造popupWindow
+        val popupWindow: PopupWindow = PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                true
+        )
+        popupWindow.animationStyle = R.anim.anim_pop
+        popupWindow.isOutsideTouchable = true
+        popupWindow.setTouchInterceptor { _, _ ->
+            performClick()
+            false
+        }
+        popupWindow.setBackgroundDrawable(ColorDrawable(0x00000000))
+        popupWindow.showAsDropDown(view, -200, 0)
+        tipsTextView.text = msg
     }
 
     fun dismissError() {
@@ -214,6 +240,10 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
 
     override fun afterTextChanged(p0: Editable?) {
 
+    }
+
+    override fun performClick(): Boolean {
+        return super.performClick()
     }
 
 }
