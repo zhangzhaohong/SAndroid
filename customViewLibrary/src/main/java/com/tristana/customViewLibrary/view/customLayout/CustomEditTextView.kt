@@ -180,7 +180,7 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         val popupView: View = LayoutInflater.from(context).inflate(R.layout.item_popup_window, this, false)
         val tipsTextView: AppCompatTextView = popupView.findViewById(R.id.tips_text)
         //构造popupWindow
-        val popupWindow: PopupWindow = PopupWindow(
+        val popupWindow = PopupWindow(
                 popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
