@@ -242,8 +242,4 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
 
     }
 
-    override fun performClick(): Boolean {
-        return super.performClick()
-    }
-
 }
