@@ -190,6 +190,7 @@ class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(co
     /**
      * 得到bitmap的大小
      */
+    @SuppressLint("ObsoleteSdkInt")
     private fun getBitmapSize(bitmap: Bitmap): Int {
         val result: Long = when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> {    //API 19
