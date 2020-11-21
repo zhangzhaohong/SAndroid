@@ -22,6 +22,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import com.tristana.customViewLibrary.R
 import com.tristana.customViewLibrary.tools.log.Timber
+import com.tristana.customViewLibrary.view.popupWindow.PopupWindowView
 
 
 class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs), TextWatcher {
@@ -169,7 +170,8 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
             this.inputWarning.background = BitmapDrawable(context.resources, bitmap)
             if (enableShowMsg) {
                 this.inputWarning.setOnClickListener {
-                    initPopWindow(msg, this.inputWarning)
+                    PopupWindowView(context).setText(msg).showPopupWindow()
+//                    initPopWindow(msg, this.inputWarning)
 //                    ToastUtils.showLongToast(context, msg)
                 }
             }
