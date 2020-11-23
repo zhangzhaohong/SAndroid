@@ -6,11 +6,4 @@
     android:layout_height="match_parent"
     tools:context=".ui.webView.X5WebViewFragment">
 
-    <com.tristana.sandroid.tools.x5.X5WebView
-        android:id="@+id/webView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

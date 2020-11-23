@@ -92,7 +92,6 @@ public class IllegalDataAdapter extends RecyclerView.Adapter<IllegalDataAdapter.
                     case PageType.TYPE_VID:
                         bundle.putString("VideoUrl", data.get(position).getFile());
                         navController.navigate(R.id.nav_videoPlayer, bundle);
-//                        navController.navigate(R.id.nav_webView, bundle);
                         break;
                 }
             }
