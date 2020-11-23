@@ -66,8 +66,9 @@ public class LoginFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        loginViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(LoginViewModel.class);
+        if (loginViewModel == null)
+            loginViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(LoginViewModel.class);
         View root = inflater.inflate(R.layout.fragment_login, container, false);
         username = root.findViewById(R.id.username);
         password = root.findViewById(R.id.password);

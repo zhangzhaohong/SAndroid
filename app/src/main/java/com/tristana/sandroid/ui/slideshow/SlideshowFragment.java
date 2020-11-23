@@ -20,8 +20,9 @@ public class SlideshowFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(SlideshowViewModel.class);
+        if (slideshowViewModel == null)
+            slideshowViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(SlideshowViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
         final TextView textView = root.findViewById(R.id.text_slideshow);
         slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

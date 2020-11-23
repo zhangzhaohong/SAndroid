@@ -27,8 +27,9 @@ public class IllegalManagerFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        illegalManagerViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(IllegalManagerViewModel.class);
+        if (illegalManagerViewModel == null)
+            illegalManagerViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(IllegalManagerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_illegal_manager, container, false);
         illegalManagerViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

@@ -25,8 +25,9 @@ public class HttpTesterFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        httpTesterViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(HttpTesterViewModel.class);
+        if (httpTesterViewModel == null)
+            httpTesterViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(HttpTesterViewModel.class);
         View root = inflater.inflate(R.layout.fragment_http_tester, container, false);
         final TextView textView = root.findViewById(R.id.text_http_tester);
         httpTesterViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

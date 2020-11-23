@@ -19,8 +19,9 @@ public class EnvFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        envViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(EnvViewModel.class);
+        if (envViewModel == null)
+            envViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(EnvViewModel.class);
         View root = inflater.inflate(R.layout.fragment_env_manager, container, false);
         envViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

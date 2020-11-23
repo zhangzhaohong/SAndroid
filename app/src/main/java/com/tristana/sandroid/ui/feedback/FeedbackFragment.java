@@ -27,8 +27,9 @@ public class FeedbackFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        feedbackViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(FeedbackViewModel.class);
+        if (feedbackViewModel == null)
+            feedbackViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(FeedbackViewModel.class);
         View root = inflater.inflate(R.layout.fragment_feedback, container, false);
         feedbackViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

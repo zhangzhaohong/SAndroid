@@ -37,8 +37,9 @@ public class TrafficManagerFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        trafficManagerViewModel =
-                ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(TrafficManagerViewModel.class);
+        if (trafficManagerViewModel == null)
+            trafficManagerViewModel =
+                    ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(TrafficManagerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_traffic_manager, container, false);
         trafficManagerViewModel.setNeedStop(false);
         final RecyclerView trafficLightData = root.findViewById(R.id.trafficLightData);

@@ -1,10 +1,14 @@
 package com.tristana.sandroid
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.tristana.customViewLibrary.view.customLayout.SplashView
 
@@ -14,38 +18,12 @@ import com.tristana.customViewLibrary.view.customLayout.SplashView
  */
 class SplashActivity : AppCompatActivity() {
     private lateinit var fullscreenSplash: SplashView
-    private val hideHandler = Handler()
-
-    @SuppressLint("InlinedApi")
-    private val hidePart2Runnable = Runnable {
-        // Delayed removal of status and navigation bar
-
-        // Note that some of these constants are new as of API 16 (Jelly Bean)
-        // and API 19 (KitKat). It is safe to use them, as they are inlined
-        // at compile-time and do nothing on earlier devices.
-        fullscreenSplash.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-    }
-    private val showPart2Runnable = Runnable {
-        // Delayed display of UI elements
-        supportActionBar?.show()
-    }
-    private var isFullscreen: Boolean = false
-
-    private val hideRunnable = Runnable { hide() }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_splash)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        isFullscreen = true
         // Set up the user interaction to manually show or hide the system UI.
         fullscreenSplash = findViewById(R.id.full_screen_splash)
         fullscreenSplash.initParameter(
@@ -73,7 +51,7 @@ class SplashActivity : AppCompatActivity() {
                 "https://storage.tracup.com/o_1end7rie71g391kuel4r13j33opa.jpg",
                 false
         )
-        fullscreenSplash.setOnClickListener { hide() }
+        fullscreenSplash.setOnClickListener { hideSystemUI() }
     }
 
     private fun jumpToMainActivity() {
@@ -82,52 +60,52 @@ class SplashActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        delayedHide(100)
-    }
-
     override fun onResume() {
         super.onResume()
-        hide()
+        hideSystemUI()
     }
 
-    private fun hide() {
-        // Hide UI first
-        supportActionBar?.hide()
-        isFullscreen = false
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        hideHandler.removeCallbacks(showPart2Runnable)
-        hideHandler.postDelayed(hidePart2Runnable, UI_ANIMATION_DELAY.toLong())
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemUI()
     }
 
-    /**
-     * Schedules a call to hide() in [delayMillis], canceling any
-     * previously scheduled calls.
-     */
-    private fun delayedHide(delayMillis: Int) {
-        hideHandler.removeCallbacks(hideRunnable)
-        hideHandler.postDelayed(hideRunnable, delayMillis.toLong())
+    private fun Activity.hideSystemUI() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.let {
+                // Default behavior is that if navigation bar is hidden, the system will "steal" touches
+                // and show it again upon user's touch. We just want the user to be able to show the
+                // navigation bar by swipe, touches are handled by custom code -> change system bar behavior.
+                // Alternative to deprecated SYSTEM_UI_FLAG_IMMERSIVE.
+                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                // make navigation bar translucent (alternative to deprecated
+                // WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+                // - do this already in hideSystemUI() so that the bar
+                // is translucent if user swipes it up
+                window.navigationBarColor = getColor(R.color.black_overlay)
+                // Finally, hide the system bars, alternative to View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                // and SYSTEM_UI_FLAG_FULLSCREEN.
+                it.hide(WindowInsets.Type.systemBars())
+            }
+        } else {
+            // Enables regular immersive mode.
+            // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+            // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (
+                    // Do not let system steal touches for showing the navigation bar
+                    View.SYSTEM_UI_FLAG_IMMERSIVE
+                            // Hide the nav bar and status bar
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN
+                            // Keep the app content behind the bars even if user swipes them up
+                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+            // make navbar translucent - do this already in hideSystemUI() so that the bar
+            // is translucent if user swipes it up
+            @Suppress("DEPRECATION")
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+        }
     }
 
-    companion object {
-        /**
-         * Whether or not the system UI should be auto-hidden after
-         * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
-         */
-        private const val AUTO_HIDE = true
-
-        /**
-         * If [AUTO_HIDE] is set, the number of milliseconds to wait after
-         * user interaction before hiding the system UI.
-         */
-        private const val AUTO_HIDE_DELAY_MILLIS = 3000
-
-        /**
-         * Some older devices needs a small delay between UI widget updates
-         * and a change of the status and navigation bar.
-         */
-        private const val UI_ANIMATION_DELAY = 300
-    }
 }

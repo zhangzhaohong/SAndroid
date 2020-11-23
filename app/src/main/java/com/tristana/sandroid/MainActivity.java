@@ -99,11 +99,7 @@ public class MainActivity extends AppCompatActivity {
             MenuItem networkSetting = menu.findItem(R.id.network_setting);
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
             String label = Objects.requireNonNull(Objects.requireNonNull(navController.getCurrentDestination()).getLabel()).toString();
-            if (!label.equals(getString(R.string.menu_login))) {
-                networkSetting.setVisible(false);
-            } else {
-                networkSetting.setVisible(true);
-            }
+            networkSetting.setVisible(label.equals(getString(R.string.menu_login)));
             networkSetting.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
