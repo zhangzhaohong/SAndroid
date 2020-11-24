@@ -1,0 +1,83 @@
+package com.tristana.sandroid.ui.webView
+
+import android.os.Bundle
+import android.text.InputType
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.tristana.customViewLibrary.view.customLayout.CustomEditTextView
+import com.tristana.customViewLibrary.view.webView.X5WebView
+import com.tristana.sandroid.MainActivity
+import com.tristana.sandroid.R
+import com.tristana.sandroid.customInterface.IOnBackPressedInterface
+import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
+
+@Suppress("CAST_NEVER_SUCCEEDS")
+class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedInterface {
+    private var url: String = "https://www.baidu.com"
+    private var x5ViewModel: X5ViewModel? = null
+    private lateinit var x5WebView: X5WebView
+    private lateinit var inputUrl: CustomEditTextView
+    private lateinit var webview_enter: AppCompatImageView
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (x5ViewModel == null) x5ViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(X5ViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_web_viewer, container, false)
+        val bundle = arguments
+        if (bundle != null) {
+            url = bundle.getString("url").toString()
+        }
+        x5WebView = root.findViewById(R.id.webView)
+        inputUrl = root.findViewById(R.id.input_url)
+        webview_enter = root.findViewById(R.id.webView_enter)
+        x5WebView.loadUrl(url)
+        inputUrl.initParameter(
+                R.drawable.ic_browser_default,
+                InputType.TYPE_CLASS_TEXT,
+                0,
+                1,
+                "",
+                0,
+                0,
+                false,
+                R.drawable.ic_clear,
+                true
+        )
+        webview_enter.setOnClickListener {
+            x5WebView.loadUrl(inputUrl.getText())
+        }
+        x5WebView.onLoadFinishListener = this
+        hideActionBar()
+        return root
+    }
+
+    private fun hideActionBar() {
+        getActionBar()?.hide()
+    }
+
+    private fun getActionBar(): ActionBar? {
+        return (activity as MainActivity?)?.supportActionBar
+    }
+
+    /**
+     * If you return true the back press will not be taken into account, otherwise the activity will act naturally
+     * @return true if your processing has priority if not false
+     */
+    override fun onBackPressed(): Boolean {
+        return if (x5WebView.canGoBack()) {
+            x5WebView.goBack()
+            false
+        } else {
+            true
+        }
+    }
+
+    override fun onPageFinished(p0: String?) {
+        inputUrl.setText(p0.toString())
+    }
+
+}

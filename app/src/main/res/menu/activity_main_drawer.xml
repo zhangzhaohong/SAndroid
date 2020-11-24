@@ -40,5 +40,9 @@
             android:id="@+id/nav_envManager"
             android:icon="@android:drawable/ic_dialog_map"
             android:title="@string/menu_envManager" />
+        <item
+            android:id="@+id/nav_webView"
+            android:icon="@drawable/ic_browser"
+            android:title="@string/menu_webView" />
     </group>
 </menu>
