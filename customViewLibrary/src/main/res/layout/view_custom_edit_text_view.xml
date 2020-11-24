@@ -17,6 +17,7 @@
         android:layout_marginBottom="5dp"
         android:foregroundGravity="center_vertical"
         android:padding="5dp"
+        android:focusableInTouchMode="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
