@@ -175,7 +175,6 @@ class MainActivity : AppCompatActivity() {
                 return it as F
             }
         }
-
         return null
     }
 
