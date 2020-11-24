@@ -43,7 +43,8 @@
         <activity
             android:name=".MainActivity"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
     </application>
 
 </manifest>

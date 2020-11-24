@@ -9,20 +9,27 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
 import com.tristana.customViewLibrary.view.customLayout.CustomEditTextView
 import com.tristana.customViewLibrary.view.webView.X5WebView
 import com.tristana.sandroid.MainActivity
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
-import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
+
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedInterface {
-    private var url: String = "https://www.baidu.com"
+    private lateinit var webViewBack: AppCompatImageView
+    private lateinit var webViewForward: AppCompatImageView
+    private lateinit var webViewHome: AppCompatImageView
+    private lateinit var webViewRefresh: AppCompatImageView
+    private lateinit var webViewExit: AppCompatImageView
+    private var defaultUrl: String = "https://www.hao123.com/"
+    private var url: String = ""
     private var x5ViewModel: X5ViewModel? = null
     private lateinit var x5WebView: X5WebView
     private lateinit var inputUrl: CustomEditTextView
-    private lateinit var webview_enter: AppCompatImageView
+    private lateinit var webViewEnter: AppCompatImageView
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (x5ViewModel == null) x5ViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(X5ViewModel::class.java)
@@ -31,9 +38,17 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         if (bundle != null) {
             url = bundle.getString("url").toString()
         }
+        if (url.isEmpty()) {
+            url = "https://www.baidu.com"
+        }
         x5WebView = root.findViewById(R.id.webView)
         inputUrl = root.findViewById(R.id.input_url)
-        webview_enter = root.findViewById(R.id.webView_enter)
+        webViewEnter = root.findViewById(R.id.webView_enter)
+        webViewBack = root.findViewById(R.id.browser_back)
+        webViewForward = root.findViewById(R.id.browser_forward)
+        webViewHome = root.findViewById(R.id.browser_home)
+        webViewRefresh = root.findViewById(R.id.browser_refresh)
+        webViewExit = root.findViewById(R.id.browser_exit)
         x5WebView.loadUrl(url)
         inputUrl.initParameter(
                 R.drawable.ic_browser_default,
@@ -47,8 +62,28 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
                 R.drawable.ic_clear,
                 true
         )
-        webview_enter.setOnClickListener {
+        webViewEnter.setOnClickListener {
+            inputUrl.clearFocus()
             x5WebView.loadUrl(inputUrl.getText())
+        }
+        webViewBack.setOnClickListener {
+            if (x5WebView.canGoBack()) {
+                x5WebView.goBack()
+            }
+        }
+        webViewForward.setOnClickListener {
+            if (x5WebView.canGoForward()) {
+                x5WebView.goForward()
+            }
+        }
+        webViewHome.setOnClickListener {
+            x5WebView.loadUrl(defaultUrl)
+        }
+        webViewRefresh.setOnClickListener {
+            x5WebView.loadUrl(url)
+        }
+        webViewExit.setOnClickListener {
+            requireActivity().onBackPressed()
         }
         x5WebView.onLoadFinishListener = this
         hideActionBar()
@@ -78,6 +113,7 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
 
     override fun onPageFinished(p0: String?) {
         inputUrl.setText(p0.toString())
+        url = p0.toString()
     }
 
 }

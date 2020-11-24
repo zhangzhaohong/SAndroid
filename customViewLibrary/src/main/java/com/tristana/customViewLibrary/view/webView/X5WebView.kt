@@ -1,89 +1,253 @@
 package com.tristana.customViewLibrary.view.webView
 
+import android.R
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Process
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
-import com.tencent.smtt.sdk.QbSdk
-import com.tencent.smtt.sdk.WebSettings
-import com.tencent.smtt.sdk.WebView
-import com.tencent.smtt.sdk.WebViewClient
+import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.Toast
+import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
+import com.tencent.smtt.sdk.*
 import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
 import com.tristana.customViewLibrary.tools.log.Timber
 
-
 class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(context, attributeSet) {
 
+    private lateinit var progressBar: ProgressBar
     var onLoadFinishListener: IOnPageFinishedInterface? = null
+    private var enableShowProgressBar: Boolean = true
 
     private val timber: Timber = Timber("X5WebView")
 
     private val client: WebViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
             timber.d("shouldOverrideUrlLoading:$p1")
-            if (!p1!!.startsWith("http")) {
-                try {
-                    // 以下固定写法
-                    val intent = Intent(Intent.ACTION_VIEW,
-                            Uri.parse(url))
-                    intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK
-                            or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    context!!.startActivity(intent)
-                } catch (e: Exception) {
-                    // 防止没有安装的情况
-                    e.printStackTrace()
-                }
+            //返回值是true的时候控制去WebView打开，
+            // 为false调用系统浏览器或第三方浏览器
+            if (p1.isNullOrEmpty())
                 return true
+            return if (p1.startsWith("http") || p1.startsWith("https") || p1.startsWith("ftp")) {
+                false
+            } else if (p1.startsWith("qqmap:")) {
+                //do nothing
+                true
+            } else {
+                try {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_VIEW
+                    intent.data = Uri.parse(p1)
+                    view.context.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    timber.d("异常URL：$p1")
+                    Toast.makeText(view.context, "手机还没有安装支持打开此网页的应用！", Toast.LENGTH_SHORT).show()
+                }
+                true
             }
-            return false
         }
 
+        @SuppressLint("ObsoleteSdkInt")
         override fun onPageFinished(p0: WebView?, p1: String?) {
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.setAcceptCookie(true)
+            val endCookie = cookieManager.getCookie(p1)
+            timber.d("onPageFinished: endCookie : $endCookie")
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                CookieSyncManager.getInstance().sync() //同步cookie
+            } else {
+                CookieManager.getInstance().flush()
+            }
             super.onPageFinished(p0, p1)
             onLoadFinishListener?.onPageFinished(p1)
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    private val mWebChromeClient = object : WebChromeClient() {
+        override fun onShowCustomView(p0: View?, p1: IX5WebChromeClient.CustomViewCallback?) {
+            super.onShowCustomView(p0, p1)
+            timber.d("onShowCustomView")
+        }
+
+        override fun onProgressChanged(p0: WebView?, p1: Int) {
+            super.onProgressChanged(p0, p1)
+            if (enableShowProgressBar) {
+                progressBar.progress = p1
+                if (p1 != 100) {
+                    //Webview加载没有完成 就显示我们自定义的加载图
+                    progressBar.visibility = View.VISIBLE
+                } else {
+                    //Webview加载完成 就隐藏进度条,显示Webview
+                    progressBar.visibility = View.GONE
+                }
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
     private fun initWebViewSettings() {
-        val webSetting: WebSettings = this.settings
+        setBackgroundColor(resources.getColor(R.color.white))
+        isClickable = true
+        setOnTouchListener { _, _ -> false }
+        val webSetting = settings
         webSetting.javaScriptEnabled = true
+        webSetting.builtInZoomControls = true
         webSetting.javaScriptCanOpenWindowsAutomatically = true
+        webSetting.domStorageEnabled = true
         webSetting.allowFileAccess = true
         webSetting.layoutAlgorithm = WebSettings.LayoutAlgorithm.NARROW_COLUMNS
         webSetting.setSupportZoom(true)
-        webSetting.builtInZoomControls = true
-        webSetting.useWideViewPort = true
+        //设置自适应屏幕，两者合用
+        webSetting.useWideViewPort = true //将图片调整到适合webview的大小
+        webSetting.loadWithOverviewMode = true // 缩放至屏幕的大小
         webSetting.setSupportMultipleWindows(true)
-        // webSetting.setLoadWithOverviewMode(true);
         webSetting.setAppCacheEnabled(true)
-        // webSetting.setDatabaseEnabled(true);
-        webSetting.domStorageEnabled = true
         webSetting.setGeolocationEnabled(true)
         webSetting.setAppCacheMaxSize(Long.MAX_VALUE)
-        // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
         webSetting.pluginState = WebSettings.PluginState.ON_DEMAND
-        // webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSetting.cacheMode = WebSettings.LOAD_NO_CACHE
-        // this.getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
+        webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        //android 默认是可以打开_bank的，是因为它默认设置了WebSettings.setSupportMultipleWindows(false)
+        //在false状态下，_bank也会在当前页面打开……
+        //而x5浏览器，默认开启了WebSettings.setSupportMultipleWindows(true)，
+        // 所以打不开……主动设置成false就可以打开了
+        //需要支持多窗体还需要重写WebChromeClient.onCreateWindow
+        //android 默认是可以打开_bank的，是因为它默认设置了WebSettings.setSupportMultipleWindows(false)
+        //在false状态下，_bank也会在当前页面打开……
+        //而x5浏览器，默认开启了WebSettings.setSupportMultipleWindows(true)，
+        // 所以打不开……主动设置成false就可以打开了
+        //需要支持多窗体还需要重写WebChromeClient.onCreateWindow
+        webSetting.setSupportMultipleWindows(false)
+//        webSetting.setCacheMode(WebSettings.LOAD_NORMAL);
+//        getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
+
+        //启用数据库
+//        webSetting.setCacheMode(WebSettings.LOAD_NORMAL);
+//        getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
+        //启用数据库
+        webSetting.databaseEnabled = true
+        val dir: String = context.getDir("database", Context.MODE_PRIVATE).path
+        //启用地理定位
+        webSetting.setGeolocationEnabled(true)
+        //设置定位的数据库路径
+        webSetting.setGeolocationDatabasePath(dir)
+        //最重要的方法，一定要设置，这就是出不来的主要原因
+        webSetting.domStorageEnabled = true
         // settings 的设计
+        //兼容视频
+        try {
+            if (x5WebViewExtension != null) {
+                val data = Bundle()
+                data.putBoolean("standardFullScreen", false)
+                //true表示标准全屏，false表示X5全屏；不设置默认false，
+                data.putBoolean("supportLiteWnd", false)
+                //false：关闭小窗；true：开启小窗；不设置默认true，
+                data.putInt("DefaultVideoScreen", 1)
+                //1：以页面内开始播放，2：以全屏开始播放；不设置默认：1
+                x5WebViewExtension.invokeMiscMethod("setVideoParams", data)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     init {
+        initUi()
         setBackgroundColor(85621)
         this.webViewClient = this.client
-        // this.setWebChromeClient(chromeClient);
+        this.webChromeClient = mWebChromeClient;
         // WebStorage webStorage = WebStorage.getInstance();
         initWebViewSettings()
         this.view.isClickable = true
     }
 
+    fun enableShowProgressBar(enableShowProgressBar: Boolean) {
+        this.enableShowProgressBar = enableShowProgressBar
+    }
+
+    private fun initUi() {
+        try {
+            x5WebViewExtension.setScrollBarFadingEnabled(false)
+        } catch (e: java.lang.Exception) {
+            timber.d("Error:$e")
+        }
+        isHorizontalScrollBarEnabled = false //水平不显示小方块
+        isVerticalScrollBarEnabled = false //垂直不显示小方块
+//      setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);//滚动条在WebView内侧显示
+//      setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);//滚动条在WebView外侧显示
+        progressBar = ProgressBar(context, null, R.attr.progressBarStyleHorizontal)
+        progressBar.max = 100
+        //progressBar.setProgressDrawable(this.getResources().getDrawable(R.drawable.color_progressbar));
+        addView(progressBar, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 6))
+    }
+
+    @SuppressLint("ObsoleteSdkInt")
+    fun syncCookie(url: String?, cookie: String) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager.createInstance(context)
+        }
+        if (!TextUtils.isEmpty(url)) {
+            val cookieManager = CookieManager.getInstance()
+            cookieManager.setAcceptCookie(true)
+            cookieManager.removeSessionCookies { p0 -> timber.d("syncCookiesStatus:$p0") } // 移除
+            cookieManager.removeAllCookies { p0 -> timber.d("removeAllCookiesStatus:$p0") }
+            //这里的拼接方式是伪代码
+            val split = cookie.split(";".toRegex()).toTypedArray()
+            for (string in split) {
+                //为url设置cookie
+                // ajax方式下  cookie后面的分号会丢失
+                cookieManager.setCookie(url, string)
+            }
+            val newCookie = cookieManager.getCookie(url)
+            timber.d("syncCookie: newCookie == $newCookie")
+            //sdk21之后CookieSyncManager被抛弃了，换成了CookieManager来进行管理。
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                CookieSyncManager.getInstance().sync() //同步cookie
+            } else {
+                CookieManager.getInstance().flush()
+            }
+        }
+    }
+
+    //删除Cookie
+    @SuppressLint("ObsoleteSdkInt")
+    private fun removeCookie() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager.createInstance(context)
+        }
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.removeSessionCookies { p0 -> timber.d("syncCookiesStatus:$p0") } // 移除
+        cookieManager.removeAllCookies { p0 -> timber.d("removeAllCookiesStatus:$p0") }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CookieSyncManager.getInstance().sync()
+        } else {
+            CookieManager.getInstance().flush()
+        }
+    }
+
+    fun getDomain(url: String): String? {
+        var domain = ""
+        val start = url.indexOf(".")
+        if (start >= 0) {
+            val end = url.indexOf("/", start)
+            domain = if (end < 0) {
+                url.substring(start)
+            } else {
+                url.substring(start, end)
+            }
+        }
+        return domain
+    }
 
     override fun drawChild(canvas: Canvas, child: View?, drawingTime: Long): Boolean {
         val ret = super.drawChild(canvas, child, drawingTime)
