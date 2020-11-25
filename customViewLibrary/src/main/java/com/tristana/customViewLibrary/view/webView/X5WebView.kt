@@ -1,10 +1,13 @@
 package com.tristana.customViewLibrary.view.webView
 
+import android.Manifest
 import android.R
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.net.Uri
@@ -17,10 +20,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.sdk.*
 import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
 import com.tristana.customViewLibrary.tools.log.Timber
+
 
 class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(context, attributeSet) {
 
@@ -93,6 +99,11 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
                 progressBar.visibility = View.GONE
             }
         }
+
+        override fun onGeolocationPermissionsShowPrompt(p0: String?, p1: GeolocationPermissionsCallback?) {
+            p1?.invoke(p0, true, false);
+            super.onGeolocationPermissionsShowPrompt(p0, p1)
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
@@ -122,16 +133,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         //而x5浏览器，默认开启了WebSettings.setSupportMultipleWindows(true)，
         // 所以打不开……主动设置成false就可以打开了
         //需要支持多窗体还需要重写WebChromeClient.onCreateWindow
-        //android 默认是可以打开_bank的，是因为它默认设置了WebSettings.setSupportMultipleWindows(false)
-        //在false状态下，_bank也会在当前页面打开……
-        //而x5浏览器，默认开启了WebSettings.setSupportMultipleWindows(true)，
-        // 所以打不开……主动设置成false就可以打开了
-        //需要支持多窗体还需要重写WebChromeClient.onCreateWindow
         webSetting.setSupportMultipleWindows(false)
-//        webSetting.setCacheMode(WebSettings.LOAD_NORMAL);
-//        getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
-
-        //启用数据库
 //        webSetting.setCacheMode(WebSettings.LOAD_NORMAL);
 //        getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
         //启用数据库
@@ -162,6 +164,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
     }
 
     init {
+        initPermission()
         initUi()
         setBackgroundColor(85621)
         this.webViewClient = this.client
@@ -169,6 +172,14 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         // WebStorage webStorage = WebStorage.getInstance();
         initWebViewSettings()
         this.view.isClickable = true
+    }
+
+    private fun initPermission() {
+        //权限检查,编辑器自动添加
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+            return
+        }
     }
 
     fun enableShowProgressBar(enableShowProgressBar: Boolean) {
