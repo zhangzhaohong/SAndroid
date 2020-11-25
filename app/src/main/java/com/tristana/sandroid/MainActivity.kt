@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
 import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat

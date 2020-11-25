@@ -18,16 +18,16 @@
         tools:targetApi="o">
 
         <meta-data
-            android:name="android.max_aspect"
-            android:value="2.4" />
-        <!--适配华为（huawei）刘海屏-->
-        <meta-data
             android:name="android.notch_support"
-            android:value="true" />
-        <!--适配小米（xiaomi）刘海屏-->
+            android:value="true"/>
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.34"/>
+
         <meta-data
             android:name="notch.config"
-            android:value="portrait|landscape" />
+            android:value="portrait|landscape"/>
 
         <activity
             android:name=".SplashActivity"
@@ -44,7 +44,8 @@
             android:name=".MainActivity"
             android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|uiMode"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
     </application>
 
 </manifest>

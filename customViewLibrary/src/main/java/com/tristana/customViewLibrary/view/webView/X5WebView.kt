@@ -25,7 +25,9 @@ import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.sdk.*
 import com.tristana.customViewLibrary.R
 import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
+import com.tristana.customViewLibrary.data.DataModel
 import com.tristana.customViewLibrary.tools.log.Timber
+import com.tristana.customViewLibrary.tools.sharedPreferences.SpUtils
 
 
 class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(context, attributeSet) {
@@ -261,25 +263,28 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
     }
 
     override fun drawChild(canvas: Canvas, child: View?, drawingTime: Long): Boolean {
-        val ret = super.drawChild(canvas, child, drawingTime)
+        val status = SpUtils.get(context, DataModel.X5_DEBUG_MODE, false) as Boolean
+        val ret: Boolean = super.drawChild(canvas, child, drawingTime)
         canvas.save()
         val paint = Paint()
         paint.color = 0x7fff0000
         paint.textSize = 24f
         paint.isAntiAlias = true
-        if (x5WebViewExtension != null) {
-            canvas.drawText(this.context.packageName + "-pid:"
-                    + Process.myPid(), 10F, 50F, paint)
-            canvas.drawText(
-                    "X5  Core:" + QbSdk.getTbsVersion(this.context), 10F,
-                    100F, paint)
-        } else {
-            canvas.drawText(this.context.packageName + "-pid:"
-                    + Process.myPid(), 10F, 50F, paint)
-            canvas.drawText("Sys Core", 10F, 100F, paint)
+        if (status) {
+            if (x5WebViewExtension != null) {
+                canvas.drawText(this.context.packageName + "-pid:"
+                        + Process.myPid(), 10F, 50F, paint)
+                canvas.drawText(
+                        "X5  Core:" + QbSdk.getTbsVersion(this.context), 10F,
+                        100F, paint)
+            } else {
+                canvas.drawText(this.context.packageName + "-pid:"
+                        + Process.myPid(), 10F, 50F, paint)
+                canvas.drawText("Sys Core", 10F, 100F, paint)
+            }
+            canvas.drawText(Build.MANUFACTURER, 10F, 150F, paint)
+            canvas.drawText(Build.MODEL, 10F, 200F, paint)
         }
-        canvas.drawText(Build.MANUFACTURER, 10F, 150F, paint)
-        canvas.drawText(Build.MODEL, 10F, 200F, paint)
         canvas.restore()
         return ret
     }
