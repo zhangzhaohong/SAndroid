@@ -1,6 +1,7 @@
 package com.tristana.sandroid
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
 import com.tencent.smtt.sdk.QbSdk
 import com.tristana.sandroid.tools.log.Timber
@@ -17,6 +18,7 @@ class MyApplication : Application() {
         super.onCreate()
         instance = this
         timber = Timber("MyApplication")
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 val cb: QbSdk.PreInitCallback = object : QbSdk.PreInitCallback {
