@@ -1,7 +1,6 @@
 package com.tristana.customViewLibrary.view.webView
 
 import android.Manifest
-import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -24,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.sdk.*
+import com.tristana.customViewLibrary.R
 import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
 import com.tristana.customViewLibrary.tools.log.Timber
 
@@ -101,7 +101,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         }
 
         override fun onGeolocationPermissionsShowPrompt(p0: String?, p1: GeolocationPermissionsCallback?) {
-            p1?.invoke(p0, true, false);
+            p1?.invoke(p0, true, false)
             super.onGeolocationPermissionsShowPrompt(p0, p1)
         }
     }
@@ -196,7 +196,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         isVerticalScrollBarEnabled = false //垂直不显示小方块
 //      setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);//滚动条在WebView内侧显示
 //      setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);//滚动条在WebView外侧显示
-        progressBar = ProgressBar(context, null, R.attr.progressBarStyleHorizontal)
+        progressBar = ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal)
         progressBar.max = 100
         //progressBar.setProgressDrawable(this.getResources().getDrawable(R.drawable.color_progressbar));
         addView(progressBar, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 6))

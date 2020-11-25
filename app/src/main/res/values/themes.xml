@@ -1,5 +1,4 @@
 <resources>
-
     <style name="AppTheme.Fullscreen" parent="AppTheme.NoActionBar">
         <item name="android:actionBarStyle">@style/Widget.AppTheme.ActionBar.Fullscreen</item>
         <item name="android:windowActionBarOverlay">true</item>

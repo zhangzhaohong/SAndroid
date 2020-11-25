@@ -77,4 +77,10 @@
         android:label="@string/menu_webView"
         tools:layout="@layout/fragment_web_viewer" />
 
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.tristana.sandroid.ui.setting.SettingFragment"
+        android:label="@string/menu_setting"
+        tools:layout="@layout/fragment_setting" />
+
 </navigation>

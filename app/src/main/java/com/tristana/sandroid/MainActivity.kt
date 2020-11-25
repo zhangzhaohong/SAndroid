@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -98,6 +99,12 @@ class MainActivity : AppCompatActivity() {
         this.menu = menu
         initTestProject()
         updateMenu()
+        val actionSettings = menu.findItem(R.id.action_settings)
+        actionSettings.setOnMenuItemClickListener {
+            val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+            navController.navigate(R.id.nav_setting)
+            true
+        }
         return true
     }
 

@@ -1,6 +1,7 @@
 package com.tristana.sandroid
 
 import android.app.Application
+import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.QbSdk.PreInitCallback
 import com.tristana.sandroid.tools.log.Timber
@@ -12,6 +13,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         timber = Timber("MyApplication")
+        QMUISwipeBackActivityManager.init(this)
         val cb: PreInitCallback = object : PreInitCallback {
             override fun onViewInitFinished(arg0: Boolean) {
                 // TODO Auto-generated method stub
