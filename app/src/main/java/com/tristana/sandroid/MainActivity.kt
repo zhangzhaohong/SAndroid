@@ -173,11 +173,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun <F : Fragment> AppCompatActivity.getFragment(fragmentClass: Class<F>): F? {
+    private fun <F : Fragment> getFragment(fragmentClass: Class<F>): F? {
         val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
         navHostFragment.childFragmentManager.fragments.forEach {
             if (fragmentClass.isAssignableFrom(it.javaClass)) {
+                @Suppress("UNCHECKED_CAST")
                 return it as F
             }
         }
