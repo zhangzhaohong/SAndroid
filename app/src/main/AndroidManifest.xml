@@ -15,7 +15,8 @@
         android:maxAspectRatio="2.4"
         android:resizeableActivity="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="o">
+        tools:targetApi="o"
+        android:dataExtractionRules="@xml/data_extraction_rules">
 
         <meta-data
             android:name="android.notch_support"
@@ -32,9 +33,9 @@
         <activity
             android:name=".SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
             android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme.Fullscreen">
+            android:theme="@style/AppTheme.Fullscreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
