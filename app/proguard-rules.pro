@@ -28,3 +28,14 @@
 
 -keep class com.qmuiteam.qmui.arch.scheme.SchemeMap {*;}
 -keep class com.qmuiteam.qmui.arch.scheme.SchemeMapImpl {*;}
+
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
+    *;
+}
+
+-keep class com.tencent.tbs.** {
+    *;
+}

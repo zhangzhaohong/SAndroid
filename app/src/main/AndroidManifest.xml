@@ -15,9 +15,7 @@
         android:maxAspectRatio="2.4"
         android:resizeableActivity="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="s"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        tools:ignore="DataExtractionRules">
+        tools:targetApi="s">
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
