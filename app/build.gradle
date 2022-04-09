@@ -12,12 +12,12 @@ android {
             keyPassword '123123'
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.tristana.sandroid"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -62,5 +62,5 @@ dependencies {
     implementation "com.qmuiteam:qmui:$qmui_version"
     implementation "com.qmuiteam:arch:$qmui_version"
     kapt "com.qmuiteam:arch-compiler:$qmui_version" // use annotationProcessor if java
-//    implementation 'com.tencent.tbs:tbssdk:44176'
+    implementation 'com.tencent.tbs:tbssdk:44176'
 }
