@@ -21,9 +21,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        ndk {
-            abiFilters 'armeabi'
-        }
     }
 
     buildTypes {
@@ -65,10 +62,11 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.6'
+    implementation 'com.github.getActivity:XXPermissions:13.5'
     def qmui_version = '2.1.0'
     implementation 'com.qmuiteam:qmuilint:1.0.1'
     implementation "com.qmuiteam:qmui:$qmui_version"
     implementation "com.qmuiteam:arch:$qmui_version"
     kapt "com.qmuiteam:arch-compiler:$qmui_version" // use annotationProcessor if java
-    api 'com.tencent.tbs:tbssdk:44176'
+    implementation 'com.tencent.tbs:tbssdk:44176'
 }

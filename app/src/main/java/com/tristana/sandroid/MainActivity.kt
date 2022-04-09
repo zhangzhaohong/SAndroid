@@ -1,6 +1,7 @@
 package com.tristana.sandroid
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
@@ -19,12 +20,23 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
+import com.tencent.smtt.export.external.TbsCoreSettings
+import com.tencent.smtt.sdk.QbSdk
+import com.tencent.smtt.sdk.TbsDownloader
+import com.tencent.smtt.sdk.TbsListener
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
 import com.tristana.sandroid.tools.array.ArrayUtils
 import com.tristana.sandroid.tools.file.FileUtils
 import com.tristana.sandroid.tools.log.Timber
 import com.tristana.sandroid.tools.toast.ToastUtils
 import com.tristana.sandroid.ui.webView.X5WebViewFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -54,10 +66,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home,
                 R.id.nav_gallery,
                 R.id.nav_slideshow,
-                R.id.nav_login,
-                R.id.nav_feedback,
-                R.id.nav_trafficManager,
-                R.id.nav_illegalManager
+                R.id.nav_login
         )
                 .setOpenableLayout(drawer)
                 .build()
@@ -65,6 +74,77 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration!!)
         NavigationUI.setupWithNavController(navigationView, navController)
         initNavigationOnChangeListener(navController)
+        XXPermissions.with(this)
+            .permission(Permission.READ_PHONE_STATE)
+            .permission(Permission.WRITE_EXTERNAL_STORAGE)
+            .permission(Permission.READ_EXTERNAL_STORAGE)
+            // 设置权限请求拦截器（局部设置）
+            //.interceptor(new PermissionInterceptor())
+            // 设置不触发错误检测机制（局部设置）
+            //.unchecked()
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>, all: Boolean) {
+                    MainScope().launch {
+                        withContext(Dispatchers.IO) {
+                            /* 设置允许移动网络下进行内核下载。默认不下载，会导致部分一直用移动网络的用户无法使用x5内核 */
+                            QbSdk.setDownloadWithoutWifi(true)
+                            QbSdk.setNeedInitX5FirstTime(true)
+                            QbSdk.setTBSInstallingStatus(false)
+                            // 在调用TBS初始化、创建WebView之前进行如下配置
+                            val map: Map<String, Any> = mapOf(
+                                TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER to true,
+                                TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE to true
+                            )
+                            QbSdk.initTbsSettings(map)
+                            timber?.i("VERSION: " + Build.VERSION.SDK_INT);
+                            TbsDownloader.startDownload(MyApplication.instance);//手动开始下载，此时需要先判定网络是否符合
+                            val callback: QbSdk.PreInitCallback = object : QbSdk.PreInitCallback {
+                                override fun onViewInitFinished(arg0: Boolean) {
+                                    // TODO Auto-generated method stub
+                                    //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+                                    timber?.i("onViewInitFinished: $arg0")
+                                }
+
+                                override fun onCoreInitFinished() {
+                                    // TODO Auto-generated method stub
+                                    timber?.i("onCoreInitFinished")
+                                }
+                            }
+
+                            //x5内核初始化接口
+                            QbSdk.initX5Environment(applicationContext, callback)
+                            /* SDK内核初始化周期回调，包括 下载、安装、加载 */
+                            QbSdk.setTbsListener(object : TbsListener {
+                                /**
+                                 * @param stateCode 110: 表示当前服务器认为该环境下不需要下载
+                                 */
+                                override fun onDownloadFinish(stateCode: Int) {
+                                    timber?.i("onDownloadFinished: $stateCode")
+                                }
+
+                                /**
+                                 * @param stateCode 200、232安装成功
+                                 */
+                                override fun onInstallFinish(stateCode: Int) {
+                                    timber?.i("onInstallFinished: $stateCode")
+                                }
+
+                                /**
+                                 * 首次安装应用，会触发内核下载，此时会有内核下载的进度回调。
+                                 * @param progress 0 - 100
+                                 */
+                                override fun onDownloadProgress(progress: Int) {
+                                    timber?.i("Core Downloading: $progress")
+                                }
+                            })
+                        }
+                    }
+                }
+
+                override fun onDenied(permissions: MutableList<String>, never: Boolean) {
+
+                }
+            })
     }
 
     /**
