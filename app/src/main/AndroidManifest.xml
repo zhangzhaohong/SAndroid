@@ -52,11 +52,6 @@
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|uiMode"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
-        <service
-            android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
-            android:label="dexopt"
-            android:process=":dexopt" >
-        </service>
     </application>
 
 </manifest>

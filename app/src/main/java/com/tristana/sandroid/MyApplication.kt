@@ -24,9 +24,6 @@ class MyApplication : Application() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         MainScope().launch {
             withContext(Dispatchers.IO) {
-                // 在调用TBS初始化、创建WebView之前进行如下配置
-                val map: Map<String, Any> = mapOf(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER to true, TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE to true)
-                QbSdk.initTbsSettings(map)
                 /* 设置允许移动网络下进行内核下载。默认不下载，会导致部分一直用移动网络的用户无法使用x5内核 */
                 QbSdk.setDownloadWithoutWifi(true)
                 /* SDK内核初始化周期回调，包括 下载、安装、加载 */
@@ -65,6 +62,12 @@ class MyApplication : Application() {
                         timber.i("onCoreInitFinished")
                     }
                 }
+                // 在调用TBS初始化、创建WebView之前进行如下配置
+                val map: Map<String, Any> = mapOf(
+                    TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER to true,
+                    TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE to true
+                )
+                QbSdk.initTbsSettings(map)
                 //x5内核初始化接口
                 QbSdk.initX5Environment(applicationContext, callback)
             }
