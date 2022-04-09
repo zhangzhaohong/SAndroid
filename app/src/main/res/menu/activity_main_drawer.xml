@@ -25,22 +25,6 @@
             android:icon="@android:drawable/ic_dialog_info"
             android:title="@string/menu_login" />
         <item
-            android:id="@+id/nav_feedback"
-            android:icon="@android:drawable/ic_menu_send"
-            android:title="@string/menu_feedback" />
-        <item
-            android:id="@+id/nav_trafficManager"
-            android:icon="@drawable/ic_traffic_light"
-            android:title="@string/menu_trafficManager" />
-        <item
-            android:id="@+id/nav_illegalManager"
-            android:icon="@drawable/ic_illegal"
-            android:title="@string/menu_illegalManager" />
-        <item
-            android:id="@+id/nav_envManager"
-            android:icon="@android:drawable/ic_dialog_map"
-            android:title="@string/menu_envManager" />
-        <item
             android:id="@+id/nav_webView"
             android:icon="@drawable/ic_browser"
             android:title="@string/menu_webView" />
