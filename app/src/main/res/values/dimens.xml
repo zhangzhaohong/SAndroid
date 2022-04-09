@@ -7,5 +7,5 @@
     <dimen name="nav_header_height">250dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="view_splash_bottom">60dp</dimen>
-    <dimen name="webView_bottom_icon">30dp</dimen>
+    <dimen name="webView_bottom_icon">12dp</dimen>
 </resources>

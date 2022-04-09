@@ -22,14 +22,14 @@
             <com.tristana.customViewLibrary.view.customLayout.CustomEditTextView
                 android:id="@+id/input_url"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/webView_enter"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
                 android:src="@drawable/ic_web_view_enter" />
