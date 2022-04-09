@@ -23,6 +23,7 @@
         android:resizeableActivity="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:extractNativeLibs="true"
         tools:targetApi="s">
 
         <uses-library
