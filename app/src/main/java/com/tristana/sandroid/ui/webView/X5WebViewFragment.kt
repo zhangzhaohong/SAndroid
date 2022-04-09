@@ -24,7 +24,7 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
     private lateinit var webViewHome: AppCompatImageView
     private lateinit var webViewRefresh: AppCompatImageView
     private lateinit var webViewExit: AppCompatImageView
-    private var defaultUrl: String = "https://www.hao123.com/"
+    private var defaultUrl: String = "https://debugx5.qq.com/"
     private var url: String = ""
     private var x5ViewModel: X5ViewModel? = null
     private lateinit var x5WebView: X5WebView
