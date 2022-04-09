@@ -12,7 +12,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class MyApplication : Application() {
     private lateinit var timber: Timber
 
