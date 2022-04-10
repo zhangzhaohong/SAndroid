@@ -99,7 +99,9 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
 
         override fun onShowCustomView(p0: View?, p1: IX5WebChromeClient.CustomViewCallback?) {
             showCustomView(p0, p1)
-            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+            // activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+            // activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED;
             // super.onShowCustomView(p0, p1)
             LogUtils.d("onShowCustomView")
         }
