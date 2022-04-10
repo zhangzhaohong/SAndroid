@@ -12,7 +12,7 @@ import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel
-import com.tristana.CustomViewWithToolsLibrary.tools.sharedPreferences.SpUtils
+import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 
 /**
  * A simple [Fragment] subclass.

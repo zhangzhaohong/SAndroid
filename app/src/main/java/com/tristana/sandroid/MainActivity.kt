@@ -1,5 +1,6 @@
 package com.tristana.sandroid
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -26,10 +27,10 @@ import com.hjq.permissions.XXPermissions
 import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsListener
-import com.tristana.CustomViewWithToolsLibrary.tools.log.Timber
+import com.tristana.customViewWithToolsLibrary.tools.array.ArrayUtils
+import com.tristana.customViewWithToolsLibrary.tools.file.FileUtils
+import com.tristana.customViewWithToolsLibrary.tools.log.Timber
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
-import com.tristana.sandroid.tools.array.ArrayUtils
-import com.tristana.sandroid.tools.file.FileUtils
 import com.tristana.sandroid.tools.toast.ToastUtils
 import com.tristana.sandroid.ui.webView.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        timber = Timber("MainActivity")
+        timber = Timber().timber
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val title = toolbar.getChildAt(0) as AppCompatTextView
@@ -95,18 +96,18 @@ class MainActivity : AppCompatActivity() {
                                 TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE to true
                             )
                             QbSdk.initTbsSettings(map)
-                            timber?.i("VERSION: " + Build.VERSION.SDK_INT);
+                            timber?.i(this@MainActivity, "VERSION: " + Build.VERSION.SDK_INT);
                             // TbsDownloader.startDownload(MyApplication.instance);//手动开始下载，此时需要先判定网络是否符合
                             val callback: QbSdk.PreInitCallback = object : QbSdk.PreInitCallback {
                                 override fun onViewInitFinished(arg0: Boolean) {
                                     // TODO Auto-generated method stub
                                     //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                                    timber?.i("onViewInitFinished: $arg0")
+                                    timber?.i(this@MainActivity, "onViewInitFinished: $arg0")
                                 }
 
                                 override fun onCoreInitFinished() {
                                     // TODO Auto-generated method stub
-                                    timber?.i("onCoreInitFinished")
+                                    timber?.i(this@MainActivity, "onCoreInitFinished")
                                 }
                             }
 
@@ -118,14 +119,14 @@ class MainActivity : AppCompatActivity() {
                                  * @param stateCode 110: 表示当前服务器认为该环境下不需要下载
                                  */
                                 override fun onDownloadFinish(stateCode: Int) {
-                                    timber?.i("onDownloadFinished: $stateCode")
+                                    timber?.i(this@MainActivity, "onDownloadFinished: $stateCode")
                                 }
 
                                 /**
                                  * @param stateCode 200、232安装成功
                                  */
                                 override fun onInstallFinish(stateCode: Int) {
-                                    timber?.i("onInstallFinished: $stateCode")
+                                    timber?.i(this@MainActivity, "onInstallFinished: $stateCode")
                                 }
 
                                 /**
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                                  * @param progress 0 - 100
                                  */
                                 override fun onDownloadProgress(progress: Int) {
-                                    timber?.i("Core Downloading: $progress")
+                                    timber?.i(this@MainActivity, "Core Downloading: $progress")
                                 }
                             })
                         }
@@ -195,7 +196,7 @@ class MainActivity : AppCompatActivity() {
         menuRead.setOnMenuItemClickListener {
             val data = FileUtils().readLine(this@MainActivity, "data_TEST")
             for (i in data.indices) {
-                timber!!.d("Data_read[" + i + "] " + data[i])
+                timber!!.d(this@MainActivity, "Data_read[" + i + "] " + data[i])
             }
             true
         }
@@ -211,7 +212,7 @@ class MainActivity : AppCompatActivity() {
             val data = "111,222,333,444,555"
             val result = ArrayUtils().textToArrayList(data)
             for (i in result.indices) {
-                timber!!.d("Data_textToArray[" + i + "] " + result[i])
+                timber!!.d(this@MainActivity, "Data_textToArray[" + i + "] " + result[i])
             }
             true
         }
@@ -224,7 +225,7 @@ class MainActivity : AppCompatActivity() {
             data.add("555")
             data.add("666")
             val result = ArrayUtils().arrayListToString(data)
-            timber!!.d("Data_arrayToText: $result")
+            timber!!.d(this@MainActivity, "Data_arrayToText: $result")
             true
         }
         menuDelFile.setOnMenuItemClickListener {

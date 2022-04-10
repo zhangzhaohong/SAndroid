@@ -10,7 +10,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.tristana.CustomViewWithToolsLibrary.view.customLayout.SplashView
+import com.tristana.customViewWithToolsLibrary.view.customLayout.SplashView
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

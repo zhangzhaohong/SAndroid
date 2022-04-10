@@ -19,7 +19,7 @@
             android:layout_marginEnd="10dp"
             android:orientation="horizontal">
 
-            <com.tristana.CustomViewWithToolsLibrary.view.customLayout.CustomEditTextView
+            <com.tristana.customViewWithToolsLibrary.view.customLayout.CustomEditTextView
                 android:id="@+id/input_url"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
@@ -36,7 +36,7 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.tristana.CustomViewWithToolsLibrary.view.webView.X5WebView
+        <com.tristana.customViewWithToolsLibrary.view.webView.X5WebView
             android:id="@+id/webView"
             android:layout_width="fill_parent"
             android:layout_height="0dp"

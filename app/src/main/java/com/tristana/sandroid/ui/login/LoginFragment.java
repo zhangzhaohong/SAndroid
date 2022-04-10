@@ -10,15 +10,15 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.google.gson.Gson;
-import com.tristana.CustomViewWithToolsLibrary.tools.log.Timber;
-import com.tristana.CustomViewWithToolsLibrary.view.customLayout.CustomEditTextView;
+import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
+import com.tristana.customViewWithToolsLibrary.tools.http.RequestInfo;
+import com.tristana.customViewWithToolsLibrary.tools.log.Timber;
+import com.tristana.customViewWithToolsLibrary.view.customLayout.CustomEditTextView;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
 import com.tristana.sandroid.model.data.DataModel;
 import com.tristana.sandroid.model.login.LoginRespModel;
-import com.tristana.sandroid.tools.http.HttpUtils;
-import com.tristana.sandroid.tools.http.RequestInfo;
-import com.tristana.CustomViewWithToolsLibrary.tools.sharedPreferences.SpUtils;
+import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils;
 import com.tristana.sandroid.tools.text.TextUtils;
 import com.tristana.sandroid.tools.toast.ToastUtils;
 
@@ -37,7 +37,7 @@ public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
     private boolean isRequest = false;
-    private final Timber timber = new Timber("LoginFragment");
+    private final Timber timber = new Timber().getTimber();
     private CustomEditTextView username;
     private CustomEditTextView password;
     private AppCompatCheckBox rememberPassword;
@@ -55,7 +55,7 @@ public class LoginFragment extends Fragment {
                     password.showError(R.drawable.ic_warning, message.obj.toString(), true);
                     break;
                 case HandlerType.TYPE_LOGIN_STATUS:
-                    timber.d("LOGIN STATUS!" + message.obj);
+                    timber.d(requireActivity(), "LOGIN STATUS!" + message.obj);
 //                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 //                    navController.navigate(R.id.nav_home);
                     break;

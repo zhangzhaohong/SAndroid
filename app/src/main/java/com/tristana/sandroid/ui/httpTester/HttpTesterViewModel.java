@@ -1,14 +1,14 @@
 package com.tristana.sandroid.ui.httpTester;
 
-import com.tristana.sandroid.tools.http.HttpUtils;
-import com.tristana.sandroid.tools.http.RequestInfo;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
+import com.tristana.customViewWithToolsLibrary.tools.http.RequestInfo;
 
 public class HttpTesterViewModel extends ViewModel {
 
