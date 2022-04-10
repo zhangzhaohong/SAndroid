@@ -21,7 +21,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import com.tristana.customViewWithToolsLibrary.R
-import com.tristana.customViewWithToolsLibrary.tools.log.Timber
 import com.tristana.customViewWithToolsLibrary.view.popupWindow.PopupWindowView
 
 
@@ -43,12 +42,10 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
     private var iconResId: Int = 0
     private lateinit var inputIcon: AppCompatImageView
     private lateinit var inputEditText: AppCompatEditText
-    var timber: Timber
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_custom_edit_text_view, this)
         initResources()
-        timber = Timber().timber
     }
 
     private fun initResources() {

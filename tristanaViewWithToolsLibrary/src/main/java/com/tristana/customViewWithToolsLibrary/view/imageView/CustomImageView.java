@@ -14,8 +14,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
-import com.tristana.customViewWithToolsLibrary.tools.log.Timber;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat;
 public class CustomImageView extends View {
 
     private final Context context;
-    private final Timber timber;
     /**
      * isInit记录当前初始化状态
      */
@@ -62,7 +61,7 @@ public class CustomImageView extends View {
             isInit = true;
             longPicStatus = checkLongPic();
             isVertical = checkOrientation();
-            timber.i(context, "[picInfo]" + "\n" +
+            LogUtils.i("[picInfo]" + "\n" +
                     "onShowInfo:" + "\n" +
                     "longPicStatus[" + longPicStatus + "]" + "\n" +
                     "isVertical[" + isVertical + "]");
@@ -84,7 +83,7 @@ public class CustomImageView extends View {
                 dY = -(float) (viewHeight - bmpHeight) / 2;
             else
                 dY = (float) (viewHeight - bmpHeight) / 2;
-            timber.i(context, "[picDetail]" + "\n" +
+            LogUtils.i("[picDetail]" + "\n" +
                     "onShowInfo:" + "\n" +
                     "viewWidth[" + viewWidth + "]" + "\n" +
                     "viewHeight[" + viewHeight + "]" + "\n" +
@@ -100,7 +99,6 @@ public class CustomImageView extends View {
         super(context, attrs);
         this.context = context;
         initListener(context);
-        timber = new Timber().getTimber();
     }
 
     private void initListener(Context context) {

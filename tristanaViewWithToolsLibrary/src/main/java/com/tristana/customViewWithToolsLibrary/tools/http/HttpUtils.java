@@ -3,8 +3,6 @@ package com.tristana.customViewWithToolsLibrary.tools.http;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.tristana.customViewWithToolsLibrary.tools.log.Timber;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
@@ -20,11 +18,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HttpUtils {
-    private static Timber timber;
-
-    public HttpUtils() {
-        timber = new Timber().getTimber();
-    }
 
     public Bitmap getBitmap(String url) {
         Bitmap bitmap = null;

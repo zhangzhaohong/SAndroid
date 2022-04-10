@@ -25,12 +25,12 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import com.blankj.utilcode.util.BarUtils.setStatusBarVisibility
+import com.blankj.utilcode.util.LogUtils
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.sdk.*
 import com.tristana.customViewWithToolsLibrary.customInterface.IOnPageFinishedInterface
 import com.tristana.customViewWithToolsLibrary.data.DataModel
-import com.tristana.customViewWithToolsLibrary.tools.log.Timber
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.customViewWithToolsLibrary.R
 
@@ -44,11 +44,9 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
     var onLoadFinishListener: IOnPageFinishedInterface? = null
     private var enableShowProgressBar: Boolean = true
 
-    private val timber: Timber = Timber().timber
-
     private val client: WebViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
-            timber.d(context, "shouldOverrideUrlLoading:$p1")
+            LogUtils.d("shouldOverrideUrlLoading:$p1")
             //返回值是true的时候控制去WebView打开，
             // 为false调用系统浏览器或第三方浏览器
             if (p1.isNullOrEmpty())
@@ -65,7 +63,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
                     intent.data = Uri.parse(p1)
                     view.context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
-                    timber.d(context, "异常URL：$p1")
+                    LogUtils.d("异常URL：$p1")
                     Toast.makeText(view.context, "手机还没有安装支持打开此网页的应用！", Toast.LENGTH_SHORT).show()
                 }
                 true
@@ -77,7 +75,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
             val cookieManager = CookieManager.getInstance()
             cookieManager.setAcceptCookie(true)
             val endCookie = cookieManager.getCookie(p1)
-            timber.d(context, "onPageFinished: endCookie : $endCookie")
+            LogUtils.d("onPageFinished: endCookie : $endCookie")
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 CookieSyncManager.getInstance().sync() //同步cookie
             } else {
@@ -90,7 +88,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
 
     private val mWebChromeClient = object : WebChromeClient() {
         override fun getVideoLoadingProgressView(): View {
-            timber.d(context, "getVideoLoadingProgressView")
+            LogUtils.d("getVideoLoadingProgressView")
             val frameLayout = FrameLayout(activity)
             frameLayout.layoutParams =
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -101,7 +99,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
             showCustomView(p0, p1)
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
             // super.onShowCustomView(p0, p1)
-            timber.d(context, "onShowCustomView")
+            LogUtils.d("onShowCustomView")
         }
 
         @SuppressLint("SourceLockedOrientationActivity")
@@ -109,7 +107,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
             hideCustomView()
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
             // super.onHideCustomView()
-            timber.d(context, "onHideCustomView")
+            LogUtils.d("onHideCustomView")
         }
 
         override fun onProgressChanged(p0: WebView?, p1: Int) {
@@ -224,7 +222,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         try {
             x5WebViewExtension.setScrollBarFadingEnabled(false)
         } catch (e: java.lang.Exception) {
-            timber.d(context, "Error:$e")
+            LogUtils.d("Error:$e")
         }
         isHorizontalScrollBarEnabled = false //水平不显示小方块
         isVerticalScrollBarEnabled = false //垂直不显示小方块
@@ -244,8 +242,8 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         if (!TextUtils.isEmpty(url)) {
             val cookieManager = CookieManager.getInstance()
             cookieManager.setAcceptCookie(true)
-            cookieManager.removeSessionCookies { p0 -> timber.d(context, "syncCookiesStatus:$p0") } // 移除
-            cookieManager.removeAllCookies { p0 -> timber.d(context, "removeAllCookiesStatus:$p0") }
+            cookieManager.removeSessionCookies { p0 -> LogUtils.d("syncCookiesStatus:$p0") } // 移除
+            cookieManager.removeAllCookies { p0 -> LogUtils.d("removeAllCookiesStatus:$p0") }
             //这里的拼接方式是伪代码
             val split = cookie.split(";".toRegex()).toTypedArray()
             for (string in split) {
@@ -254,7 +252,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
                 cookieManager.setCookie(url, string)
             }
             val newCookie = cookieManager.getCookie(url)
-            timber.d(context, "syncCookie: newCookie == $newCookie")
+            LogUtils.d("syncCookie: newCookie == $newCookie")
             //sdk21之后CookieSyncManager被抛弃了，换成了CookieManager来进行管理。
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 CookieSyncManager.getInstance().sync() //同步cookie
@@ -271,8 +269,8 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
             CookieSyncManager.createInstance(context)
         }
         val cookieManager = CookieManager.getInstance()
-        cookieManager.removeSessionCookies { p0 -> timber.d(context, "syncCookiesStatus:$p0") } // 移除
-        cookieManager.removeAllCookies { p0 -> timber.d(context, "removeAllCookiesStatus:$p0") }
+        cookieManager.removeSessionCookies { p0 -> LogUtils.d("syncCookiesStatus:$p0") } // 移除
+        cookieManager.removeAllCookies { p0 -> LogUtils.d("removeAllCookiesStatus:$p0") }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             CookieSyncManager.getInstance().sync()
         } else {

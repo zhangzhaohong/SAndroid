@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
 import com.tristana.customViewWithToolsLibrary.tools.http.RequestInfo;
-import com.tristana.customViewWithToolsLibrary.tools.log.Timber;
 import com.tristana.customViewWithToolsLibrary.view.customLayout.CustomEditTextView;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
@@ -37,7 +37,6 @@ public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
     private boolean isRequest = false;
-    private final Timber timber = new Timber().getTimber();
     private CustomEditTextView username;
     private CustomEditTextView password;
     private AppCompatCheckBox rememberPassword;
@@ -55,7 +54,7 @@ public class LoginFragment extends Fragment {
                     password.showError(R.drawable.ic_warning, message.obj.toString(), true);
                     break;
                 case HandlerType.TYPE_LOGIN_STATUS:
-                    timber.d(requireActivity(), "LOGIN STATUS!" + message.obj);
+                    LogUtils.d("LOGIN STATUS!" + message.obj);
 //                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 //                    navController.navigate(R.id.nav_home);
                     break;

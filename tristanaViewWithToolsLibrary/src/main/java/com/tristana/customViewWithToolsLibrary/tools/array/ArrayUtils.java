@@ -1,16 +1,9 @@
 package com.tristana.customViewWithToolsLibrary.tools.array;
 
-import com.tristana.customViewWithToolsLibrary.tools.log.Timber;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ArrayUtils {
-    private final Timber timber;
-
-    public ArrayUtils() {
-        timber = new Timber().getTimber();
-    }
 
     public ArrayList<Object> textToArrayList(String text) {
         String[] arr = text.split(",");
