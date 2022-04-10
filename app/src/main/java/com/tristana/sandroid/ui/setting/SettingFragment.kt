@@ -108,8 +108,23 @@ class SettingFragment : Fragment() {
                         .show()
                 }
                 RESET_SETTINGS -> {
-                    SpUtils.clear(requireContext())
-                    needRestart(false)
+                    MessageDialogBuilder(activity)
+                        .setTitle("提示")
+                        .setMessage("是否重置全部设置？\n该操作不可逆")
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction(
+                            "立即重置"
+                        ) { dialog, _ ->
+                            run {
+                                dialog.dismiss()
+                                SpUtils.clear(requireContext())
+                                needRestart(false)
+                            }
+                        }
+                        .show()
+
                 }
                 else -> {
                     Toast.makeText(activity, "$text is Clicked", Toast.LENGTH_SHORT).show()
@@ -291,8 +306,11 @@ class SettingFragment : Fragment() {
 
     private fun needRestart(later: Boolean = true) {
         val builder = MessageDialogBuilder(activity)
-        builder.setTitle("提示")
+        builder
+            .setTitle("提示")
             .setMessage("设置已保存，重启App生效")
+            .setCancelable(later)
+            .setCanceledOnTouchOutside(later)
         if (later) {
             builder.addAction(
                 "稍后重启"
