@@ -348,8 +348,9 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         decor.removeView(fullscreenContainer)
         fullscreenContainer.removeAllViews()
         customView = null
-        setStatusBarVisibility(activity, true)
         customViewCallback = null
+        setStatusBarVisibility(activity, true)
+        // activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
     }
 
     private fun showCustomView(view: View?, callback: IX5WebChromeClient.CustomViewCallback?) {
@@ -368,10 +369,10 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
             LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         )
         customView = view
-        setStatusBarVisibility(activity, false)
         customViewCallback = callback
+        setStatusBarVisibility(activity, false)
+        // activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
     }
-
 
 }
 
