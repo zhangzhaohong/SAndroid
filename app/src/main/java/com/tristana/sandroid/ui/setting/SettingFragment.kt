@@ -107,6 +107,10 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+                RESET_SETTINGS -> {
+                    SpUtils.clear(requireContext())
+                    needRestart(false)
+                }
                 else -> {
                     Toast.makeText(activity, "$text is Clicked", Toast.LENGTH_SHORT).show()
                 }
@@ -120,7 +124,8 @@ class SettingFragment : Fragment() {
     private fun jumpToBrowser(url: String) {
         val fragmentManager: FragmentManager = parentFragmentManager
         val fragment: Fragment = X5WebViewFragment()
-        fragmentManager.beginTransaction().add(requireParentFragment().requireView().id, fragment).addToBackStack(null).commit()
+        fragmentManager.beginTransaction().add(requireParentFragment().requireView().id, fragment)
+            .addToBackStack(null).commit()
         val bundle = Bundle()
         bundle.putString("url", url)
         fragment.arguments = bundle
@@ -236,6 +241,16 @@ class SettingFragment : Fragment() {
         logFilePrefix.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
         logFilePrefix.showRedDot(false)
 
+        val resetSettings: QMUICommonListItemView = mGroupListView.createItemView(
+            null,
+            RESET_SETTINGS,
+            null,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
+            height
+        )
+        resetSettings.showRedDot(true)
+
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(context)
             .setTitle("基础设置")
@@ -264,25 +279,34 @@ class SettingFragment : Fragment() {
             .addItemView(logSaveDay, onClickListener)
             .setOnlyShowStartEndSeparator(true)
             .addTo(mGroupListView)
+        QMUIGroupListView.newSection(requireContext())
+            .setTitle("全局设置")
+            .setDescription("以下设置项请谨慎操作")
+            .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(resetSettings, onClickListener)
+            .setOnlyShowStartEndSeparator(true)
+            .addTo(mGroupListView)
         return root
     }
 
-    private fun needRestart() {
-        MessageDialogBuilder(activity)
-            .setTitle("提示")
+    private fun needRestart(later: Boolean = true) {
+        val builder = MessageDialogBuilder(activity)
+        builder.setTitle("提示")
             .setMessage("设置已保存，重启App生效")
-            .addAction(
+        if (later) {
+            builder.addAction(
                 "稍后重启"
             ) { dialog, _ -> dialog.dismiss() }
-            .addAction(
-                "立即重启"
-            ) { dialog, _ ->
-                run {
-                    dialog.dismiss()
-                    AppUtils.relaunchApp(true)
-                }
+        }
+        builder.addAction(
+            "立即重启"
+        ) { dialog, _ ->
+            run {
+                dialog.dismiss()
+                AppUtils.relaunchApp(true)
             }
-            .show()
+        }
+        builder.show()
     }
 
 }
