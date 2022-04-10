@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -15,12 +16,15 @@ import android.os.Bundle
 import android.os.Process
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
+import com.blankj.utilcode.util.BarUtils.setStatusBarVisibility
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.sdk.*
@@ -30,9 +34,11 @@ import com.tristana.customViewLibrary.data.DataModel
 import com.tristana.customViewLibrary.tools.log.Timber
 import com.tristana.customViewLibrary.tools.sharedPreferences.SpUtils
 
-
 class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(context, attributeSet) {
 
+    private var customViewCallback: IX5WebChromeClient.CustomViewCallback? = null
+    private lateinit var fullscreenContainer: FullscreenHolder
+    private var customView: View? = null
     private lateinit var activity: FragmentActivity
     private lateinit var progressBar: ProgressBar
     var onLoadFinishListener: IOnPageFinishedInterface? = null
@@ -83,13 +89,26 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
     }
 
     private val mWebChromeClient = object : WebChromeClient() {
+        override fun getVideoLoadingProgressView(): View {
+            timber.d("getVideoLoadingProgressView")
+            val frameLayout = FrameLayout(activity)
+            frameLayout.layoutParams =
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            return frameLayout
+        }
+
         override fun onShowCustomView(p0: View?, p1: IX5WebChromeClient.CustomViewCallback?) {
-            super.onShowCustomView(p0, p1)
+            showCustomView(p0, p1)
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+            // super.onShowCustomView(p0, p1)
             timber.d("onShowCustomView")
         }
 
+        @SuppressLint("SourceLockedOrientationActivity")
         override fun onHideCustomView() {
-            super.onHideCustomView()
+            hideCustomView()
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            // super.onHideCustomView()
             timber.d("onHideCustomView")
         }
 
@@ -319,4 +338,48 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         this.view.isClickable = true
     }
 
+    private fun hideCustomView() {
+        if (customView == null) {
+            return
+        }
+        val decor = activity.window.decorView as FrameLayout
+        decor.removeView(fullscreenContainer)
+        fullscreenContainer.removeAllViews()
+        customView = null
+        setStatusBarVisibility(activity, true)
+        customViewCallback = null
+    }
+
+    private fun showCustomView(view: View?, callback: IX5WebChromeClient.CustomViewCallback?) {
+        if (customView != null) {
+            callback?.onCustomViewHidden()
+            return
+        }
+        val decor = activity.window.decorView as FrameLayout
+        fullscreenContainer = FullscreenHolder(activity)
+        fullscreenContainer.addView(
+            view,
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        )
+        decor.addView(
+            fullscreenContainer,
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        )
+        customView = view
+        setStatusBarVisibility(activity, false)
+        customViewCallback = callback
+    }
+
+
+}
+
+internal class FullscreenHolder(ctx: Context) : FrameLayout(ctx) {
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(evt: MotionEvent): Boolean {
+        return true
+    }
+
+    init {
+        setBackgroundColor(ctx.resources.getColor(android.R.color.transparent))
+    }
 }
