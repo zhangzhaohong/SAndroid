@@ -88,8 +88,8 @@ class MainActivity : AppCompatActivity() {
                         withContext(Dispatchers.IO) {
                             /* 设置允许移动网络下进行内核下载。默认不下载，会导致部分一直用移动网络的用户无法使用x5内核 */
                             QbSdk.setDownloadWithoutWifi(true)
-                            QbSdk.setNeedInitX5FirstTime(true)
-                            QbSdk.setTBSInstallingStatus(false)
+                            // QbSdk.setNeedInitX5FirstTime(true)
+                            // QbSdk.setTBSInstallingStatus(false)
                             // 在调用TBS初始化、创建WebView之前进行如下配置
                             val map: Map<String, Any> = mapOf(
                                 TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER to true,
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                             )
                             QbSdk.initTbsSettings(map)
                             timber?.i("VERSION: " + Build.VERSION.SDK_INT);
-                            TbsDownloader.startDownload(MyApplication.instance);//手动开始下载，此时需要先判定网络是否符合
+                            // TbsDownloader.startDownload(MyApplication.instance);//手动开始下载，此时需要先判定网络是否符合
                             val callback: QbSdk.PreInitCallback = object : QbSdk.PreInitCallback {
                                 override fun onViewInitFinished(arg0: Boolean) {
                                     // TODO Auto-generated method stub

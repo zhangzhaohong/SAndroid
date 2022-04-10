@@ -23,7 +23,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            abiFilters 'armeabi'
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
 
