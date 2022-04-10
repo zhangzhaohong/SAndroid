@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.AppUtils
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
@@ -19,6 +20,7 @@ import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.DataModel.*
 import com.tristana.sandroid.model.data.SettingModel.*
+import com.tristana.sandroid.ui.webView.X5WebViewFragment
 
 
 /**
@@ -32,7 +34,14 @@ class SettingFragment : Fragment() {
     private var onClickListener = View.OnClickListener { v ->
         if (v is QMUICommonListItemView) {
             when (val text = v.text) {
+                X5_ALLOW_THIRD_PART_APP -> {}
                 X5_PRINT_DEBUG_INFO -> {}
+                X5_DEBUG -> {
+                    jumpToBrowser("http://debugx5.qq.com")
+                }
+                X5_TBS_DEBUG -> {
+                    jumpToBrowser("http://debugtbs.qq.com")
+                }
                 LOGGER -> {}
                 LOG_FILE_PREFIX -> {
                     run {
@@ -108,6 +117,15 @@ class SettingFragment : Fragment() {
         }
     }
 
+    private fun jumpToBrowser(url: String) {
+        val fragmentManager: FragmentManager = parentFragmentManager
+        val fragment: Fragment = X5WebViewFragment()
+        fragmentManager.beginTransaction().add(requireParentFragment().requireView().id, fragment).addToBackStack(null).commit()
+        val bundle = Bundle()
+        bundle.putString("url", url)
+        fragment.arguments = bundle
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -118,17 +136,49 @@ class SettingFragment : Fragment() {
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
 
-        val x5DebugItem = mGroupListView.createItemView(X5_PRINT_DEBUG_INFO)
-        x5DebugItem.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
-        x5DebugItem.switch.isChecked =
-            SpUtils.get(context, DataModel.X5_DEBUG_MODE_SP, false) as Boolean;
-        x5DebugItem.switch.setOnCheckedChangeListener { _, isChecked ->
+        val x5AllowThirdPartApp = mGroupListView.createItemView(X5_ALLOW_THIRD_PART_APP)
+        x5AllowThirdPartApp.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
+        x5AllowThirdPartApp.switch.isChecked =
+            SpUtils.get(context, X5_ALLOW_THIRD_PART_APP_SP, false) as Boolean;
+        x5AllowThirdPartApp.switch.setOnCheckedChangeListener { _, isChecked ->
             SpUtils.put(
                 context,
-                DataModel.X5_DEBUG_MODE_SP,
+                X5_ALLOW_THIRD_PART_APP_SP,
                 isChecked
             )
         }
+
+        val x5DebugItem = mGroupListView.createItemView(X5_PRINT_DEBUG_INFO)
+        x5DebugItem.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
+        x5DebugItem.switch.isChecked =
+            SpUtils.get(context, X5_DEBUG_MODE_SP, false) as Boolean;
+        x5DebugItem.switch.setOnCheckedChangeListener { _, isChecked ->
+            SpUtils.put(
+                context,
+                X5_DEBUG_MODE_SP,
+                isChecked
+            )
+        }
+
+        val x5Debug: QMUICommonListItemView = mGroupListView.createItemView(
+            null,
+            X5_DEBUG,
+            null,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
+            height
+        )
+        x5Debug.showRedDot(false)
+
+        val x5TbsDebug: QMUICommonListItemView = mGroupListView.createItemView(
+            null,
+            X5_TBS_DEBUG,
+            null,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
+            height
+        )
+        x5TbsDebug.showRedDot(false)
 
         val redPointItem: QMUICommonListItemView = mGroupListView.createItemView(
             null,
@@ -197,7 +247,10 @@ class SettingFragment : Fragment() {
             .setTitle("X5设置")
             .setDescription("")
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(x5AllowThirdPartApp, onClickListener)
             .addItemView(x5DebugItem, onClickListener)
+            .addItemView(x5Debug, onClickListener)
+            .addItemView(x5TbsDebug, onClickListener)
             .addItemView(redPointItem, onClickListener)
             .setOnlyShowStartEndSeparator(true)
             .addTo(mGroupListView)

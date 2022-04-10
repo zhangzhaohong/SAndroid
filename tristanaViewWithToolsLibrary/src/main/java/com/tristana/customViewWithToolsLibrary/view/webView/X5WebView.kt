@@ -43,12 +43,14 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
     private lateinit var progressBar: ProgressBar
     var onLoadFinishListener: IOnPageFinishedInterface? = null
     private var enableShowProgressBar: Boolean = true
+    private val allowThirdPartApp = SpUtils.get(context, DataModel.X5_ALLOW_THIRD_PART_APP_SP, false) as Boolean
 
     private val client: WebViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
+            if (!allowThirdPartApp) {
+                return false
+            }
             LogUtils.d("shouldOverrideUrlLoading:$p1")
-            //返回值是true的时候控制去WebView打开，
-            // 为false调用系统浏览器或第三方浏览器
             if (p1.isNullOrEmpty())
                 return true
             return if (p1.startsWith("http") || p1.startsWith("https") || p1.startsWith("ftp")) {
