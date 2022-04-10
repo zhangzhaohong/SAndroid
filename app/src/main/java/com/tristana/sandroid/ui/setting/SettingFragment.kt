@@ -15,6 +15,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.MessageDialogBuilder
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
+import com.tencent.smtt.sdk.TbsVideo
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel
@@ -42,6 +43,38 @@ class SettingFragment : Fragment() {
                 X5_TBS_DEBUG -> {
                     jumpToBrowser("http://debugtbs.qq.com")
                 }
+                X5_VIDEO_DEBUG -> {
+                    val builder = EditTextDialogBuilder(activity)
+                    builder
+                        .setTitle("设置视频链接")
+                        .setPlaceholder("设置视频链接")
+                        .setInputType(InputType.TYPE_CLASS_TEXT)
+                        .setDefaultText(
+                            SpUtils.get(
+                                context,
+                                X5_VIDEO_DEBUG_SP,
+                                ""
+                            ) as String
+                        )
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction("确定") { dialog, _ ->
+                            val input: CharSequence? = builder.editText.text
+                            if (input.isNullOrEmpty()) {
+                                dialog.dismiss()
+                                Toast.makeText(activity, "非法的视频链接", Toast.LENGTH_SHORT).show()
+                            } else {
+                                SpUtils.put(context, X5_VIDEO_DEBUG_SP, input)
+                                dialog.dismiss()
+                                val bundle = Bundle()
+                                bundle.putInt("screenMode", 102)
+                                TbsVideo.openVideo(requireContext(), input.toString(), bundle)
+                            }
+                            v.detailText = input
+                        }
+                        .show()
+                }
                 LOGGER -> {}
                 LOG_FILE_PREFIX -> {
                     run {
@@ -60,7 +93,7 @@ class SettingFragment : Fragment() {
                             .addAction(
                                 "取消"
                             ) { dialog, _ -> dialog.dismiss() }
-                            .addAction("保存修改") { dialog, index ->
+                            .addAction("保存修改") { dialog, _ ->
                                 val input: CharSequence? = builder.editText.text
                                 if (input.isNullOrEmpty()) {
                                     dialog.dismiss()
@@ -94,7 +127,7 @@ class SettingFragment : Fragment() {
                         .addAction(
                             "取消"
                         ) { dialog, _ -> dialog.dismiss() }
-                        .addAction("保存修改") { dialog, index ->
+                        .addAction("保存修改") { dialog, _ ->
                             val input: CharSequence? = builder.editText.text
                             if (input.isNullOrEmpty()) {
                                 SpUtils.put(context, LOG_SAVE_DAY_SP, (-1))
@@ -200,6 +233,17 @@ class SettingFragment : Fragment() {
         )
         x5TbsDebug.showRedDot(false)
 
+        val x5VideoDebug: QMUICommonListItemView = mGroupListView.createItemView(
+            null,
+            X5_VIDEO_DEBUG,
+            SpUtils.get(context, X5_VIDEO_DEBUG_SP, "") as String,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
+            height
+        )
+        x5VideoDebug.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
+        x5VideoDebug.showRedDot(false)
+
         val redPointItem: QMUICommonListItemView = mGroupListView.createItemView(
             null,
             "红点显示在右边",
@@ -218,7 +262,7 @@ class SettingFragment : Fragment() {
         logger.switch.setOnCheckedChangeListener { _, isChecked ->
             SpUtils.put(
                 context,
-                DataModel.LOGGER_SP,
+                LOGGER_SP,
                 isChecked
             )
         }
@@ -237,10 +281,10 @@ class SettingFragment : Fragment() {
         val log2Local = mGroupListView.createItemView(LOG_2_LOCAL)
         log2Local.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
         log2Local.switch.isChecked =
-            SpUtils.get(context, DataModel.LOG_SAVE_2_LOCAL_SP, false) as Boolean;
+            SpUtils.get(context, LOG_SAVE_2_LOCAL_SP, false) as Boolean;
         log2Local.switch.setOnCheckedChangeListener { _, isChecked ->
             run {
-                SpUtils.put(context, DataModel.LOG_SAVE_2_LOCAL_SP, isChecked)
+                SpUtils.put(context, LOG_SAVE_2_LOCAL_SP, isChecked)
                 needRestart()
             }
         }
@@ -281,6 +325,7 @@ class SettingFragment : Fragment() {
             .addItemView(x5DebugItem, onClickListener)
             .addItemView(x5Debug, onClickListener)
             .addItemView(x5TbsDebug, onClickListener)
+            .addItemView(x5VideoDebug, onClickListener)
             .addItemView(redPointItem, onClickListener)
             .setOnlyShowStartEndSeparator(true)
             .addTo(mGroupListView)
