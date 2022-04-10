@@ -86,6 +86,11 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
             timber.d("onShowCustomView")
         }
 
+        override fun onHideCustomView() {
+            super.onHideCustomView()
+            timber.d("onHideCustomView")
+        }
+
         override fun onProgressChanged(p0: WebView?, p1: Int) {
             super.onProgressChanged(p0, p1)
             if (enableShowProgressBar) {
