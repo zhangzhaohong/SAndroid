@@ -49,6 +49,7 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         webViewHome = root.findViewById(R.id.browser_home)
         webViewRefresh = root.findViewById(R.id.browser_refresh)
         webViewExit = root.findViewById(R.id.browser_exit)
+        x5WebView.init(requireActivity())
         x5WebView.loadUrl(url)
         inputUrl.initParameter(
                 R.drawable.ic_browser_default,

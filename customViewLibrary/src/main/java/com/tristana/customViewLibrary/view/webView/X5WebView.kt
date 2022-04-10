@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentActivity
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.sdk.*
@@ -32,6 +33,7 @@ import com.tristana.customViewLibrary.tools.sharedPreferences.SpUtils
 
 class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(context, attributeSet) {
 
+    private lateinit var activity: FragmentActivity
     private lateinit var progressBar: ProgressBar
     var onLoadFinishListener: IOnPageFinishedInterface? = null
     private var enableShowProgressBar: Boolean = true
@@ -107,7 +109,10 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
             }
         }
 
-        override fun onGeolocationPermissionsShowPrompt(p0: String?, p1: GeolocationPermissionsCallback?) {
+        override fun onGeolocationPermissionsShowPrompt(
+            p0: String?,
+            p1: GeolocationPermissionsCallback?
+        ) {
             p1?.invoke(p0, true, false)
             super.onGeolocationPermissionsShowPrompt(p0, p1)
         }
@@ -170,21 +175,24 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         }
     }
 
-    init {
-        initPermission()
-        initUi()
-        setBackgroundColor(85621)
-        this.webViewClient = this.client
-        this.webChromeClient = mWebChromeClient;
-        // WebStorage webStorage = WebStorage.getInstance();
-        initWebViewSettings()
-        this.view.isClickable = true
-    }
-
     private fun initPermission() {
         //权限检查,编辑器自动添加
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                1
+            )
             return
         }
     }
@@ -277,14 +285,19 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         paint.isAntiAlias = true
         if (status) {
             if (x5WebViewExtension != null) {
-                canvas.drawText(this.context.packageName + "-pid:"
-                        + Process.myPid(), 10F, 50F, paint)
                 canvas.drawText(
-                        "X5  Core:" + QbSdk.getTbsVersion(this.context), 10F,
-                        100F, paint)
+                    this.context.packageName + "-pid:"
+                            + Process.myPid(), 10F, 50F, paint
+                )
+                canvas.drawText(
+                    "X5  Core:" + QbSdk.getTbsVersion(this.context), 10F,
+                    100F, paint
+                )
             } else {
-                canvas.drawText(this.context.packageName + "-pid:"
-                        + Process.myPid(), 10F, 50F, paint)
+                canvas.drawText(
+                    this.context.packageName + "-pid:"
+                            + Process.myPid(), 10F, 50F, paint
+                )
                 canvas.drawText("Sys Core", 10F, 100F, paint)
             }
             canvas.drawText(Build.MANUFACTURER, 10F, 150F, paint)
@@ -292,6 +305,18 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
         }
         canvas.restore()
         return ret
+    }
+
+    fun init(activity: FragmentActivity) {
+        initPermission()
+        initUi()
+        setBackgroundColor(85621)
+        this.activity = activity
+        this.webViewClient = this.client
+        this.webChromeClient = mWebChromeClient
+        // WebStorage webStorage = WebStorage.getInstance();
+        initWebViewSettings()
+        this.view.isClickable = true
     }
 
 }
