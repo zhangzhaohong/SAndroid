@@ -20,8 +20,10 @@ class MyApplication : Application() {
             withContext(Dispatchers.IO) {
                 instance?.let {
                     val mConfig: LogUtils.Config = LogUtils.getConfig()
+                    mConfig.isLogSwitch = SpUtils.get(it, DataModel.LOGGER_SP, true) as Boolean
                     mConfig.filePrefix = SpUtils.get(it, DataModel.LOG_FILE_PREFIX_SP, "AppLog") as String
                     mConfig.isLog2FileSwitch = SpUtils.get(it, DataModel.LOG_SAVE_2_LOCAL_SP, false) as Boolean
+                    mConfig.saveDays = SpUtils.get(it, DataModel.LOG_SAVE_DAY_SP, 3) as Int
                     LogUtils.d(mConfig)
                 }
             }

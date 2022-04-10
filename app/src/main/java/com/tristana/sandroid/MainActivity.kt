@@ -119,14 +119,14 @@ class MainActivity : AppCompatActivity() {
                                  * @param stateCode 110: 表示当前服务器认为该环境下不需要下载
                                  */
                                 override fun onDownloadFinish(stateCode: Int) {
-                                    LogUtils.i("onDownloadFinished: $stateCode")
+                                    LogUtils.d("onDownloadFinished: $stateCode")
                                 }
 
                                 /**
                                  * @param stateCode 200、232安装成功
                                  */
                                 override fun onInstallFinish(stateCode: Int) {
-                                    LogUtils.i("onInstallFinished: $stateCode")
+                                    LogUtils.d("onInstallFinished: $stateCode")
                                 }
 
                                 /**
@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                                  * @param progress 0 - 100
                                  */
                                 override fun onDownloadProgress(progress: Int) {
-                                    LogUtils.i("Core Downloading: $progress")
+                                    LogUtils.d("Core Downloading: $progress")
                                 }
                             })
                         }

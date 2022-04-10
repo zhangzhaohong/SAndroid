@@ -17,7 +17,7 @@ import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel
-import com.tristana.sandroid.model.data.DataModel.LOG_FILE_PREFIX_SP
+import com.tristana.sandroid.model.data.DataModel.*
 import com.tristana.sandroid.model.data.SettingModel.*
 
 
@@ -33,6 +33,7 @@ class SettingFragment : Fragment() {
         if (v is QMUICommonListItemView) {
             when (val text = v.text) {
                 X5_PRINT_DEBUG_INFO -> {}
+                LOGGER -> {}
                 LOG_FILE_PREFIX -> {
                     run {
                         val builder = EditTextDialogBuilder(activity)
@@ -60,11 +61,43 @@ class SettingFragment : Fragment() {
                                     dialog.dismiss()
                                     needRestart()
                                 }
+                                v.detailText = input
                             }
                             .show()
                     }
                 }
                 LOG_2_LOCAL -> {}
+                LOG_SAVE_DAY -> {
+                    val builder = EditTextDialogBuilder(activity)
+                    builder
+                        .setTitle("设置$LOG_SAVE_DAY")
+                        .setPlaceholder("在此输入$LOG_SAVE_DAY")
+                        .setInputType(InputType.TYPE_CLASS_NUMBER)
+                        .setDefaultText(
+                            "${
+                                SpUtils.get(
+                                    context,
+                                    LOG_SAVE_DAY_SP,
+                                    3
+                                ) as Int
+                            }"
+                        )
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction("保存修改") { dialog, index ->
+                            val input: CharSequence? = builder.editText.text
+                            if (input.isNullOrEmpty()) {
+                                SpUtils.put(context, LOG_SAVE_DAY_SP, (-1))
+                            } else {
+                                SpUtils.put(context, LOG_SAVE_DAY_SP, input.toString().toInt())
+                            }
+                            v.detailText = "$input 天"
+                            dialog.dismiss()
+                            needRestart()
+                        }
+                        .show()
+                }
                 else -> {
                     Toast.makeText(activity, "$text is Clicked", Toast.LENGTH_SHORT).show()
                 }
@@ -108,6 +141,18 @@ class SettingFragment : Fragment() {
         redPointItem.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
         redPointItem.showRedDot(true)
 
+        val logger = mGroupListView.createItemView(LOGGER)
+        logger.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
+        logger.switch.isChecked =
+            SpUtils.get(context, LOGGER_SP, true) as Boolean;
+        logger.switch.setOnCheckedChangeListener { _, isChecked ->
+            SpUtils.put(
+                context,
+                DataModel.LOGGER_SP,
+                isChecked
+            )
+        }
+
         val logFilePrefix: QMUICommonListItemView = mGroupListView.createItemView(
             null,
             LOG_FILE_PREFIX,
@@ -130,6 +175,17 @@ class SettingFragment : Fragment() {
             }
         }
 
+        val logSaveDay: QMUICommonListItemView = mGroupListView.createItemView(
+            null,
+            LOG_SAVE_DAY,
+            "${SpUtils.get(context, LOG_SAVE_DAY_SP, 3) as Int} 天",
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
+            height
+        )
+        logFilePrefix.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
+        logFilePrefix.showRedDot(false)
+
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(context)
             .setTitle("基础设置")
@@ -149,8 +205,10 @@ class SettingFragment : Fragment() {
             .setTitle("日志设置")
             .setDescription("")
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(logger, onClickListener)
             .addItemView(logFilePrefix, onClickListener)
             .addItemView(log2Local, onClickListener)
+            .addItemView(logSaveDay, onClickListener)
             .setOnlyShowStartEndSeparator(true)
             .addTo(mGroupListView)
         return root
