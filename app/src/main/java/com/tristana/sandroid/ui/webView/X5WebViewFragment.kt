@@ -9,9 +9,9 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.tristana.customViewLibrary.customInterface.IOnPageFinishedInterface
-import com.tristana.customViewLibrary.view.customLayout.CustomEditTextView
-import com.tristana.customViewLibrary.view.webView.X5WebView
+import com.tristana.CustomViewWithToolsLibrary.customInterface.IOnPageFinishedInterface
+import com.tristana.CustomViewWithToolsLibrary.view.customLayout.CustomEditTextView
+import com.tristana.CustomViewWithToolsLibrary.view.webView.X5WebView
 import com.tristana.sandroid.MainActivity
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
@@ -24,7 +24,7 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
     private lateinit var webViewHome: AppCompatImageView
     private lateinit var webViewRefresh: AppCompatImageView
     private lateinit var webViewExit: AppCompatImageView
-    private var defaultUrl: String = "http://debugx5.qq.com/"
+    private var defaultUrl: String = "https://www.baidu.com"
     private var url: String = ""
     private var x5ViewModel: X5ViewModel? = null
     private lateinit var x5WebView: X5WebView

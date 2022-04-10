@@ -12,7 +12,7 @@ import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel
-import com.tristana.sandroid.tools.sharedPreferences.SpUtils
+import com.tristana.CustomViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 
 /**
  * A simple [Fragment] subclass.
@@ -40,6 +40,8 @@ class SettingFragment : Fragment() {
         val height = QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
         val x5DebugItem = mGroupListView.createItemView("打印 X5 debug日志")
         x5DebugItem.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
+        x5DebugItem.switch.isChecked =
+            SpUtils.get(context, DataModel.X5_DEBUG_MODE, false) as Boolean;
         x5DebugItem.switch.setOnCheckedChangeListener { _, isChecked -> SpUtils.put(context, DataModel.X5_DEBUG_MODE, isChecked) }
         val item: QMUICommonListItemView = mGroupListView.createItemView(
                 null,

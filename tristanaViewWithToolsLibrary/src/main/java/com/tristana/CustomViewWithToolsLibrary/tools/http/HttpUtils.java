@@ -1,4 +1,4 @@
-package com.tristana.sandroid.tools.http;
+package com.tristana.CustomViewWithToolsLibrary.tools.http;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

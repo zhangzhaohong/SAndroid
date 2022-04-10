@@ -3,7 +3,7 @@ package com.tristana.sandroid
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
-import com.tristana.customViewLibrary.tools.log.Timber
+import com.tristana.CustomViewWithToolsLibrary.tools.log.Timber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

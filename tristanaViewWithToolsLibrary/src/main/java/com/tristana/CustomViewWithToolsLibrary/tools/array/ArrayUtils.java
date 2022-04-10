@@ -1,4 +1,4 @@
-package com.tristana.sandroid.tools.array;
+package com.tristana.CustomViewWithToolsLibrary.tools.array;
 
 import com.tristana.CustomViewWithToolsLibrary.tools.log.Timber;
 

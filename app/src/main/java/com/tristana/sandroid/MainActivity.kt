@@ -26,7 +26,7 @@ import com.hjq.permissions.XXPermissions
 import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsListener
-import com.tristana.customViewLibrary.tools.log.Timber
+import com.tristana.CustomViewWithToolsLibrary.tools.log.Timber
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
 import com.tristana.sandroid.tools.array.ArrayUtils
 import com.tristana.sandroid.tools.file.FileUtils
