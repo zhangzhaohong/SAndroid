@@ -25,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsListener
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        QMUIStatusBarHelper.translucent(this)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         val title = toolbar.getChildAt(0) as AppCompatTextView

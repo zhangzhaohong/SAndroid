@@ -293,7 +293,7 @@ class X5WebView(context: Context?, attributeSet: AttributeSet?) : WebView(contex
     }
 
     override fun drawChild(canvas: Canvas, child: View?, drawingTime: Long): Boolean {
-        val status = SpUtils.get(context, DataModel.X5_DEBUG_MODE, false) as Boolean
+        val status = SpUtils.get(context, DataModel.X5_DEBUG_MODE_SP, false) as Boolean
         val ret: Boolean = super.drawChild(canvas, child, drawingTime)
         canvas.save()
         val paint = Paint()

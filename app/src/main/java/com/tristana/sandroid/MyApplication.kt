@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.blankj.utilcode.util.LogUtils
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
+import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
+import com.tristana.sandroid.model.data.DataModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -16,10 +18,12 @@ class MyApplication : Application() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         MainScope().launch {
             withContext(Dispatchers.IO) {
-                val mConfig: LogUtils.Config = LogUtils.getConfig()
-                mConfig.filePrefix = "AppLog"
-                mConfig.isLog2FileSwitch = true
-                LogUtils.d(mConfig)
+                instance?.let {
+                    val mConfig: LogUtils.Config = LogUtils.getConfig()
+                    mConfig.filePrefix = SpUtils.get(it, DataModel.LOG_FILE_PREFIX_SP, "AppLog") as String
+                    mConfig.isLog2FileSwitch = SpUtils.get(it, DataModel.LOG_SAVE_2_LOCAL_SP, false) as Boolean
+                    LogUtils.d(mConfig)
+                }
             }
             withContext(Dispatchers.IO) {
                 instance?.let { QMUISwipeBackActivityManager.init(it) }
