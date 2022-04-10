@@ -1,6 +1,6 @@
 package com.tristana.sandroid.tools.array;
 
-import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.customViewLibrary.tools.log.Timber;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.google.gson.Gson;
+import com.tristana.customViewLibrary.tools.log.Timber;
 import com.tristana.customViewLibrary.view.customLayout.CustomEditTextView;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
@@ -17,7 +18,6 @@ import com.tristana.sandroid.model.data.DataModel;
 import com.tristana.sandroid.model.login.LoginRespModel;
 import com.tristana.sandroid.tools.http.HttpUtils;
 import com.tristana.sandroid.tools.http.RequestInfo;
-import com.tristana.sandroid.tools.log.Timber;
 import com.tristana.sandroid.tools.sharedPreferences.SpUtils;
 import com.tristana.sandroid.tools.text.TextUtils;
 import com.tristana.sandroid.tools.toast.ToastUtils;

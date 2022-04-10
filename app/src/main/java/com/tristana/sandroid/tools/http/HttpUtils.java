@@ -3,7 +3,7 @@ package com.tristana.sandroid.tools.http;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.customViewLibrary.tools.log.Timber;
 
 import java.io.IOException;
 import java.util.Map;

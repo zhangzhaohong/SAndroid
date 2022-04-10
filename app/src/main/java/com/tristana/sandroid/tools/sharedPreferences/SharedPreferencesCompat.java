@@ -2,7 +2,7 @@ package com.tristana.sandroid.tools.sharedPreferences;
 
 import android.content.SharedPreferences;
 
-import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.customViewLibrary.tools.log.Timber;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

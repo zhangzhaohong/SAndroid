@@ -2,7 +2,7 @@ package com.tristana.sandroid.tools.file;
 
 import android.content.Context;
 
-import com.tristana.sandroid.tools.log.Timber;
+import com.tristana.customViewLibrary.tools.log.Timber;
 
 import java.io.BufferedReader;
 import java.io.File;

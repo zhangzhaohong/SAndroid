@@ -25,12 +25,11 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
-import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
+import com.tristana.customViewLibrary.tools.log.Timber
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
 import com.tristana.sandroid.tools.array.ArrayUtils
 import com.tristana.sandroid.tools.file.FileUtils
-import com.tristana.sandroid.tools.log.Timber
 import com.tristana.sandroid.tools.toast.ToastUtils
 import com.tristana.sandroid.ui.webView.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
@@ -56,20 +55,20 @@ class MainActivity : AppCompatActivity() {
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+                .setAction("Action", null).show()
         }
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = AppBarConfiguration.Builder(
-                R.id.nav_home,
-                R.id.nav_gallery,
-                R.id.nav_slideshow,
-                R.id.nav_login
+            R.id.nav_home,
+            R.id.nav_gallery,
+            R.id.nav_slideshow,
+            R.id.nav_login
         )
-                .setOpenableLayout(drawer)
-                .build()
+            .setOpenableLayout(drawer)
+            .build()
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration!!)
         NavigationUI.setupWithNavController(navigationView, navController)
@@ -201,7 +200,11 @@ class MainActivity : AppCompatActivity() {
             true
         }
         menuWrite.setOnMenuItemClickListener {
-            FileUtils().writeData(this@MainActivity, "data_TEST", "This is the data!" + System.currentTimeMillis())
+            FileUtils().writeData(
+                this@MainActivity,
+                "data_TEST",
+                "This is the data!" + System.currentTimeMillis()
+            )
             true
         }
         menuTextToArray.setOnMenuItemClickListener {
