@@ -84,6 +84,7 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
             x5WebView.loadUrl(url)
         }
         webViewExit.setOnClickListener {
+            x5WebView.clearHistory()
             requireActivity().onBackPressed()
         }
         x5WebView.onLoadFinishListener = this
