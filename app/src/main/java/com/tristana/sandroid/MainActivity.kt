@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         //2、再拿NavController
-        val navController:NavController = navHostFragment.navController
+        val navController: NavController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration!!)
         NavigationUI.setupWithNavController(navigationView, navController)
         initNavigationOnChangeListener(navController)
