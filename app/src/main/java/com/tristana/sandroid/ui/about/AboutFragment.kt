@@ -1,13 +1,11 @@
 package com.tristana.sandroid.ui.about
 
-import com.tristana.sandroid.ui.about.AboutViewModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.tristana.sandroid.R
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
@@ -19,13 +17,9 @@ class AboutFragment : Fragment() {
 
     private var aboutViewModel: AboutViewModel? = null
     private lateinit var mGroupListView: QMUIGroupListView
-    private var loading: String = "Loading"
+    private var na: String = "N/A"
 
-    private var onClickListener = object : View.OnClickListener {
-        override fun onClick(p0: View?) {
-
-        }
-    }
+    private var onClickListener = View.OnClickListener { }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +38,7 @@ class AboutFragment : Fragment() {
         val appName = mGroupListView.createItemView(
             null,
             APP_NAME,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
@@ -52,7 +46,7 @@ class AboutFragment : Fragment() {
         val appPackageName = mGroupListView.createItemView(
             null,
             APP_PACKAGE_NAME,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
@@ -60,7 +54,7 @@ class AboutFragment : Fragment() {
         val appVersionName = mGroupListView.createItemView(
             null,
             APP_VERSION_NAME,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
@@ -68,7 +62,7 @@ class AboutFragment : Fragment() {
         val appVersionCode = mGroupListView.createItemView(
             null,
             APP_VERSION_CODE,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
@@ -76,7 +70,7 @@ class AboutFragment : Fragment() {
         val appPathName = mGroupListView.createItemView(
             null,
             APP_PATH_NAME,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
@@ -84,7 +78,7 @@ class AboutFragment : Fragment() {
         val appSignatureNameSHA1 = mGroupListView.createItemView(
             null,
             APP_SIGNATURE_NAME_SHA1,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
@@ -92,7 +86,7 @@ class AboutFragment : Fragment() {
         val appSignatureNameSHA256 = mGroupListView.createItemView(
             null,
             APP_SIGNATURE_NAME_SHA256,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
@@ -100,7 +94,7 @@ class AboutFragment : Fragment() {
         val appSignatureNameMD5 = mGroupListView.createItemView(
             null,
             APP_SIGNATURE_NAME_MD5,
-            loading,
+            na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
