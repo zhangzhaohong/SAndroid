@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/bottom_nav_main">
+
+    <fragment
+        android:id="@+id/bottom_nav_main"
+        android:name="com.tristana.sandroid.ui.main.MainFragment"
+        android:label="@string/menu_bottom_main"
+        tools:layout="@layout/fragment_main" />
+
+    <fragment
+        android:id="@+id/bottom_nav_about"
+        android:name="com.tristana.sandroid.ui.about.AboutFragment"
+        android:label="@string/menu_bottom_about"
+        tools:layout="@layout/fragment_about" />
+
+
+</navigation>

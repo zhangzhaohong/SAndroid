@@ -22,7 +22,7 @@ public class MainFragment extends Fragment {
         if (mainViewModel == null)
             mainViewModel =
                     ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication()).create(MainViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_main, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
         mainViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
