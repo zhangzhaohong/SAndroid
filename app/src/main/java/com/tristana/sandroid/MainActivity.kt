@@ -48,9 +48,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val title = toolbar.getChildAt(0) as AppCompatTextView
-        title.layoutParams.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT
-        title.gravity = Gravity.CENTER_HORIZONTAL
+        // val title = toolbar.getChildAt(0) as AppCompatTextView
+        // title.layoutParams.width = LinearLayoutCompat.LayoutParams.MATCH_PARENT
+        // title.gravity = Gravity.CENTER_HORIZONTAL
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
