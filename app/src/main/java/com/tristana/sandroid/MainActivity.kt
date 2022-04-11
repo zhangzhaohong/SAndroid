@@ -68,7 +68,12 @@ class MainActivity : AppCompatActivity() {
         )
             .setOpenableLayout(drawer)
             .build()
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        // val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        //1、先拿NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        //2、再拿NavController
+        val navController:NavController = navHostFragment.navController
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration!!)
         NavigationUI.setupWithNavController(navigationView, navController)
         initNavigationOnChangeListener(navController)
