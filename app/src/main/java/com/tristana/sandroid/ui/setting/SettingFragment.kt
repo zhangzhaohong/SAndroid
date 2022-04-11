@@ -389,7 +389,7 @@ class SettingFragment : Fragment() {
 
     private fun refreshLogLocalSize(item: QMUICommonListItemView) {
         MainScope().launch {
-            var folderSize: String? = null
+            var folderSize: String?
             withContext(Dispatchers.IO) {
                 folderSize = FileUtils.getSize(LogUtils.getConfig().dir)
             }
