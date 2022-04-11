@@ -16,5 +16,6 @@ public class SettingModel {
     public static final String LOG_FILE_PREFIX = "日志文件前缀";
     public static final String LOG_2_LOCAL = "保存日志到本地";
     public static final String LOG_SAVE_DAY = "日志保留天数";
+    public static final String LOG_LOCAL_SIZE = "本地日志占用空间";
     public static final String RESET_SETTINGS = "重置全部设置";
 }

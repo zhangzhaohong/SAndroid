@@ -9,6 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
@@ -18,10 +21,13 @@ import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tencent.smtt.sdk.TbsVideo
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
-import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.DataModel.*
 import com.tristana.sandroid.model.data.SettingModel.*
 import com.tristana.sandroid.ui.webView.X5WebViewFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -137,6 +143,25 @@ class SettingFragment : Fragment() {
                             v.detailText = "$input 天"
                             dialog.dismiss()
                             needRestart()
+                        }
+                        .show()
+                }
+                LOG_LOCAL_SIZE -> {
+                    MessageDialogBuilder(activity)
+                        .setTitle("提示")
+                        .setMessage("是否清空本地日志目录？")
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction(
+                            "确定"
+                        ) { dialog, _ ->
+                            run {
+                                dialog.dismiss()
+                                FileUtils.deleteAllInDir(LogUtils.getConfig().dir)
+                                refreshLogLocalSize(v)
+                                ToastUtils.showLong("清空目录成功")
+                            }
                         }
                         .show()
                 }
@@ -297,8 +322,20 @@ class SettingFragment : Fragment() {
             QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
             height
         )
-        logFilePrefix.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
-        logFilePrefix.showRedDot(false)
+        logSaveDay.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
+        logSaveDay.showRedDot(false)
+
+        val logLocalSize: QMUICommonListItemView = mGroupListView.createItemView(
+            null,
+            LOG_LOCAL_SIZE,
+            "获取中",
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
+            height
+        )
+        logLocalSize.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
+        logLocalSize.showRedDot(false)
+        refreshLogLocalSize(logLocalSize)
 
         val resetSettings: QMUICommonListItemView = mGroupListView.createItemView(
             null,
@@ -337,6 +374,7 @@ class SettingFragment : Fragment() {
             .addItemView(logFilePrefix, onClickListener)
             .addItemView(log2Local, onClickListener)
             .addItemView(logSaveDay, onClickListener)
+            .addItemView(logLocalSize, onClickListener)
             .setOnlyShowStartEndSeparator(true)
             .addTo(mGroupListView)
         QMUIGroupListView.newSection(requireContext())
@@ -347,6 +385,18 @@ class SettingFragment : Fragment() {
             .setOnlyShowStartEndSeparator(true)
             .addTo(mGroupListView)
         return root
+    }
+
+    private fun refreshLogLocalSize(item: QMUICommonListItemView) {
+        MainScope().launch {
+            var folderSize: String? = null
+            withContext(Dispatchers.IO) {
+                folderSize = FileUtils.getSize(LogUtils.getConfig().dir)
+            }
+            withContext(Dispatchers.Main) {
+                item.detailText = folderSize
+            }
+        }
     }
 
     private fun needRestart(later: Boolean = true) {
