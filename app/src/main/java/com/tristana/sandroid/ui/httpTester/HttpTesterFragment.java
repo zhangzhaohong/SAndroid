@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tristana.customViewWithToolsLibrary.tools.toast.ToastUtils;
 import com.tristana.sandroid.R;
-import com.tristana.sandroid.tools.toast.ToastUtils;
 
 import java.util.Objects;
 

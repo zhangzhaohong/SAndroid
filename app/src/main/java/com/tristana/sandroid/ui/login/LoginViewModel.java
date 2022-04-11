@@ -3,8 +3,8 @@ package com.tristana.sandroid.ui.login;
 import com.google.gson.Gson;
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
 import com.tristana.customViewWithToolsLibrary.tools.http.RequestInfo;
+import com.tristana.customViewWithToolsLibrary.tools.text.TextUtils;
 import com.tristana.sandroid.model.login.LoginRespModel;
-import com.tristana.sandroid.tools.text.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
