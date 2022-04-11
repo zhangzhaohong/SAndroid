@@ -36,8 +36,8 @@ public class HttpTesterFragment extends Fragment {
                 textView.setText(s);
             }
         });
-        final AppCompatEditText appCompatEditText = root.findViewById(R.id.inputUrl);
-        final AppCompatButton appCompatButton = root.findViewById(R.id.requestUrl);
+        final AppCompatEditText appCompatEditText = root.findViewById(R.id.input_url);
+        final AppCompatButton appCompatButton = root.findViewById(R.id.request_url);
         appCompatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

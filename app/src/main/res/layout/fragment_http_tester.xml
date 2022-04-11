@@ -16,13 +16,13 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/inputUrl"
+                android:id="@+id/input_url"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/default_url" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/requestUrl"
+                android:id="@+id/request_url"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/menu_request" />

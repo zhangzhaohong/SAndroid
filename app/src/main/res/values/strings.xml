@@ -55,4 +55,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="menu_webView">浏览器</string>
     <string name="menu_setting">设置</string>
+    <string name="navigation_main_page">首页</string>
+    <string name="navigation_about_page">关于</string>
 </resources>

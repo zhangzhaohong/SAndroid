@@ -18,7 +18,6 @@ import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tencent.smtt.sdk.TbsVideo
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
-import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.DataModel.*
 import com.tristana.sandroid.model.data.SettingModel.*
 import com.tristana.sandroid.ui.webView.X5WebViewFragment
@@ -185,7 +184,7 @@ class SettingFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_setting, container, false)
-        mGroupListView = root.findViewById(R.id.groupListView)
+        mGroupListView = root.findViewById(R.id.settings_group_list_view)
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
 
