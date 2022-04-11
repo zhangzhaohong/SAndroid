@@ -48,7 +48,7 @@
                     android:text="@string/rememberPassWd" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/auto_login"
+                    android:id="@+id/autoLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

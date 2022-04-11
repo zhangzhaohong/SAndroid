@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
         password = root.findViewById(R.id.password);
         AppCompatTextView login = root.findViewById(R.id.login);
         rememberPassword = root.findViewById(R.id.rememberPassWd);
-        autoLogin = root.findViewById(R.id.auto_login);
+        autoLogin = root.findViewById(R.id.autoLogin);
         AppCompatTextView register = root.findViewById(R.id.register);
         username.initParameter(
                 R.drawable.ic_user_icon,
