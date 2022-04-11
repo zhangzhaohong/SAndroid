@@ -9,7 +9,7 @@
             android:icon="@drawable/ic_menu_space"
             android:title="@string/menu_space" />
         <item
-            android:id="@+id/nav_webView"
+            android:id="@+id/nav_browser"
             android:icon="@drawable/ic_browser"
             android:title="@string/menu_webView" />
     </group>

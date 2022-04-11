@@ -1,11 +1,13 @@
 package com.tristana.sandroid.ui.home
 
+import android.os.Build
 import com.tristana.sandroid.ui.home.HomeViewModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.NonNull
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +35,7 @@ class HomeFragment : Fragment() {
                     HomeViewModel::class.java
                 )
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
         val navigationView = root.findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         //1、先拿NavHostFragment
         // val navHostFragment = childFragmentManager.findFragmentById(R.id.bottom_nav_host_fragment) as NavHostFragment
@@ -58,6 +61,9 @@ class HomeFragment : Fragment() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 navigationView.menu.getItem(position).isChecked = true
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    toolbar?.title = navigationView.menu.getItem(position).title
+                }
             }
         })
         navigationView.setOnItemSelectedListener {
@@ -71,6 +77,9 @@ class HomeFragment : Fragment() {
                 else -> {
                     viewpager.setCurrentItem(0, true)
                 }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                toolbar?.title = it.title
             }
             true
         }
