@@ -14,6 +14,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -251,6 +252,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onDestroy() {
+        AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
+        super.onDestroy()
     }
 
     private fun <F : Fragment> getFragment(fragmentClass: Class<F>): F? {
