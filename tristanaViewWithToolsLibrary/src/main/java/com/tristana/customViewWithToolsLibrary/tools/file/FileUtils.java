@@ -18,15 +18,15 @@ public class FileUtils {
         FileWriter fileWriter;
         try {
             String path = Objects.requireNonNull(context.getExternalCacheDir()).getPath() + "/" + fileName + ".sfd";
-            LogUtils.i("FilePath:" + path);
-            LogUtils.i("FileData:" + text);
+            LogUtils.i("FilePath: " + path);
+            LogUtils.i("FileData: " + text);
             fileWriter = new FileWriter(path, true);
             String data = text + "\r\n";
             fileWriter.write(data);
             fileWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.i("Exception:" + e.toString());
+            LogUtils.i("Exception: " + e);
         }
     }
 
@@ -34,7 +34,7 @@ public class FileUtils {
         ArrayList<String> result = new ArrayList<>();
         try {
             String path = Objects.requireNonNull(context.getExternalCacheDir()).getPath() + "/" + fileName + ".sfd";
-            LogUtils.i("FilePath:" + path);
+            LogUtils.i("FilePath: " + path);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
             for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
                 LogUtils.d(line);
@@ -43,7 +43,7 @@ public class FileUtils {
             bufferedReader.close();
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.i("Exception:" + e.toString());
+            LogUtils.i("Exception: " + e);
         }
         return result;
     }
@@ -51,14 +51,14 @@ public class FileUtils {
     public boolean deleteFile(Context context, String fileName) {
         try {
             String path = Objects.requireNonNull(context.getExternalCacheDir()).getPath() + "/" + fileName + ".sfd";
-            LogUtils.i("FilePath:" + path);
+            LogUtils.i("FilePath: " + path);
             File file = new File(path);
             if (file.isFile() && file.exists()) {
                 return file.delete();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.i("Exception:" + e.toString());
+            LogUtils.i("Exception:"  + e);
         }
         return false;
     }
