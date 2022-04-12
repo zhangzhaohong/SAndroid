@@ -42,7 +42,7 @@ class ImageAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val imageViewHolder = holder as ImageViewHolder
         imageViewHolder.imageView.setOnClickListener {
-            
+
         }
         val options = RequestOptions()
             .centerCrop() // .placeholder(R.drawable.ic_picture_loading) //预加载图片
