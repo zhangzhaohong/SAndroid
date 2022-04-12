@@ -15,7 +15,7 @@ import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
 import com.tristana.customViewWithToolsLibrary.tools.http.RequestInfo;
 import com.tristana.customViewWithToolsLibrary.tools.text.TextUtils;
 import com.tristana.customViewWithToolsLibrary.tools.toast.ToastUtils;
-import com.tristana.customViewWithToolsLibrary.view.customLayout.CustomEditTextView;
+import com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomEditTextView;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
 import com.tristana.sandroid.model.data.DataModel;

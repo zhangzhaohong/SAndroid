@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.tristana.sandroid.R
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.AppUtils
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
@@ -36,6 +38,8 @@ class AboutFragment : Fragment() {
                 )
         val root = inflater.inflate(R.layout.fragment_about, container, false)
         mGroupListView = root.findViewById(R.id.groupListView)
+        val appIcon: AppCompatImageView = root.findViewById(R.id.app_icon)
+        appIcon.setImageDrawable(AppUtils.getAppIcon())
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
 

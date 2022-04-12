@@ -10,12 +10,14 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.tristana.customViewWithToolsLibrary.view.customLayout.SplashView
+import com.blankj.utilcode.util.BarUtils
+import com.tristana.customViewWithToolsLibrary.view.splashLayout.SplashView
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private lateinit var fullscreenSplash: SplashView
 
@@ -23,6 +25,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        BarUtils.setStatusBarVisibility(this, false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // Set up the user interaction to manually show or hide the system UI.
         fullscreenSplash = findViewById(R.id.full_screen_splash)

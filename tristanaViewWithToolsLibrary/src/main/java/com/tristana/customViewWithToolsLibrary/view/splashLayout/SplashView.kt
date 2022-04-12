@@ -1,4 +1,4 @@
-package com.tristana.customViewWithToolsLibrary.view.customLayout
+package com.tristana.customViewWithToolsLibrary.view.splashLayout
 
 import android.annotation.SuppressLint
 import android.content.Context
