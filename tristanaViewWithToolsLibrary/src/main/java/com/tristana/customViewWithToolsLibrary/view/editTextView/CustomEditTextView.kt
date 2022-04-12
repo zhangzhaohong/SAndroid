@@ -1,4 +1,4 @@
-package com.tristana.customViewWithToolsLibrary.view.splashLayout
+package com.tristana.customViewWithToolsLibrary.view.editTextView
 
 import android.content.Context
 import android.graphics.Bitmap

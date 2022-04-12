@@ -23,7 +23,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs) {
+class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs) {
     private var splashClickable: Boolean = false
     private var enterTextSplashOnClick: String = ""
     private var splashUrl: String = ""

@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.tristana.customViewWithToolsLibrary.customInterface.IOnPageFinishedInterface
-import com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomEditTextView
+import com.tristana.customViewWithToolsLibrary.view.editTextView.CustomEditTextView
 import com.tristana.customViewWithToolsLibrary.view.webView.X5WebView
 import com.tristana.sandroid.MainActivity
 import com.tristana.sandroid.R

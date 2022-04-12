@@ -16,13 +16,13 @@
             android:layout_margin="20dp"
             android:orientation="vertical">
 
-            <com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomEditTextView
+            <com.tristana.customViewWithToolsLibrary.view.editTextView.CustomEditTextView
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp" />
 
-            <com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomEditTextView
+            <com.tristana.customViewWithToolsLibrary.view.editTextView.CustomEditTextView
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

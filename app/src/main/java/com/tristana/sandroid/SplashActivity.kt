@@ -11,7 +11,7 @@ import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.BarUtils
-import com.tristana.customViewWithToolsLibrary.view.splashLayout.SplashView
+import com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomSplashView
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -19,7 +19,7 @@ import com.tristana.customViewWithToolsLibrary.view.splashLayout.SplashView
  */
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
-    private lateinit var fullscreenSplash: SplashView
+    private lateinit var fullscreenCustomSplash: CustomSplashView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +28,8 @@ class SplashActivity : AppCompatActivity() {
         BarUtils.setStatusBarVisibility(this, false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         // Set up the user interaction to manually show or hide the system UI.
-        fullscreenSplash = findViewById(R.id.full_screen_splash)
-        fullscreenSplash.initParameter(
+        fullscreenCustomSplash = findViewById(R.id.full_screen_splash)
+        fullscreenCustomSplash.initParameter(
                 true,
                 "立即跳过",
                 "进入体验",
@@ -54,7 +54,7 @@ class SplashActivity : AppCompatActivity() {
                 "https://storage.tracup.com/o_1end7rie71g391kuel4r13j33opa.jpg",
                 false
         )
-        fullscreenSplash.setOnClickListener { hideSystemUI() }
+        fullscreenCustomSplash.setOnClickListener { hideSystemUI() }
     }
 
     private fun jumpToMainActivity() {
