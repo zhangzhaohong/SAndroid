@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.tristana.sandroid.R
 import androidx.fragment.app.Fragment
@@ -35,73 +36,21 @@ class AboutFragment : Fragment() {
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
 
-        val appName = mGroupListView.createItemView(
-            null,
-            APP_NAME,
-            na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
-        )
+        val appName = createElement(APP_NAME)
 
-        val appPackageName = mGroupListView.createItemView(
-            null,
-            APP_PACKAGE_NAME,
-            na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
-        )
+        val appPackageName = createElement(APP_PACKAGE_NAME)
 
-        val appVersionName = mGroupListView.createItemView(
-            null,
-            APP_VERSION_NAME,
-            na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
-        )
+        val appVersionName = createElement(APP_VERSION_NAME)
 
-        val appVersionCode = mGroupListView.createItemView(
-            null,
-            APP_VERSION_CODE,
-            na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
-        )
+        val appVersionCode = createElement(APP_VERSION_CODE)
 
-        val appPathName = mGroupListView.createItemView(
-            null,
-            APP_PATH_NAME,
-            na,
-            QMUICommonListItemView.VERTICAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+        val appPathName = createElement(APP_PATH_NAME)
 
-        val appSignatureNameSHA1 = mGroupListView.createItemView(
-            null,
-            APP_SIGNATURE_NAME_SHA1,
-            na,
-            QMUICommonListItemView.VERTICAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+        val appSignatureNameSHA1 = createElement(APP_SIGNATURE_NAME_SHA1)
 
-        val appSignatureNameSHA256 = mGroupListView.createItemView(
-            null,
-            APP_SIGNATURE_NAME_SHA256,
-            na,
-            QMUICommonListItemView.VERTICAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+        val appSignatureNameSHA256 = createElement(APP_SIGNATURE_NAME_SHA256)
 
-        val appSignatureNameMD5 = mGroupListView.createItemView(
-            null,
-            APP_SIGNATURE_NAME_MD5,
-            na,
-            QMUICommonListItemView.VERTICAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+        val appSignatureNameMD5 = createElement(APP_SIGNATURE_NAME_MD5)
 
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(requireContext())
@@ -120,29 +69,44 @@ class AboutFragment : Fragment() {
             .addTo(mGroupListView)
 
         aboutViewModel!!.getAppName.observe(viewLifecycleOwner) { text: String? ->
-            appName.detailText = text
+            updateElement(appName, text)
         }
         aboutViewModel!!.getAppPackageName.observe(viewLifecycleOwner) { text: String? ->
-            appPackageName.detailText = text
+            updateElement(appPackageName, text)
         }
         aboutViewModel!!.getAppVersionName.observe(viewLifecycleOwner) { text: String? ->
-            appVersionName.detailText = text
+            updateElement(appVersionName, text)
         }
         aboutViewModel!!.getAppVersionCode.observe(viewLifecycleOwner) { text: String? ->
-            appVersionCode.detailText = text
+            updateElement(appVersionCode, text)
         }
         aboutViewModel!!.getAppPathName.observe(viewLifecycleOwner) { text: String? ->
-            appPathName.detailText = text
+            updateElement(appPathName, text)
         }
         aboutViewModel!!.getAppSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
-            appSignatureNameSHA1.detailText = text
+            updateElement(appSignatureNameSHA1, text)
         }
         aboutViewModel!!.getAppSignatureNameSHA256.observe(viewLifecycleOwner) { text: String? ->
-            appSignatureNameSHA256.detailText = text
+            updateElement(appSignatureNameSHA256, text)
         }
         aboutViewModel!!.getAppSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
-            appSignatureNameMD5.detailText = text
+            updateElement(appSignatureNameMD5, text)
         }
         return root
+    }
+
+    private fun createElement(name: String): QMUICommonListItemView {
+        return mGroupListView.createItemView(
+            null,
+            name,
+            na,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_NONE
+        )
+    }
+
+    private fun updateElement(element: QMUICommonListItemView?, text: String?) {
+        element?.detailText = text
+        element?.detailTextView?.gravity = GravityCompat.END
     }
 }
