@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.tristana.sandroid.R
@@ -65,32 +66,32 @@ class AboutFragment : Fragment() {
             .addItemView(appSignatureNameSHA1, onClickListener)
             .addItemView(appSignatureNameSHA256, onClickListener)
             .addItemView(appSignatureNameMD5, onClickListener)
-            .setOnlyShowStartEndSeparator(true)
+            .setShowSeparator(true)
             .addTo(mGroupListView)
 
         aboutViewModel!!.getAppName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appName, text)
+            updateElement(appName, text, height)
         }
         aboutViewModel!!.getAppPackageName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appPackageName, text)
+            updateElement(appPackageName, text, height)
         }
         aboutViewModel!!.getAppVersionName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appVersionName, text)
+            updateElement(appVersionName, text, height)
         }
         aboutViewModel!!.getAppVersionCode.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appVersionCode, text)
+            updateElement(appVersionCode, text, height)
         }
         aboutViewModel!!.getAppPathName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appPathName, text)
+            updateElement(appPathName, text, height)
         }
         aboutViewModel!!.getAppSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appSignatureNameSHA1, text)
+            updateElement(appSignatureNameSHA1, text, height)
         }
         aboutViewModel!!.getAppSignatureNameSHA256.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appSignatureNameSHA256, text)
+            updateElement(appSignatureNameSHA256, text, height)
         }
         aboutViewModel!!.getAppSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appSignatureNameMD5, text)
+            updateElement(appSignatureNameMD5, text, height)
         }
         return root
     }
@@ -105,8 +106,12 @@ class AboutFragment : Fragment() {
         )
     }
 
-    private fun updateElement(element: QMUICommonListItemView?, text: String?) {
+    private fun updateElement(element: QMUICommonListItemView?, text: String?, minHeight: Int) {
         element?.detailText = text
         element?.detailTextView?.gravity = GravityCompat.END
+        element?.detailTextView?.setPadding(0, 12, 0, 12)
+        element?.layoutParams =
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        element?.minHeight = minHeight
     }
 }
