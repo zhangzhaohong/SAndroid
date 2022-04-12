@@ -1,11 +1,16 @@
 package com.tristana.sandroid.ui.setting
 
+import android.graphics.text.LineBreaker
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.AppUtils
@@ -37,6 +42,7 @@ import kotlinx.coroutines.withContext
  */
 class SettingFragment : Fragment() {
     private lateinit var mGroupListView: QMUIGroupListView
+    private var na: String = "N/A"
 
     private var onClickListener = View.OnClickListener { v ->
         if (v is QMUICommonListItemView) {
@@ -197,7 +203,7 @@ class SettingFragment : Fragment() {
     private fun jumpToBrowser(url: String) {
         val fragmentManager: FragmentManager = parentFragmentManager
         val fragment: Fragment = X5WebViewFragment()
-        fragmentManager.beginTransaction().add(requireParentFragment().requireView().id, fragment)
+        fragmentManager.beginTransaction().replace(requireParentFragment().requireView().id, fragment)
             .addToBackStack(null).commit()
         val bundle = Bundle()
         bundle.putString("url", url)
@@ -214,138 +220,21 @@ class SettingFragment : Fragment() {
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
 
-        val x5AllowThirdPartApp = mGroupListView.createItemView(X5_ALLOW_THIRD_PART_APP)
-        x5AllowThirdPartApp.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
-        x5AllowThirdPartApp.switch.isChecked =
-            SpUtils.get(context, X5_ALLOW_THIRD_PART_APP_SP, false) as Boolean;
-        x5AllowThirdPartApp.switch.setOnCheckedChangeListener { _, isChecked ->
-            SpUtils.put(
-                context,
-                X5_ALLOW_THIRD_PART_APP_SP,
-                isChecked
-            )
-        }
-
-        val x5DebugItem = mGroupListView.createItemView(X5_PRINT_DEBUG_INFO)
-        x5DebugItem.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
-        x5DebugItem.switch.isChecked =
-            SpUtils.get(context, X5_DEBUG_MODE_SP, false) as Boolean;
-        x5DebugItem.switch.setOnCheckedChangeListener { _, isChecked ->
-            SpUtils.put(
-                context,
-                X5_DEBUG_MODE_SP,
-                isChecked
-            )
-        }
-
-        val x5Debug: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            X5_DEBUG,
-            null,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        x5Debug.showRedDot(false)
-
-        val x5TbsDebug: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            X5_TBS_DEBUG,
-            null,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        x5TbsDebug.showRedDot(false)
-
-        val x5VideoDebug: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            X5_VIDEO_DEBUG,
-            SpUtils.get(context, X5_VIDEO_DEBUG_SP, "") as String,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        x5VideoDebug.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
-        x5VideoDebug.showRedDot(false)
-
-        val redPointItem: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            "红点显示在右边",
-            "在右方的详细信息",
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        redPointItem.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
-        redPointItem.showRedDot(true)
-
-        val logger = mGroupListView.createItemView(LOGGER)
-        logger.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
-        logger.switch.isChecked =
-            SpUtils.get(context, LOGGER_SP, true) as Boolean;
-        logger.switch.setOnCheckedChangeListener { _, isChecked ->
-            SpUtils.put(
-                context,
-                LOGGER_SP,
-                isChecked
-            )
-        }
-
-        val logFilePrefix: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            LOG_FILE_PREFIX,
-            SpUtils.get(context, LOG_FILE_PREFIX_SP, "AppLog") as String,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        logFilePrefix.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
-        logFilePrefix.showRedDot(false)
-
-        val log2Local = mGroupListView.createItemView(LOG_2_LOCAL)
-        log2Local.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
-        log2Local.switch.isChecked =
-            SpUtils.get(context, LOG_SAVE_2_LOCAL_SP, false) as Boolean;
-        log2Local.switch.setOnCheckedChangeListener { _, isChecked ->
-            run {
-                SpUtils.put(context, LOG_SAVE_2_LOCAL_SP, isChecked)
-                needRestart()
-            }
-        }
-
-        val logSaveDay: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            LOG_SAVE_DAY,
-            "${SpUtils.get(context, LOG_SAVE_DAY_SP, 3) as Int} 天",
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        logSaveDay.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
-        logSaveDay.showRedDot(false)
-
-        val logLocalSize: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            LOG_LOCAL_SIZE,
-            "获取中",
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        logLocalSize.setTipPosition(QMUICommonListItemView.TIP_POSITION_RIGHT)
-        logLocalSize.showRedDot(false)
+        val x5AllowThirdPartApp = createSwitchElement(X5_ALLOW_THIRD_PART_APP, height, X5_ALLOW_THIRD_PART_APP_SP)
+        val x5DebugItem = createSwitchElement(X5_PRINT_DEBUG_INFO, height, X5_DEBUG_MODE_SP)
+        val x5Debug: QMUICommonListItemView = createElement(X5_DEBUG, height)
+        val x5TbsDebug: QMUICommonListItemView = createElement(X5_TBS_DEBUG, height)
+        val x5VideoDebug: QMUICommonListItemView = createTextElement(X5_VIDEO_DEBUG, height)
+        x5VideoDebug.detailText = SpUtils.get(context, X5_VIDEO_DEBUG_SP, "") as String
+        val logger = createSwitchElement(LOGGER, height, LOGGER_SP, true)
+        val logFilePrefix: QMUICommonListItemView = createTextElement(LOG_FILE_PREFIX, height)
+        logFilePrefix.detailText = SpUtils.get(context, LOG_FILE_PREFIX_SP, "AppLog") as String
+        val log2Local = createSwitchElement(LOG_2_LOCAL, height, LOG_SAVE_2_LOCAL_SP)
+        val logSaveDay: QMUICommonListItemView = createTextElement(LOG_SAVE_DAY, height)
+        logSaveDay.detailText = "${SpUtils.get(context, LOG_SAVE_DAY_SP, 3) as Int} 天"
+        val logLocalSize: QMUICommonListItemView = createTextElement(LOG_LOCAL_SIZE, height)
+        val resetSettings: QMUICommonListItemView = createElement(RESET_SETTINGS, height, true)
         refreshLogLocalSize(logLocalSize)
-
-        val resetSettings: QMUICommonListItemView = mGroupListView.createItemView(
-            null,
-            RESET_SETTINGS,
-            null,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON,
-            height
-        )
-        resetSettings.showRedDot(true)
 
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(context)
@@ -363,7 +252,6 @@ class SettingFragment : Fragment() {
             .addItemView(x5Debug, onClickListener)
             .addItemView(x5TbsDebug, onClickListener)
             .addItemView(x5VideoDebug, onClickListener)
-            .addItemView(redPointItem, onClickListener)
             .setShowSeparator(true)
             .addTo(mGroupListView)
         QMUIGroupListView.newSection(requireContext())
@@ -385,6 +273,99 @@ class SettingFragment : Fragment() {
             .setShowSeparator(true)
             .addTo(mGroupListView)
         return root
+    }
+
+    private fun createElement(name: String, minHeight: Int, showRedDot: Boolean = false): QMUICommonListItemView {
+        val element = mGroupListView.createItemView(
+            null,
+            name,
+            null,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON
+        )
+        element.showRedDot(showRedDot)
+        element?.layoutParams =
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+        element?.minHeight = minHeight
+        element?.detailTextView?.gravity = GravityCompat.END
+        element?.detailTextView?.setPadding(0, 12, 0, 12)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            element?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
+        }
+        return element
+    }
+
+    private fun createTextElement(name: String, minHeight: Int, showRedDot: Boolean = false): QMUICommonListItemView {
+        val element = mGroupListView.createItemView(
+            null,
+            name,
+            na,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON
+        )
+        element.showRedDot(showRedDot)
+        element?.layoutParams =
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+        element?.minHeight = minHeight
+        element?.detailTextView?.gravity = GravityCompat.END
+        element?.detailTextView?.setPadding(0, 12, 0, 12)
+        element?.detailTextView?.maxLines = 5
+        element?.detailTextView?.ellipsize = TextUtils.TruncateAt.END
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            element?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
+        }
+        return element
+    }
+
+
+    private fun createSwitchElement(
+        name: String,
+        minHeight: Int,
+        spName: String,
+        defaultValue: Boolean = false
+    ): QMUICommonListItemView {
+        val element = mGroupListView.createItemView(
+            null,
+            name,
+            null,
+            QMUICommonListItemView.HORIZONTAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
+        )
+        element.switch.isChecked =
+            SpUtils.get(context, spName, defaultValue) as Boolean;
+        element.switch.setOnCheckedChangeListener { _, isChecked ->
+            SpUtils.put(
+                context,
+                spName,
+                isChecked
+            )
+        }
+        element?.layoutParams =
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+        element?.minHeight = minHeight
+        element?.detailTextView?.gravity = GravityCompat.END
+        element?.detailTextView?.setPadding(0, 12, 0, 12)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            element?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
+        }
+        return element
+    }
+
+    private fun initView(view: QMUICommonListItemView?) {
+        view?.detailTextView?.gravity = GravityCompat.END
+        view?.detailTextView?.setPadding(0, 12, 0, 12)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            view?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
+        }
     }
 
     private fun refreshLogLocalSize(item: QMUICommonListItemView) {

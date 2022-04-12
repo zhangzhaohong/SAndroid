@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.tristana.customViewWithToolsLibrary.customInterface.IOnPageFinishedInterface
 import com.tristana.customViewWithToolsLibrary.view.editTextView.CustomEditTextView
