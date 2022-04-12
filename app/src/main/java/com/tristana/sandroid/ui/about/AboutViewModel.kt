@@ -27,6 +27,15 @@ class AboutViewModel : ViewModel() {
     private val appPathName: MutableLiveData<String> = MutableLiveData()
     val getAppPathName: LiveData<String>
         get() = appPathName
+    private val appRootMode: MutableLiveData<String> = MutableLiveData()
+    val getAppRootMode: LiveData<String>
+        get() = appRootMode
+    private val appDebugMode: MutableLiveData<String> = MutableLiveData()
+    val getAppDebugMode: LiveData<String>
+        get() = appDebugMode
+    private val systemAppMode: MutableLiveData<String> = MutableLiveData()
+    val getSystemAppMode: LiveData<String>
+        get() = systemAppMode
     private val appSignatureNameSHA1: MutableLiveData<String> = MutableLiveData()
     val getAppSignatureNameSHA1: LiveData<String>
         get() = appSignatureNameSHA1
@@ -54,6 +63,15 @@ class AboutViewModel : ViewModel() {
                 }
                 appPathName.value = withContext(Dispatchers.IO) {
                     AppUtils.getAppPath()
+                }
+                appRootMode.value = withContext(Dispatchers.IO) {
+                    AppUtils.isAppRoot().toString()
+                }
+                appDebugMode.value = withContext(Dispatchers.IO) {
+                    AppUtils.isAppDebug().toString()
+                }
+                systemAppMode.value = withContext(Dispatchers.IO) {
+                    AppUtils.isAppSystem().toString()
                 }
                 appSignatureNameSHA1.value = withContext(Dispatchers.IO) {
                     AppUtils.getAppSignaturesSHA1().toString()

@@ -40,19 +40,15 @@ class AboutFragment : Fragment() {
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
 
         val appName = createElement(APP_NAME)
-
         val appPackageName = createElement(APP_PACKAGE_NAME)
-
         val appVersionName = createElement(APP_VERSION_NAME)
-
         val appVersionCode = createElement(APP_VERSION_CODE)
-
         val appPathName = createElement(APP_PATH_NAME)
-
+        val appRootMode = createElement(APP_ROOT_MODE)
+        val appDebugMode = createElement(APP_DEBUG_MODE)
+        val systemAppMode = createElement(SYSTEM_APP_MODE)
         val appSignatureNameSHA1 = createElement(APP_SIGNATURE_NAME_SHA1)
-
         val appSignatureNameSHA256 = createElement(APP_SIGNATURE_NAME_SHA256)
-
         val appSignatureNameMD5 = createElement(APP_SIGNATURE_NAME_MD5)
 
         val size = QMUIDisplayHelper.dp2px(context, 20)
@@ -65,6 +61,9 @@ class AboutFragment : Fragment() {
             .addItemView(appVersionName, onClickListener)
             .addItemView(appVersionCode, onClickListener)
             .addItemView(appPathName, onClickListener)
+            .addItemView(appRootMode, onClickListener)
+            .addItemView(appDebugMode, onClickListener)
+            .addItemView(systemAppMode, onClickListener)
             .addItemView(appSignatureNameSHA1, onClickListener)
             .addItemView(appSignatureNameSHA256, onClickListener)
             .addItemView(appSignatureNameMD5, onClickListener)
@@ -85,6 +84,15 @@ class AboutFragment : Fragment() {
         }
         aboutViewModel!!.getAppPathName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appPathName, text, height)
+        }
+        aboutViewModel!!.getAppRootMode.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(appRootMode, text, height)
+        }
+        aboutViewModel!!.getAppDebugMode.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(appDebugMode, text, height)
+        }
+        aboutViewModel!!.getSystemAppMode.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(systemAppMode, text, height)
         }
         aboutViewModel!!.getAppSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameSHA1, text, height)
@@ -110,7 +118,10 @@ class AboutFragment : Fragment() {
 
     private fun updateElement(element: QMUICommonListItemView?, text: String?, minHeight: Int) {
         element?.layoutParams =
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            );
         element?.minHeight = minHeight
         element?.detailText = text
         element?.detailTextView?.gravity = GravityCompat.END
