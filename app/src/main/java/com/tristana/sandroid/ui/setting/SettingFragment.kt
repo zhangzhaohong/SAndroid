@@ -12,11 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
@@ -201,13 +197,12 @@ class SettingFragment : Fragment() {
     }
 
     private fun jumpToBrowser(url: String) {
-        val fragmentManager: FragmentManager = parentFragmentManager
-        val fragment: Fragment = X5WebViewFragment()
-        fragmentManager.beginTransaction().replace(requireParentFragment().requireView().id, fragment)
-            .addToBackStack(null).commit()
         val bundle = Bundle()
         bundle.putString("url", url)
-        fragment.arguments = bundle
+        parentFragmentManager.beginTransaction().remove(this)
+            .add(requireParentFragment().requireView().id, X5WebViewFragment::class.java, bundle)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onCreateView(
@@ -220,7 +215,8 @@ class SettingFragment : Fragment() {
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
 
-        val x5AllowThirdPartApp = createSwitchElement(X5_ALLOW_THIRD_PART_APP, height, X5_ALLOW_THIRD_PART_APP_SP)
+        val x5AllowThirdPartApp =
+            createSwitchElement(X5_ALLOW_THIRD_PART_APP, height, X5_ALLOW_THIRD_PART_APP_SP)
         val x5DebugItem = createSwitchElement(X5_PRINT_DEBUG_INFO, height, X5_DEBUG_MODE_SP)
         val x5Debug: QMUICommonListItemView = createElement(X5_DEBUG, height)
         val x5TbsDebug: QMUICommonListItemView = createElement(X5_TBS_DEBUG, height)
@@ -275,7 +271,11 @@ class SettingFragment : Fragment() {
         return root
     }
 
-    private fun createElement(name: String, minHeight: Int, showRedDot: Boolean = false): QMUICommonListItemView {
+    private fun createElement(
+        name: String,
+        minHeight: Int,
+        showRedDot: Boolean = false
+    ): QMUICommonListItemView {
         val element = mGroupListView.createItemView(
             null,
             name,
@@ -298,7 +298,11 @@ class SettingFragment : Fragment() {
         return element
     }
 
-    private fun createTextElement(name: String, minHeight: Int, showRedDot: Boolean = false): QMUICommonListItemView {
+    private fun createTextElement(
+        name: String,
+        minHeight: Int,
+        showRedDot: Boolean = false
+    ): QMUICommonListItemView {
         val element = mGroupListView.createItemView(
             null,
             name,
