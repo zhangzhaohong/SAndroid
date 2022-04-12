@@ -78,37 +78,37 @@ class AboutFragment : Fragment() {
             .setShowSeparator(true)
             .addTo(mGroupListView)
 
-        aboutViewModel.getAppName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appName, text)
         }
-        aboutViewModel.getAppPackageName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appPackageName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appPackageName, text)
         }
-        aboutViewModel.getAppVersionName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appVersionName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appVersionName, text)
         }
-        aboutViewModel.getAppVersionCode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appVersionCode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appVersionCode, text)
         }
-        aboutViewModel.getAppPathName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appPathName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appPathName, text)
         }
-        aboutViewModel.getAppRootMode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appRootMode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appRootMode, text)
         }
-        aboutViewModel.getAppDebugMode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appDebugMode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appDebugMode, text)
         }
-        aboutViewModel.getSystemAppMode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.systemAppMode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(systemAppMode, text)
         }
-        aboutViewModel.getAppSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameSHA1, text)
         }
-        aboutViewModel.getAppSignatureNameSHA256.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appSignatureNameSHA256.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameSHA256, text)
         }
-        aboutViewModel.getAppSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.appSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameMD5, text)
         }
     }

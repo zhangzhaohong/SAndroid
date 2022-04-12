@@ -12,39 +12,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AboutViewModel : ViewModel() {
-    private val appName: MutableLiveData<String> = MutableLiveData()
-    val getAppName: LiveData<String>
-        get() = appName
-    private val appPackageName: MutableLiveData<String> = MutableLiveData()
-    val getAppPackageName: LiveData<String>
-        get() = appPackageName
-    private val appVersionName: MutableLiveData<String> = MutableLiveData()
-    val getAppVersionName: LiveData<String>
-        get() = appVersionName
-    private val appVersionCode: MutableLiveData<String> = MutableLiveData()
-    val getAppVersionCode: LiveData<String>
-        get() = appVersionCode
-    private val appPathName: MutableLiveData<String> = MutableLiveData()
-    val getAppPathName: LiveData<String>
-        get() = appPathName
-    private val appRootMode: MutableLiveData<String> = MutableLiveData()
-    val getAppRootMode: LiveData<String>
-        get() = appRootMode
-    private val appDebugMode: MutableLiveData<String> = MutableLiveData()
-    val getAppDebugMode: LiveData<String>
-        get() = appDebugMode
-    private val systemAppMode: MutableLiveData<String> = MutableLiveData()
-    val getSystemAppMode: LiveData<String>
-        get() = systemAppMode
-    private val appSignatureNameSHA1: MutableLiveData<String> = MutableLiveData()
-    val getAppSignatureNameSHA1: LiveData<String>
-        get() = appSignatureNameSHA1
-    private val appSignatureNameSHA256: MutableLiveData<String> = MutableLiveData()
-    val getAppSignatureNameSHA256: LiveData<String>
-        get() = appSignatureNameSHA256
-    private val appSignatureNameMD5: MutableLiveData<String> = MutableLiveData()
-    val getAppSignatureNameMD5: LiveData<String>
-        get() = appSignatureNameMD5
+    val appName: MutableLiveData<String> = MutableLiveData()
+    val appPackageName: MutableLiveData<String> = MutableLiveData()
+    val appVersionName: MutableLiveData<String> = MutableLiveData()
+    val appVersionCode: MutableLiveData<String> = MutableLiveData()
+    val appPathName: MutableLiveData<String> = MutableLiveData()
+    val appRootMode: MutableLiveData<String> = MutableLiveData()
+    val appDebugMode: MutableLiveData<String> = MutableLiveData()
+    val systemAppMode: MutableLiveData<String> = MutableLiveData()
+    val appSignatureNameSHA1: MutableLiveData<String> = MutableLiveData()
+    val appSignatureNameSHA256: MutableLiveData<String> = MutableLiveData()
+    val appSignatureNameMD5: MutableLiveData<String> = MutableLiveData()
 
     init {
         initAppInfo()
