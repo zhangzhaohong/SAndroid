@@ -71,32 +71,36 @@ class AboutFragment : Fragment() {
             null,
             APP_PATH_NAME,
             na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
+            QMUICommonListItemView.VERTICAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
         val appSignatureNameSHA1 = mGroupListView.createItemView(
             null,
             APP_SIGNATURE_NAME_SHA1,
             na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
+            QMUICommonListItemView.VERTICAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
         val appSignatureNameSHA256 = mGroupListView.createItemView(
             null,
             APP_SIGNATURE_NAME_SHA256,
             na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
+            QMUICommonListItemView.VERTICAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
         val appSignatureNameMD5 = mGroupListView.createItemView(
             null,
             APP_SIGNATURE_NAME_MD5,
             na,
-            QMUICommonListItemView.HORIZONTAL,
-            QMUICommonListItemView.ACCESSORY_TYPE_NONE
+            QMUICommonListItemView.VERTICAL,
+            QMUICommonListItemView.ACCESSORY_TYPE_NONE,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
         val size = QMUIDisplayHelper.dp2px(context, 20)
