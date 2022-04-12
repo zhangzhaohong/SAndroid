@@ -42,7 +42,11 @@ class AboutFragment : Fragment() {
         appIcon.setImageDrawable(AppUtils.getAppIcon())
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
+        initAppInfoSection(aboutViewModel!!, height)
+        return root
+    }
 
+    private fun initAppInfoSection(aboutViewModel: AboutViewModel, height: Int) {
         val appName = createElement(APP_NAME)
         val appPackageName = createElement(APP_PACKAGE_NAME)
         val appVersionName = createElement(APP_VERSION_NAME)
@@ -74,40 +78,39 @@ class AboutFragment : Fragment() {
             .setShowSeparator(true)
             .addTo(mGroupListView)
 
-        aboutViewModel!!.getAppName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appName, text, height)
         }
-        aboutViewModel!!.getAppPackageName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppPackageName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appPackageName, text, height)
         }
-        aboutViewModel!!.getAppVersionName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppVersionName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appVersionName, text, height)
         }
-        aboutViewModel!!.getAppVersionCode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppVersionCode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appVersionCode, text, height)
         }
-        aboutViewModel!!.getAppPathName.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppPathName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appPathName, text, height)
         }
-        aboutViewModel!!.getAppRootMode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppRootMode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appRootMode, text, height)
         }
-        aboutViewModel!!.getAppDebugMode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppDebugMode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appDebugMode, text, height)
         }
-        aboutViewModel!!.getSystemAppMode.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getSystemAppMode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(systemAppMode, text, height)
         }
-        aboutViewModel!!.getAppSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameSHA1, text, height)
         }
-        aboutViewModel!!.getAppSignatureNameSHA256.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppSignatureNameSHA256.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameSHA256, text, height)
         }
-        aboutViewModel!!.getAppSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
+        aboutViewModel.getAppSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameMD5, text, height)
         }
-        return root
     }
 
     private fun createElement(name: String): QMUICommonListItemView {

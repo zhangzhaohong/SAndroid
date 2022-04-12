@@ -47,6 +47,10 @@ class AboutViewModel : ViewModel() {
         get() = appSignatureNameMD5
 
     init {
+        initAppInfo()
+    }
+
+    private fun initAppInfo() {
         MainScope().launch {
             withContext(Dispatchers.Main) {
                 appName.value = withContext(Dispatchers.IO) {
