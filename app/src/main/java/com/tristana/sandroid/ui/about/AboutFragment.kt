@@ -47,17 +47,17 @@ class AboutFragment : Fragment() {
     }
 
     private fun initAppInfoSection(aboutViewModel: AboutViewModel, height: Int) {
-        val appName = createElement(APP_NAME)
-        val appPackageName = createElement(APP_PACKAGE_NAME)
-        val appVersionName = createElement(APP_VERSION_NAME)
-        val appVersionCode = createElement(APP_VERSION_CODE)
-        val appPathName = createElement(APP_PATH_NAME)
-        val appRootMode = createElement(APP_ROOT_MODE)
-        val appDebugMode = createElement(APP_DEBUG_MODE)
-        val systemAppMode = createElement(SYSTEM_APP_MODE)
-        val appSignatureNameSHA1 = createElement(APP_SIGNATURE_NAME_SHA1)
-        val appSignatureNameSHA256 = createElement(APP_SIGNATURE_NAME_SHA256)
-        val appSignatureNameMD5 = createElement(APP_SIGNATURE_NAME_MD5)
+        val appName = createElement(APP_NAME, height)
+        val appPackageName = createElement(APP_PACKAGE_NAME, height)
+        val appVersionName = createElement(APP_VERSION_NAME, height)
+        val appVersionCode = createElement(APP_VERSION_CODE, height)
+        val appPathName = createElement(APP_PATH_NAME, height)
+        val appRootMode = createElement(APP_ROOT_MODE, height)
+        val appDebugMode = createElement(APP_DEBUG_MODE, height)
+        val systemAppMode = createElement(SYSTEM_APP_MODE, height)
+        val appSignatureNameSHA1 = createElement(APP_SIGNATURE_NAME_SHA1, height)
+        val appSignatureNameSHA256 = createElement(APP_SIGNATURE_NAME_SHA256, height)
+        val appSignatureNameMD5 = createElement(APP_SIGNATURE_NAME_MD5, height)
 
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(requireContext())
@@ -79,62 +79,63 @@ class AboutFragment : Fragment() {
             .addTo(mGroupListView)
 
         aboutViewModel.getAppName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appName, text, height)
+            updateElement(appName, text)
         }
         aboutViewModel.getAppPackageName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appPackageName, text, height)
+            updateElement(appPackageName, text)
         }
         aboutViewModel.getAppVersionName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appVersionName, text, height)
+            updateElement(appVersionName, text)
         }
         aboutViewModel.getAppVersionCode.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appVersionCode, text, height)
+            updateElement(appVersionCode, text)
         }
         aboutViewModel.getAppPathName.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appPathName, text, height)
+            updateElement(appPathName, text)
         }
         aboutViewModel.getAppRootMode.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appRootMode, text, height)
+            updateElement(appRootMode, text)
         }
         aboutViewModel.getAppDebugMode.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appDebugMode, text, height)
+            updateElement(appDebugMode, text)
         }
         aboutViewModel.getSystemAppMode.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(systemAppMode, text, height)
+            updateElement(systemAppMode, text)
         }
         aboutViewModel.getAppSignatureNameSHA1.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appSignatureNameSHA1, text, height)
+            updateElement(appSignatureNameSHA1, text)
         }
         aboutViewModel.getAppSignatureNameSHA256.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appSignatureNameSHA256, text, height)
+            updateElement(appSignatureNameSHA256, text)
         }
         aboutViewModel.getAppSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appSignatureNameMD5, text, height)
+            updateElement(appSignatureNameMD5, text)
         }
     }
 
-    private fun createElement(name: String): QMUICommonListItemView {
-        return mGroupListView.createItemView(
+    private fun createElement(name: String, minHeight: Int): QMUICommonListItemView {
+        val element = mGroupListView.createItemView(
             null,
             name,
             na,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_NONE
         )
-    }
-
-    private fun updateElement(element: QMUICommonListItemView?, text: String?, minHeight: Int) {
         element?.layoutParams =
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             );
         element?.minHeight = minHeight
-        element?.detailText = text
         element?.detailTextView?.gravity = GravityCompat.END
         element?.detailTextView?.setPadding(0, 12, 0, 12)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             element?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
         }
+        return element
+    }
+
+    private fun updateElement(element: QMUICommonListItemView?, text: String?) {
+        element?.detailText = text
     }
 }
