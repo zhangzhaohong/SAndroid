@@ -4,14 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class AboutViewModel : ViewModel() {
+
+    // appInfo
     val appName: MutableLiveData<String> = MutableLiveData()
     val appPackageName: MutableLiveData<String> = MutableLiveData()
     val appVersionName: MutableLiveData<String> = MutableLiveData()
@@ -24,8 +28,71 @@ class AboutViewModel : ViewModel() {
     val appSignatureNameSHA256: MutableLiveData<String> = MutableLiveData()
     val appSignatureNameMD5: MutableLiveData<String> = MutableLiveData()
 
+    // deviceInfo
+    val deviceRootMode: MutableLiveData<String> = MutableLiveData()
+    val deviceAdbMode: MutableLiveData<String> = MutableLiveData()
+    val sdkVersionName: MutableLiveData<String> = MutableLiveData()
+    val sdkVersionCode: MutableLiveData<String> = MutableLiveData()
+    val systemVersionName: MutableLiveData<String> = MutableLiveData()
+    val androidId: MutableLiveData<String> = MutableLiveData()
+    val macAddress: MutableLiveData<String> = MutableLiveData()
+    val manuFacturer: MutableLiveData<String> = MutableLiveData()
+    val model: MutableLiveData<String> = MutableLiveData()
+    val abis: MutableLiveData<String> = MutableLiveData()
+    val isTablet: MutableLiveData<String> = MutableLiveData()
+    val isEmulator: MutableLiveData<String> = MutableLiveData()
+    val uniqueDeviceId: MutableLiveData<String> = MutableLiveData()
+
     init {
         initAppInfo()
+        initDeviceInfo()
+    }
+
+    private fun initDeviceInfo() {
+        MainScope().launch {
+            withContext(Dispatchers.Main) {
+                deviceRootMode.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.isDeviceRooted().toString()
+                }
+                deviceAdbMode.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.isAdbEnabled().toString()
+                }
+                sdkVersionName.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.getSDKVersionName()
+                }
+                sdkVersionCode.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.getSDKVersionCode().toString()
+                }
+                systemVersionName.value = withContext(Dispatchers.IO) {
+                    android.os.Build.DISPLAY
+                }
+                androidId.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.getAndroidID()
+                }
+                macAddress.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.getMacAddress().toString()
+                }
+                manuFacturer.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.getManufacturer()
+                }
+                model.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.getModel()
+                }
+                abis.value = withContext(Dispatchers.IO) {
+                    mutableListOf(*DeviceUtils.getABIs()).toString()
+                }
+                isTablet.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.isTablet().toString()
+                }
+                isEmulator.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.isEmulator().toString()
+                }
+                uniqueDeviceId.value = withContext(Dispatchers.IO) {
+                    DeviceUtils.getUniqueDeviceId().toString()
+                }
+            }
+
+        }
     }
 
     private fun initAppInfo() {

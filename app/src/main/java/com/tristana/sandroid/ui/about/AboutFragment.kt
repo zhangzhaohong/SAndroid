@@ -43,7 +43,86 @@ class AboutFragment : Fragment() {
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
         initAppInfoSection(aboutViewModel!!, height)
+        initDeviceInfoSection(aboutViewModel!!, height)
         return root
+    }
+
+    private fun initDeviceInfoSection(aboutViewModel: AboutViewModel, height: Int) {
+        val deviceRootMode = createElement(DEVICE_ROOT_MODE, height)
+        val deviceAdbMode = createElement(DEVICE_ADB_MODE, height)
+        val sdkVersionName = createElement(SDK_VERSION_NAME, height)
+        val sdkVersionCode = createElement(SDK_VERSION_CODE, height)
+        val systemVersionName = createElement(SYSTEM_VERSION_NAME, height)
+        val androidId = createElement(ANDROID_ID, height)
+        val macAddress = createElement(MAC_ADDRESS, height)
+        val manuFacturer = createElement(MANU_FACTURER, height)
+        val model = createElement(MODEL, height)
+        val abis = createElement(ABIS, height)
+        val isTablet = createElement(IS_TABLET, height)
+        val isEmulator = createElement(IS_EMULATOR, height)
+        val uniqueDeviceId = createElement(UNIQUE_DEVICE_ID, height)
+
+        val size = QMUIDisplayHelper.dp2px(context, 20)
+        QMUIGroupListView.newSection(requireContext())
+            .setTitle("设备信息")
+            .setDescription("")
+            .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(deviceRootMode, onClickListener)
+            .addItemView(deviceAdbMode, onClickListener)
+            .addItemView(sdkVersionName, onClickListener)
+            .addItemView(sdkVersionCode, onClickListener)
+            .addItemView(systemVersionName, onClickListener)
+            .addItemView(androidId, onClickListener)
+            .addItemView(macAddress, onClickListener)
+            .addItemView(manuFacturer, onClickListener)
+            .addItemView(model, onClickListener)
+            .addItemView(abis, onClickListener)
+            .addItemView(isTablet, onClickListener)
+            .addItemView(isEmulator, onClickListener)
+            .addItemView(uniqueDeviceId, onClickListener)
+            .setShowSeparator(true)
+            .addTo(mGroupListView)
+
+        aboutViewModel.deviceRootMode.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(deviceRootMode, text)
+        }
+        aboutViewModel.deviceAdbMode.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(deviceAdbMode, text)
+        }
+        aboutViewModel.sdkVersionName.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(sdkVersionName, text)
+        }
+        aboutViewModel.sdkVersionCode.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(sdkVersionCode, text)
+        }
+        aboutViewModel.systemVersionName.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(systemVersionName, text)
+        }
+        aboutViewModel.androidId.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(androidId, text)
+        }
+        aboutViewModel.macAddress.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(macAddress, text)
+        }
+        aboutViewModel.manuFacturer.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(manuFacturer, text)
+        }
+        aboutViewModel.model.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(model, text)
+        }
+        aboutViewModel.abis.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(abis, text)
+        }
+        aboutViewModel.isTablet.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(isTablet, text)
+        }
+        aboutViewModel.isEmulator.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(isEmulator, text)
+        }
+        aboutViewModel.uniqueDeviceId.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(uniqueDeviceId, text)
+        }
+
     }
 
     private fun initAppInfoSection(aboutViewModel: AboutViewModel, height: Int) {
