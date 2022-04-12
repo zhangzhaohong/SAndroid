@@ -1,5 +1,7 @@
 package com.tristana.sandroid.ui.about
 
+import android.graphics.text.LineBreaker
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
@@ -107,11 +109,14 @@ class AboutFragment : Fragment() {
     }
 
     private fun updateElement(element: QMUICommonListItemView?, text: String?, minHeight: Int) {
-        element?.detailText = text
-        element?.detailTextView?.gravity = GravityCompat.END
-        element?.detailTextView?.setPadding(0, 12, 0, 12)
         element?.layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         element?.minHeight = minHeight
+        element?.detailText = text
+        element?.detailTextView?.gravity = GravityCompat.END
+        element?.detailTextView?.setPadding(0, 12, 0, 12)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            element?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
+        }
     }
 }
