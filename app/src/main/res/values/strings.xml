@@ -53,10 +53,11 @@
     <string name="title_activity_splash">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="menu_webView">浏览器</string>
+    <string name="menu_webview">浏览器</string>
     <string name="menu_setting">设置</string>
     <string name="bottom_navigation_main">主页</string>
     <string name="bottom_navigation_about">关于</string>
     <string name="menu_bottom_main">主页</string>
     <string name="menu_bottom_about">关于</string>
+    <string name="menu_ad_webview">AD浏览器</string>
 </resources>

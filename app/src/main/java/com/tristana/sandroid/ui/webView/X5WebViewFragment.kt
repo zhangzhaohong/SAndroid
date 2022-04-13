@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.tristana.customViewWithToolsLibrary.customInterface.IOnPageFinishedInterface
 import com.tristana.customViewWithToolsLibrary.view.editTextView.CustomEditTextView
@@ -42,7 +41,7 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         if (url.isEmpty()) {
             url = "https://www.baidu.com"
         }
-        x5WebView = root.findViewById(R.id.webView)
+        x5WebView = root.findViewById(R.id.web_viewer)
         inputUrl = root.findViewById(R.id.input_url)
         webViewEnter = root.findViewById(R.id.webView_enter)
         webViewBack = root.findViewById(R.id.browser_back)
@@ -93,6 +92,10 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         return root
     }
 
+    private fun showActionBar() {
+        getActionBar()?.show()
+    }
+
     private fun hideActionBar() {
         getActionBar()?.hide()
     }
@@ -117,6 +120,11 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
     override fun onPageFinished(p0: String?) {
         inputUrl.setText(p0.toString())
         url = p0.toString()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        showActionBar()
     }
 
 }

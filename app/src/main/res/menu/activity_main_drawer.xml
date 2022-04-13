@@ -11,7 +11,11 @@
         <item
             android:id="@+id/nav_browser"
             android:icon="@drawable/ic_browser"
-            android:title="@string/menu_webView" />
+            android:title="@string/menu_webview" />
+        <item
+            android:id="@+id/nav_ad_browser"
+            android:icon="@drawable/ic_browser"
+            android:title="@string/menu_ad_webview" />
     </group>
 
 </menu>

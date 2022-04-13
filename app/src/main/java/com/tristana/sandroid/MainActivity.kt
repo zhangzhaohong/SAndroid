@@ -242,6 +242,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        // super.onBackPressed()
         val fragment = getFragment(X5WebViewFragment::class.java)
         if (fragment == null) {
             super.onBackPressed()
@@ -251,7 +252,6 @@ class MainActivity : AppCompatActivity() {
                 this.supportActionBar?.show()
             }
         }
-
     }
 
     override fun onDestroy() {

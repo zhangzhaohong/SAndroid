@@ -2,23 +2,20 @@ package com.tristana.sandroid.ui.main.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.FragmentUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.tristana.sandroid.R
+import com.tristana.sandroid.customInterface.IOnClickBannerInterface
 import com.tristana.sandroid.model.bannerModel.BannerDataModel
+import com.tristana.sandroid.ui.main.MainFragment
 import com.tristana.sandroid.ui.main.transform.GlideRoundTransform
 import com.tristana.sandroid.ui.main.viewHolder.ImageViewHolder
-import com.tristana.sandroid.ui.webView.X5WebViewFragment
 
 /**
  * @author koala
@@ -27,11 +24,12 @@ import com.tristana.sandroid.ui.webView.X5WebViewFragment
  * @description
  */
 class ImageAdapter(
-    private val activity: FragmentActivity,
-    private val fragment: Fragment,
     private val context: Context,
     private val items: MutableList<out BannerDataModel>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    var onClickBannerInterface: IOnClickBannerInterface? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View =
             LayoutInflater.from(parent.context).inflate(R.layout.item_banner_image, parent, false)
@@ -42,7 +40,7 @@ class ImageAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val imageViewHolder = holder as ImageViewHolder
         imageViewHolder.imageView.setOnClickListener {
-
+            onClickBannerInterface?.onClick(it, items[position].directionPath)
         }
         val options = RequestOptions()
             .centerCrop() // .placeholder(R.drawable.ic_picture_loading) //预加载图片

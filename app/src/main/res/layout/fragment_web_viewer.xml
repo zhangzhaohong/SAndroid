@@ -37,7 +37,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.tristana.customViewWithToolsLibrary.view.webView.X5WebView
-            android:id="@+id/webView"
+            android:id="@+id/web_viewer"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
