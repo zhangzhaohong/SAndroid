@@ -20,6 +20,7 @@ import net.lucode.hackware.magicindicator.buildins.UIUtil
 import com.to.aboomy.pager2banner.ScaleInTransformer
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.StringUtils
+import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.webView.X5WebViewFragment
 import java.util.ArrayList
 
@@ -92,8 +93,14 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
     override fun onClick(view: View?, directionPath: String) {
         LogUtils.i("onClick: $directionPath")
         if (!StringUtils.isTrimEmpty(directionPath)) {
-            // TODO: Fragment
-
+            val bundle = Bundle()
+            bundle.putString("url", directionPath)
+            val fragment = AdWebViewFragment()
+            fragment.arguments = bundle
+            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
+            fragmentTransaction.addToBackStack(fragment.tag)
+            fragmentTransaction.commit()
         }
     }
 }

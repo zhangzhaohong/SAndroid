@@ -34,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 import java.util.*
 
 
@@ -260,12 +261,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun <F : Fragment> getFragment(fragmentClass: Class<F>): F? {
-        val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
-        navHostFragment.childFragmentManager.fragments.forEach {
-            if (fragmentClass.isAssignableFrom(it.javaClass)) {
-                @Suppress("UNCHECKED_CAST")
-                return it as F
+        try {
+            val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
+            navHostFragment.childFragmentManager.fragments.forEach {
+                if (fragmentClass.isAssignableFrom(it.javaClass)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return it as F
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         return null
     }

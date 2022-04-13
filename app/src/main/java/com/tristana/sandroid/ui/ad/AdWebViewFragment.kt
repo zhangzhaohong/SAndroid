@@ -14,6 +14,7 @@ import com.tristana.sandroid.R
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
 
 class AdWebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedInterface {
+    private var url: String? = null
     private lateinit var x5WebView: X5WebView
     private var adViewModel: AdViewModel? = null
     override fun onCreateView(
@@ -26,9 +27,16 @@ class AdWebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
                     AdViewModel::class.java
                 )
         val root = inflater.inflate(R.layout.fragment_ad_webview, container, false)
+        val bundle = arguments
+        if (bundle != null) {
+            url = bundle.getString("url").toString()
+        }
+        if (url?.isEmpty() == true) {
+            url = "http://about:blank"
+        }
         x5WebView = root.findViewById(R.id.ad_web_viewer)
         x5WebView.init(requireActivity())
-        x5WebView.loadUrl("https://www.baidu.com")
+        x5WebView.loadUrl(url)
         x5WebView.onLoadFinishListener = this
         hideActionBar()
         return root
