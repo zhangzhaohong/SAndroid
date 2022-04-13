@@ -62,7 +62,7 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         bannerData.add(
             BannerDataModel(
                 "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01e669572bfe806ac725381234430c.jpg%402o.jpg&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652358999&t=3fde581da2bc2b53a4e134daec92992b",
-                "https://www.jianshu.com"
+                "https://www.bilibili.com"
             )
         )
         bannerData.add(
