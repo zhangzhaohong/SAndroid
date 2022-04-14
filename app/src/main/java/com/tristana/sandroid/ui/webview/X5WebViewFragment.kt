@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.webView
+package com.tristana.sandroid.ui.webview
 
 import android.os.Bundle
 import android.text.InputType

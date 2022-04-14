@@ -24,7 +24,7 @@ import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel.*
 import com.tristana.sandroid.model.data.SettingModel.*
-import com.tristana.sandroid.ui.webView.X5WebViewFragment
+import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

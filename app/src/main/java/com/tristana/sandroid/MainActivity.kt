@@ -29,7 +29,7 @@ import com.tristana.customViewWithToolsLibrary.tools.array.ArrayUtils
 import com.tristana.customViewWithToolsLibrary.tools.file.FileUtils
 import com.tristana.customViewWithToolsLibrary.tools.toast.ToastUtils
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
-import com.tristana.sandroid.ui.webView.X5WebViewFragment
+import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

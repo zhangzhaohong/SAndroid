@@ -2,7 +2,6 @@ package com.tristana.sandroid.ui.main
 
 import android.graphics.Color
 import com.tristana.sandroid.customInterface.IOnClickBannerInterface
-import com.tristana.sandroid.ui.main.MainViewModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.tristana.sandroid.R
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.FragmentUtils
 import com.to.aboomy.pager2banner.Banner
 import com.to.aboomy.pager2banner.IndicatorView
 import com.tristana.sandroid.model.bannerModel.BannerDataModel
@@ -21,7 +19,6 @@ import com.to.aboomy.pager2banner.ScaleInTransformer
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.StringUtils
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
-import com.tristana.sandroid.ui.webView.X5WebViewFragment
 import java.util.ArrayList
 
 class MainFragment : Fragment(), IOnClickBannerInterface {
