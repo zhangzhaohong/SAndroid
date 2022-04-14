@@ -222,10 +222,10 @@ class SettingFragment : Fragment() {
         val x5TbsDebug: QMUICommonListItemView = createElement(X5_TBS_DEBUG, height)
         val x5VideoDebug: QMUICommonListItemView = createTextElement(X5_VIDEO_DEBUG, height)
         x5VideoDebug.detailText = SpUtils.get(context, X5_VIDEO_DEBUG_SP, "") as String
-        val logger = createSwitchElement(LOGGER, height, LOGGER_SP, true)
+        val logger = createSwitchElement(LOGGER, height, LOGGER_SP, true, needRestart = true)
         val logFilePrefix: QMUICommonListItemView = createTextElement(LOG_FILE_PREFIX, height)
         logFilePrefix.detailText = SpUtils.get(context, LOG_FILE_PREFIX_SP, "AppLog") as String
-        val log2Local = createSwitchElement(LOG_2_LOCAL, height, LOG_SAVE_2_LOCAL_SP)
+        val log2Local = createSwitchElement(LOG_2_LOCAL, height, LOG_SAVE_2_LOCAL_SP, needRestart = true)
         val logSaveDay: QMUICommonListItemView = createTextElement(LOG_SAVE_DAY, height)
         logSaveDay.detailText = "${SpUtils.get(context, LOG_SAVE_DAY_SP, 3) as Int} 天"
         val logLocalSize: QMUICommonListItemView = createTextElement(LOG_LOCAL_SIZE, height)
@@ -332,7 +332,8 @@ class SettingFragment : Fragment() {
         name: String,
         minHeight: Int,
         spName: String,
-        defaultValue: Boolean = false
+        defaultValue: Boolean = false,
+        needRestart: Boolean = false
     ): QMUICommonListItemView {
         val element = mGroupListView.createItemView(
             null,
@@ -349,6 +350,9 @@ class SettingFragment : Fragment() {
                 spName,
                 isChecked
             )
+            if (needRestart) {
+                needRestart()
+            }
         }
         element?.layoutParams =
             LinearLayout.LayoutParams(
@@ -362,14 +366,6 @@ class SettingFragment : Fragment() {
             element?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
         }
         return element
-    }
-
-    private fun initView(view: QMUICommonListItemView?) {
-        view?.detailTextView?.gravity = GravityCompat.END
-        view?.detailTextView?.setPadding(0, 12, 0, 12)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            view?.detailTextView?.breakStrategy = LineBreaker.BREAK_STRATEGY_BALANCED
-        }
     }
 
     private fun refreshLogLocalSize(item: QMUICommonListItemView) {
