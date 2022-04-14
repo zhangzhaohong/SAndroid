@@ -49,6 +49,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1-native-mt'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.6'
     implementation 'com.github.razerdp:BasePopup:2.2.10'
-    implementation 'com.tencent.tbs:tbssdk:44176'
+    implementation 'com.tencent.tbs:tbssdk:44181'
     implementation 'com.blankj:utilcodex:1.31.0'
 }

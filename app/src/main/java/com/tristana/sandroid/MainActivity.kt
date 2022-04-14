@@ -24,6 +24,7 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
+import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
 import com.tristana.customViewWithToolsLibrary.tools.array.ArrayUtils
 import com.tristana.customViewWithToolsLibrary.tools.file.FileUtils
@@ -101,6 +102,19 @@ class MainActivity : AppCompatActivity() {
                                     // TODO Auto-generated method stub
                                     //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
                                     LogUtils.i("onViewInitFinished: $arg0")
+                                    if (!arg0) {
+                                        //判断是否要自行下载内核
+                                        //false表示下载完成 或者 下载了一部分  true表示完全没下载
+                                        val needDownload = TbsDownloader.needDownload(
+                                            applicationContext,
+                                            TbsDownloader.DOWNLOAD_OVERSEA_TBS
+                                        )
+                                        LogUtils.i("X5", needDownload.toString() + "")
+                                        //重置
+                                        QbSdk.reset(applicationContext)
+                                        // 启动下载
+                                        TbsDownloader.startDownload(applicationContext)
+                                    }
                                 }
 
                                 override fun onCoreInitFinished() {

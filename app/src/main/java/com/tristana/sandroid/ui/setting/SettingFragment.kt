@@ -102,6 +102,7 @@ class SettingFragment : Fragment() {
                                 "取消"
                             ) { dialog, _ -> dialog.dismiss() }
                             .addAction("保存修改") { dialog, _ ->
+                                // val input: CharSequence? = builder.editText.text
                                 val input: CharSequence? = builder.editText.text
                                 if (input.isNullOrEmpty()) {
                                     dialog.dismiss()
