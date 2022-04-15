@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
@@ -32,6 +33,11 @@ class MyApplication : Application() {
                         SpUtils.get(it, DataModel.LOG_SAVE_2_LOCAL_SP, false) as Boolean
                     mConfig.saveDays = SpUtils.get(it, DataModel.LOG_SAVE_DAY_SP, 3) as Int
                     LogUtils.d(mConfig)
+                }
+            }
+            withContext(Dispatchers.IO) {
+                instance?.let {
+                    CrashUtils.init()
                 }
             }
             withContext(Dispatchers.IO) {

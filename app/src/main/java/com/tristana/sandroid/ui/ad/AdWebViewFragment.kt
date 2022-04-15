@@ -31,8 +31,8 @@ class AdWebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         if (bundle != null) {
             url = bundle.getString("url").toString()
         }
-        if (url?.isEmpty() == true) {
-            url = "http://about:blank"
+        if (url == null || url!!.trim().isEmpty()) {
+             url = "http://about:blank"
         }
         x5WebView = root.findViewById(R.id.ad_web_viewer)
         x5WebView.init(requireActivity())
