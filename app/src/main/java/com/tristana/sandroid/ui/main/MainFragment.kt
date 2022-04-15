@@ -65,13 +65,13 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         bannerData.add(
             BannerDataModel(
                 "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01d56b5542d8bc0000019ae98da289.jpg%401280w_1l_2o_100sh.jpg&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652358999&t=031988bfab0c774b34ea31ce207a1e36",
-                ""
+                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c5v5ha3c77u5r9jepv6g&ratio=540p&isDownload=0"
             )
         )
         bannerData.add(
             BannerDataModel(
                 "https://img1.baidu.com/it/u=2780823041,991952778&fm=253&fmt=auto&app=138&f=JPG?w=1280&h=453",
-                ""
+                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0300fg10000c9c3nmbc77ubd837of2g&ratio=720p&isDownload=0"
             )
         )
         val adapter = ImageAdapter(requireContext(), bannerData)
