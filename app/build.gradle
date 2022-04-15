@@ -79,4 +79,5 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.13.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.1'
     implementation 'com.github.hackware1993:MagicIndicator:1.7.0'
+    implementation "com.github.Heart-Beats:Downloader:v1.0.5"
 }
