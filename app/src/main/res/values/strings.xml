@@ -60,4 +60,6 @@
     <string name="menu_bottom_main">主页</string>
     <string name="menu_bottom_about">关于</string>
     <string name="menu_ad_webview">AD浏览器</string>
+    <string name="action_download_manager">下载管理器</string>
+    <string name="menu_download_manager">下载管理器</string>
 </resources>

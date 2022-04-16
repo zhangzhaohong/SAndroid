@@ -190,10 +190,15 @@ class MainActivity : AppCompatActivity() {
         this.menu = menu
         initTestProject()
         updateMenu()
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         val actionSettings = menu.findItem(R.id.action_settings)
         actionSettings.setOnMenuItemClickListener {
-            val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
             navController.navigate(R.id.nav_setting)
+            true
+        }
+        val actionDownloadManager = menu.findItem(R.id.action_download_manager)
+        actionDownloadManager.setOnMenuItemClickListener {
+            navController.navigate(R.id.nav_download_manager)
             true
         }
         return true

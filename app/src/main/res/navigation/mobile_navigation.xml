@@ -53,4 +53,10 @@
         android:label="@string/menu_setting"
         tools:layout="@layout/fragment_setting" />
 
+    <fragment
+        android:id="@+id/nav_download_manager"
+        android:name="com.tristana.sandroid.ui.downloader.DownloadManagerFragment"
+        android:label="@string/menu_download_manager"
+        tools:layout="@layout/fragment_download_manager" />
+
 </navigation>
