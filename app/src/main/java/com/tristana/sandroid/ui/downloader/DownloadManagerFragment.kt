@@ -40,10 +40,17 @@ class DownloadManagerFragment : Fragment() {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
             FileUtils.createOrExistsDir(filePath)
             val downloadUrl =
-                "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
+                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
+                // "https://developer.lanzoug.com/file/?UzUFOwEwVWRVXAY+VGFSPltkV28EDQI4By5XYQJwADEFK1o8D2JQNgdiCwJQYFM3ADgDcwI6BVgFQVA+Vm8HZVM4BRsBMlVeVTEGYFQxUmtbMVdlBGsCNQdfV38CPwBxBW5aKw80UG0HPQs4UFtTOwA+AzsCaQU3BTNQZFYyBzRTagV0ATpVclU+BmlUOVJlWzhXYARiAjAHJlchAi4APAU3Wj0PY1A8B34LbVAzU30AagMwAnIFNAUzUDVWPwcxUzAFYQFuVWdVZgZjVGVSN1s0VzMEOQI3BzRXYwJuADIFMFppD2FQNwdkC2tQM1NrAGIDMAJtBSkFY1AmVmEHIFMmBSEBOVVzVWoGNFQ9UmVbMFdiBG4CMwc4V3cCKgBoBWhaaA80UDkHYAtrUDFTYgBrAzYCbgUwBTZQZlYsB2BTPwUlAWFVMFU1BmVUMFJiWzFXYQRqAjMHNFd3AisAcQVyWjAPY1AxB2ILbVA8U2sAaAMwAmoFMwUkUCNWYwd2U24FYAFsVTVVLQZhVDRSa1svV2AEawI2By5XYwJtADMFI1ppDz5QOQdh"
+                // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
             MainScope().launch {
                 withContext(Dispatchers.IO) {
-                    filePath = filePath + "/" + HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)
+                    filePath = "$filePath/"
+                    HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)?.let {
+                        filePath += it
+                    } ?: kotlin.run {
+                        filePath += System.currentTimeMillis()
+                    }
                     LogUtils.i(filePath)
                 }
                 withContext(Dispatchers.Main) {

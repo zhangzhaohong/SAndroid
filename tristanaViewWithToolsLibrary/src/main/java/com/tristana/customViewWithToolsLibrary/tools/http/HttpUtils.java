@@ -224,18 +224,18 @@ public class HttpUtils {
 
     private static String getHeaderFileName(Response response) {
         String dispositionHeader = response.header("Content-Disposition");
-        if (!TextUtils.isEmpty(dispositionHeader)) {
+        if (dispositionHeader != null && !TextUtils.isEmpty(dispositionHeader)) {
             dispositionHeader.replace("attachment;filename=", "");
             dispositionHeader.replace("filename*=utf-8", "");
-            String[] strings = dispositionHeader.split("; ");
+            String[] strings = dispositionHeader.split(";");
             if (strings.length > 1) {
-                dispositionHeader = strings[1].replace("filename=", "");
+                dispositionHeader = strings[1].trim().replace("filename=", "");
                 dispositionHeader = dispositionHeader.replace("\"", "");
                 return dispositionHeader;
             }
-            return "";
+            return null;
         }
-        return "";
+        return null;
     }
 
 }
