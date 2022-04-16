@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
+import com.blankj.utilcode.util.LogUtils;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
@@ -14,6 +18,7 @@ import okhttp3.ConnectionPool;
 import okhttp3.Dispatcher;
 import okhttp3.Dns;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -192,6 +197,22 @@ public class HttpUtils {
                 .dns(Dns.SYSTEM)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
+                .followRedirects(false)
+                .followSslRedirects(false)
+                .addInterceptor(chain -> {
+                    Request request = chain.request();
+                    Response response = chain.proceed(request);
+                    int code = response.code();
+                    if (code == 307) {
+                        //获取重定向的地址
+                        String location = response.headers().get("Location");
+                        LogUtils.i("重定向地址：", "location = " + location);
+                        //重新构建请求
+                        Request newRequest = request.newBuilder().url(location).build();
+                        response = chain.proceed(newRequest);
+                    }
+                    return response;
+                })
                 .build();
         //初始化参数
         if (params != null && !params.isEmpty()) {
