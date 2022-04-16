@@ -52,7 +52,7 @@ public class LoginViewModel extends ViewModel {
                         urlParams.put("api_key", RequestInfo.REQUEST_API_KEY);
                         urlParams.put("account", userName);
                         urlParams.put("password", password);
-                        String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.REQUEST_LOGIN, urlParams, header);
+                        String[] data = new HttpUtils().getDataFromCustomUrlByOkHttp3(RequestInfo.REQUEST_LOGIN, urlParams, header);
                         if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
                             mToast.postValue("请求失败 code:" + data[0] + "\n" + data[1]);
                         } else {

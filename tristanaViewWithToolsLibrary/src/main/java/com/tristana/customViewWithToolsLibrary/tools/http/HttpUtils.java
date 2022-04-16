@@ -2,6 +2,7 @@ package com.tristana.customViewWithToolsLibrary.tools.http;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class HttpUtils {
         return bitmap;
     }
 
-    public String[] getDataFromUrlByOkHttp3(String requestInfo, Map<String, Object> params, Map<String, Object> header) {
+    public String[] getDataFromCustomUrlByOkHttp3(String requestInfo, Map<String, Object> params, Map<String, Object> header) {
         final String[] result = {null, null};
         String url = null;
         //1.第一步创建OkHttpClient对象
@@ -176,6 +177,65 @@ public class HttpUtils {
             result[1] = e.toString();
         }
         return result;
+    }
+
+    public String getFileNameFromUrlByOkHttp3(String url, Map<String, Object> params, Map<String, Object> header) {
+        String result = null;
+        //1.第一步创建OkHttpClient对象
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.setMaxRequestsPerHost(128);
+        dispatcher.setMaxRequests(128);
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.newBuilder().dispatcher(dispatcher)
+                .connectionPool(new ConnectionPool(64, 10, TimeUnit.MINUTES))
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .dns(Dns.SYSTEM)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .build();
+        //初始化参数
+        if (params != null && !params.isEmpty()) {
+            url = Objects.requireNonNull(params.get("url")).toString();
+        }
+        //2.第二步创建request
+        Request.Builder builder = new Request.Builder();
+        Request.Builder requestBuilder = builder.url(Objects.requireNonNull(url)).get();
+        if (header != null && !header.isEmpty()) {
+            for (String key : header.keySet()) {
+                requestBuilder = requestBuilder.addHeader(key, Objects.requireNonNull(header.get(key)).toString());
+            }
+        }
+        final Request request = requestBuilder.build();
+        //3.新建一个Call对象
+        final Call call = okHttpClient.newCall(request);
+        //4.同步请求网络execute()
+        try {
+            Response response = call.execute();
+            if (response.isSuccessful()) {
+                result = getHeaderFileName(response);
+            } else {
+                throw new IOException("Unexpected code " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static String getHeaderFileName(Response response) {
+        String dispositionHeader = response.header("Content-Disposition");
+        if (!TextUtils.isEmpty(dispositionHeader)) {
+            dispositionHeader.replace("attachment;filename=", "");
+            dispositionHeader.replace("filename*=utf-8", "");
+            String[] strings = dispositionHeader.split("; ");
+            if (strings.length > 1) {
+                dispositionHeader = strings[1].replace("filename=", "");
+                dispositionHeader = dispositionHeader.replace("\"", "");
+                return dispositionHeader;
+            }
+            return "";
+        }
+        return "";
     }
 
 }

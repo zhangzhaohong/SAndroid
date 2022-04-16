@@ -158,44 +158,41 @@ public class LoginFragment extends Fragment {
             }
 
             private void testHandler(final String username, final String password) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (TextUtils.checkEmpty(username) && TextUtils.checkEmpty(password)) {
-                            if (!isRequest) {
-                                isRequest = true;
-                                Map<String, Object> header = new HashMap<>();
-                                Map<String, Object> urlParams = new HashMap<>();
-                                urlParams.put("api_key", RequestInfo.REQUEST_API_KEY);
-                                urlParams.put("account", username);
-                                urlParams.put("password", password);
-                                String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.REQUEST_LOGIN, urlParams, header);
-                                if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
-                                    sendMessage(HandlerType.TYPE_TOAST, "请求失败 code:" + data[0] + "\n" + data[1]);
-                                    sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
-                                } else {
-                                    String json = data[1];
-                                    Gson gson = new Gson();
-                                    LoginRespModel loginRespModel = gson.fromJson(json, LoginRespModel.class);
-                                    int code = Integer.parseInt(loginRespModel.getCode());
-                                    String msg = loginRespModel.getMsg();
-                                    if (code == 0) {
-                                        sendMessage(HandlerType.TYPE_TOAST_SUCCESS, msg);
-                                        sendMessage(HandlerType.TYPE_LOGIN_STATUS, true);
-                                    } else {
-                                        sendMessage(HandlerType.TYPE_TOAST, "登录失败 code:" + code + "\n" + msg);
-                                        sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
-                                    }
-                                }
-                                isRequest = false;
-                            } else {
-                                sendMessage(HandlerType.TYPE_TOAST, "上一个请求正在进行中，请稍后重试！");
+                new Thread(() -> {
+                    if (TextUtils.checkEmpty(username) && TextUtils.checkEmpty(password)) {
+                        if (!isRequest) {
+                            isRequest = true;
+                            Map<String, Object> header = new HashMap<>();
+                            Map<String, Object> urlParams = new HashMap<>();
+                            urlParams.put("api_key", RequestInfo.REQUEST_API_KEY);
+                            urlParams.put("account", username);
+                            urlParams.put("password", password);
+                            String[] data = new HttpUtils().getDataFromCustomUrlByOkHttp3(RequestInfo.REQUEST_LOGIN, urlParams, header);
+                            if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
+                                sendMessage(HandlerType.TYPE_TOAST, "请求失败 code:" + data[0] + "\n" + data[1]);
                                 sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
+                            } else {
+                                String json = data[1];
+                                Gson gson = new Gson();
+                                LoginRespModel loginRespModel = gson.fromJson(json, LoginRespModel.class);
+                                int code = Integer.parseInt(loginRespModel.getCode());
+                                String msg = loginRespModel.getMsg();
+                                if (code == 0) {
+                                    sendMessage(HandlerType.TYPE_TOAST_SUCCESS, msg);
+                                    sendMessage(HandlerType.TYPE_LOGIN_STATUS, true);
+                                } else {
+                                    sendMessage(HandlerType.TYPE_TOAST, "登录失败 code:" + code + "\n" + msg);
+                                    sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
+                                }
                             }
+                            isRequest = false;
                         } else {
-                            sendMessage(HandlerType.TYPE_TOAST, "用户名密码不能为空！");
+                            sendMessage(HandlerType.TYPE_TOAST, "上一个请求正在进行中，请稍后重试！");
                             sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
                         }
+                    } else {
+                        sendMessage(HandlerType.TYPE_TOAST, "用户名密码不能为空！");
+                        sendMessage(HandlerType.TYPE_LOGIN_STATUS, false);
                     }
                 }).start();
             }

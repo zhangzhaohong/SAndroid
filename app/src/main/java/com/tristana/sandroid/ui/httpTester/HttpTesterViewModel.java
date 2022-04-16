@@ -41,7 +41,7 @@ public class HttpTesterViewModel extends ViewModel {
                     Map<String, Object> header = new HashMap<>();
                     Map<String, Object> params = new HashMap<>();
                     params.put("url", url);
-                    String[] data = new HttpUtils().getDataFromUrlByOkHttp3(RequestInfo.IS_TEST, params, header);
+                    String[] data = new HttpUtils().getDataFromCustomUrlByOkHttp3(RequestInfo.IS_TEST, params, header);
                     if (Integer.parseInt(data[0]) == -1 || Integer.parseInt(data[0]) > 400) {
                         mText.postValue("请求失败 code:" + data[0] + "\n" + data[1]);
                     } else {
