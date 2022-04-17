@@ -82,6 +82,13 @@ dependencies {
     // downloader 1
     implementation "com.github.Heart-Beats:Downloader:v1.0.5"
     // downloader 2
-    implementation 'com.arialyy.aria:core:3.8.5'
-    annotationProcessor 'com.arialyy.aria:compiler:3.8.5'
+    def aria_version = '3.8.12'
+    implementation "com.arialyy.aria:core:$aria_version"
+    annotationProcessor "com.arialyy.aria:compiler:$aria_version"
+    // 如果需要使用ftp，请增加该组件
+    implementation "com.arialyy.aria:ftpComponent:$aria_version"
+    // 如果需要使用sftp，请增加该组件
+    implementation "com.arialyy.aria:sftpComponent:$aria_version"
+    // 如果需要使用m3u8下载功能，请增加该组件
+    implementation "com.arialyy.aria:m3u8Component:$aria_version"
 }
