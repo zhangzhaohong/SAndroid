@@ -20,16 +20,16 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/test_downloader_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/test_1"
-                android:id="@+id/test_downloader_1"/>
+                android:text="@string/test_1" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/test_downloader_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/test_2"
-                android:id="@+id/test_downloader_2"/>
+                android:text="@string/test_2" />
 
             <TextView
                 android:id="@+id/text_download_manager"
@@ -40,6 +40,11 @@
                 android:layout_marginEnd="8dp"
                 android:textAlignment="center"
                 android:textSize="20sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/downloader_task_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

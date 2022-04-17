@@ -64,4 +64,6 @@
     <string name="menu_download_manager">下载管理器</string>
     <string name="test_1">下载器测试1</string>
     <string name="test_2">下载器测试2</string>
+    <string name="unknown_name">N/A</string>
+    <string name="unknown_file_type">N/A</string>
 </resources>

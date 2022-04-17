@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.arialyy.aria.core.Aria
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
@@ -15,6 +17,7 @@ import com.hl.downloader.DownloadListener
 import com.hl.downloader.DownloadManager
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
 import com.tristana.sandroid.R
+import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -37,6 +40,7 @@ class DownloadManagerFragment : Fragment() {
         val textView = root.findViewById<TextView>(R.id.text_download_manager)
         val testDownloader1 = root.findViewById<AppCompatButton>(R.id.test_downloader_1)
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
+        val downloaderTaskView = root.findViewById<RecyclerView>(R.id.downloader_task_view)
         downloadManagerViewModel!!.text.observe(viewLifecycleOwner) { s -> textView.text = s }
         testDownloader1.setOnClickListener {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
@@ -112,6 +116,10 @@ class DownloadManagerFragment : Fragment() {
             }
             LogUtils.i(Aria.download(requireActivity()).getTaskList(1, 10))
         }
+        val fileItemAdapter = FileItemAdapter(Aria.download(requireActivity()).getTaskList(1, 10))
+        val layoutManager = LinearLayoutManager(null)
+        downloaderTaskView.adapter = fileItemAdapter
+        downloaderTaskView.layoutManager = layoutManager
         return root
     }
 }
