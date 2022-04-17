@@ -195,7 +195,7 @@ open class DownloadManagerFragment : Fragment() {
     open fun taskComplete(task: DownloadTask) {
         LogUtils.d("path ==> " + task.downloadEntity.filePath)
         LogUtils.d("id ==> " + task.downloadEntity.id)
-        fileItemAdapter.onTaskComplete(task.downloadEntity)
+        fileItemAdapter.onTaskStateUpdate(task.downloadEntity)
     }
 
 }

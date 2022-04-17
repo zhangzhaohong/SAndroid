@@ -44,6 +44,13 @@ class FileItemAdapter(
         return fileInfoList?.size ?: 0
     }
 
+    override fun getItemId(position: Int): Long {
+        fileInfoList?.get(position)?.id?.let {
+            return it
+        }
+        return System.currentTimeMillis()
+    }
+
     fun insertView(entity: DownloadEntity?) {
         this.fileInfoList?.let {
             if (it.isEmpty()) {
@@ -51,15 +58,15 @@ class FileItemAdapter(
             } else {
                 it.add(0, entity)
             }
-            this.notifyItemInserted(0)
+            this.notifyItemRangeInserted(0, 1)
         }
     }
 
-    fun onTaskComplete(taskEntity: DownloadEntity) {
+    fun onTaskStateUpdate(taskEntity: DownloadEntity) {
         this.fileInfoList?.forEachIndexed { index, item ->
             if (item?.id == taskEntity.id) {
                 this.fileInfoList[index] = taskEntity
-                this.notifyItemRangeChanged(index, 1)
+                this.notifyItemRangeChanged(index, this.fileInfoList.size - index)
                 return@forEachIndexed
             }
         }
