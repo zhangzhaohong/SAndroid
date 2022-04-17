@@ -45,14 +45,36 @@ class FileItemAdapter(
     }
 
     fun insertView(entity: DownloadEntity?) {
-        fileInfoList?.add(0, entity)
-        notifyItemRangeInserted(0, 1)
+        this.fileInfoList?.let {
+            if (it.isEmpty()) {
+                it.add(entity)
+            } else {
+                it.add(0, entity)
+            }
+            this.notifyItemInserted(0)
+        }
+    }
+
+    fun onTaskComplete(taskEntity: DownloadEntity) {
+        this.fileInfoList?.forEachIndexed { index, item ->
+            if (item?.id == taskEntity.id) {
+                this.fileInfoList[index] = taskEntity
+                this.notifyItemRangeChanged(index, 1)
+                return@forEachIndexed
+            }
+        }
     }
 
     inner class FileItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(downloadEntity: DownloadEntity?) {
             fileNameTextView!!.text = downloadEntity!!.fileName
-            fileTypeTextView!!.text = getFileTypeByDownloadPath(downloadEntity)
+            val fileType = getFileTypeByDownloadPath(downloadEntity)
+            if (fileType != null && fileType.trim() != "") {
+                fileTypeTextView!!.text = getFileTypeByDownloadPath(downloadEntity)
+                fileTypeTextView!!.visibility = View.VISIBLE
+            } else {
+                fileTypeTextView!!.visibility = View.GONE
+            }
             val status = DownloadStateEnums.getMsgByNum(downloadEntity.state)
             if (status != null && status.trim { it <= ' ' } != "") {
                 taskStatusTextView!!.text = status
@@ -87,9 +109,13 @@ class FileItemAdapter(
             }
         }
 
-        private fun getFileTypeByDownloadPath(downloadEntity: DownloadEntity?): String {
-            val data = downloadEntity!!.filePath.split(".").toTypedArray()
-            return data[data.size - 1]
+        private fun getFileTypeByDownloadPath(downloadEntity: DownloadEntity?): String? {
+            downloadEntity?.let {
+                val data = downloadEntity.filePath.split(".").toTypedArray()
+                return data[data.size - 1]
+            } ?: kotlin.run {
+                return null
+            }
         }
 
         init {

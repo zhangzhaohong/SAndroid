@@ -26,7 +26,7 @@
         <useHeadRequest value="true"/>
 
         <!--设置任务最大下载速度，0表示不限速，单位为：kb-->
-        <maxSpeed value="128"/>
+        <!--<maxSpeed value="128"/>-->
 
         <!--
           多线程下载是否使用块下载模式，{@code true}使用，{@code false}不使用
@@ -48,7 +48,7 @@
         <threadNum value="1"/>
 
         <!--设置下载队列最大任务数， 默认为2-->
-        <maxTaskNum value="1"/>
+        <maxTaskNum value="3"/>
 
         <!--设置下载失败，重试次数，默认为10-->
         <reTryNum value="5"/>
