@@ -2,18 +2,17 @@ package com.tristana.sandroid.ui.downloader.adapter
 
 import android.content.Context
 import android.graphics.Color
-import com.arialyy.aria.core.download.DownloadEntity
-import com.arialyy.aria.core.download.DownloadReceiver
-import androidx.recyclerview.widget.RecyclerView
-import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter.FileItemHolder
-import androidx.appcompat.widget.AppCompatTextView
-import android.view.ViewGroup
-import com.tristana.sandroid.R
-import com.tristana.sandroid.ui.downloader.DownloadStateEnums
 import android.graphics.drawable.GradientDrawable
 import android.view.View
-import java.util.*
-import kotlin.collections.ArrayList
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.recyclerview.widget.RecyclerView
+import com.arialyy.aria.core.download.DownloadEntity
+import com.arialyy.aria.core.download.DownloadReceiver
+import com.blankj.utilcode.util.ColorUtils
+import com.tristana.sandroid.R
+import com.tristana.sandroid.ui.downloader.DownloadStateEnums
+import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter.FileItemHolder
 
 /**
  * @author koala
@@ -61,7 +60,7 @@ class FileItemAdapter(
             }
             val fileSize = downloadEntity.convertFileSize
             val gradientDrawable = fileSizeTextView!!.background as GradientDrawable
-            gradientDrawable.setColor(context.resources.getColor(R.color.tag_483D8B))
+            gradientDrawable.setColor(ColorUtils.getColor(R.color.tag_483D8B))
             if (fileSize != null && fileSize != "") {
                 fileSizeTextView!!.text = fileSize
                 fileSizeTextView!!.visibility = View.VISIBLE
@@ -77,13 +76,13 @@ class FileItemAdapter(
             val gradientDrawable = taskStatus!!.background as GradientDrawable
             when (downloadEntity!!.state) {
                 0 -> gradientDrawable.setColor(Color.RED)
-                1 -> gradientDrawable.setColor(context.resources.getColor(R.color.green_006400))
-                2 -> gradientDrawable.setColor(context.resources.getColor(R.color.yellow_EE7942))
-                3 -> gradientDrawable.setColor(context.resources.getColor(R.color.gray_4A708B))
-                4 -> gradientDrawable.setColor(context.resources.getColor(R.color.blue_008B8B))
-                5 -> gradientDrawable.setColor(context.resources.getColor(R.color.red_8B636C))
-                6 -> gradientDrawable.setColor(context.resources.getColor(R.color.red_8B475D))
-                7 -> gradientDrawable.setColor(context.resources.getColor(R.color.gray_555555))
+                1 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.green_006400))
+                2 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.yellow_EE7942))
+                3 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_4A708B))
+                4 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.blue_008B8B))
+                5 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B636C))
+                6 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B475D))
+                7 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
                 else -> {}
             }
         }
