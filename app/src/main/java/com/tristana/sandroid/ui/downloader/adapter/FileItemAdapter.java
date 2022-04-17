@@ -10,13 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.arialyy.annotations.Download;
 import com.arialyy.aria.core.download.DownloadEntity;
+import com.arialyy.aria.core.task.DownloadTask;
+import com.arialyy.aria.util.CommonUtil;
 import com.blankj.utilcode.util.LogUtils;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.ui.downloader.DownloadStateEnums;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 

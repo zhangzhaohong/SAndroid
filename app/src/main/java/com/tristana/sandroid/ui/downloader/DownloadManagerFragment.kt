@@ -22,11 +22,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import kotlin.math.floor
 
 
-class DownloadManagerFragment : Fragment() {
+open class DownloadManagerFragment : Fragment() {
     private var downloadManagerViewModel: DownloadManagerViewModel? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -130,6 +129,7 @@ class DownloadManagerFragment : Fragment() {
                     val taskId: Long = Aria.download(this)
                         .load(downloadUrl) //读取下载地址
                         .setFilePath(filePath) //设置文件保存的完整路径
+                        .resetState()
                         .create() //启动下载
                     LogUtils.i("currentTaskId: $taskId")
                     val taskInfo = aria.load(taskId)
