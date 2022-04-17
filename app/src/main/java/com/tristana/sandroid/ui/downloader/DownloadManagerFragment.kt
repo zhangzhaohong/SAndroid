@@ -116,7 +116,7 @@ class DownloadManagerFragment : Fragment() {
             }
             LogUtils.i(Aria.download(requireActivity()).getTaskList(1, 10))
         }
-        val fileItemAdapter = FileItemAdapter(Aria.download(requireActivity()).getTaskList(1, 10))
+        val fileItemAdapter = FileItemAdapter(requireContext(), Aria.download(requireActivity()).getTaskList(1, 10))
         val layoutManager = LinearLayoutManager(null)
         downloaderTaskView.adapter = fileItemAdapter
         downloaderTaskView.layoutManager = layoutManager

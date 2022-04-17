@@ -1,5 +1,8 @@
 package com.tristana.sandroid.ui.downloader.adapter;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,11 +26,13 @@ import java.util.List;
 public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.FileItemHolder> {
 
     private final List<DownloadEntity> fileInfoList;
+    private final Context context;
     private AppCompatTextView file_name;
     private AppCompatTextView file_type;
     private AppCompatTextView task_status;
 
-    public FileItemAdapter(List<DownloadEntity> fileInfoList) {
+    public FileItemAdapter(Context context, List<DownloadEntity> fileInfoList) {
+        this.context = context;
         this.fileInfoList = fileInfoList;
     }
 
@@ -65,6 +70,39 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.FileIt
             String status = DownloadStateEnums.getMsgByNum(downloadEntity.getState());
             if (status != null && !status.trim().equals("")) {
                 task_status.setText(status);
+                refreshTaskTag(task_status, downloadEntity);
+            }
+        }
+
+        private void refreshTaskTag(AppCompatTextView taskStatus, DownloadEntity downloadEntity) {
+            GradientDrawable gradientDrawable = (GradientDrawable) taskStatus.getBackground();
+            switch (downloadEntity.getState()) {
+                case 0:
+                    gradientDrawable.setColor(Color.RED);
+                    break;
+                case 1:
+                    gradientDrawable.setColor(context.getResources().getColor(R.color.green_006400));
+                    break;
+                case 2:
+                    gradientDrawable.setColor(context.getResources().getColor(R.color.yellow_EE7942));
+                    break;
+                case 3:
+                    gradientDrawable.setColor(context.getResources().getColor(R.color.gray_4A708B));
+                    break;
+                case 4:
+                    gradientDrawable.setColor(context.getResources().getColor(R.color.blue_008B8B));
+                    break;
+                case 5:
+                    gradientDrawable.setColor(context.getResources().getColor(R.color.red_8B636C));
+                    break;
+                case 6:
+                    gradientDrawable.setColor(context.getResources().getColor(R.color.red_8B475D));
+                    break;
+                case 7:
+                    gradientDrawable.setColor(context.getResources().getColor(R.color.gray_555555));
+                    break;
+                default:
+                    break;
             }
         }
 
