@@ -3,6 +3,7 @@ package com.tristana.sandroid
 import android.app.Activity
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.arialyy.aria.core.Aria
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
@@ -23,6 +24,11 @@ class MyApplication : Application() {
         instance = this
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         MainScope().launch {
+            withContext(Dispatchers.IO) {
+                instance?.let {
+                    Aria.init(instance);
+                }
+            }
             withContext(Dispatchers.IO) {
                 instance?.let {
                     val mConfig: LogUtils.Config = LogUtils.getConfig()

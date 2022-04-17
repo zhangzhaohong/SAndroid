@@ -36,7 +36,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import java.util.*
 
 
@@ -277,6 +276,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        Aria.download(this).unRegister();
         AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
         super.onDestroy()
     }
