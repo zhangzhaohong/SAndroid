@@ -88,7 +88,7 @@ class FileItemAdapter(
         }
 
         private fun getFileTypeByDownloadPath(downloadEntity: DownloadEntity?): String {
-            val data = downloadEntity!!.filePath.split("\\.").toTypedArray()
+            val data = downloadEntity!!.filePath.split(".").toTypedArray()
             return data[data.size - 1]
         }
 
