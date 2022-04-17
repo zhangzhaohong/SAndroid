@@ -31,6 +31,7 @@ import kotlin.math.floor
 open class DownloadManagerFragment : Fragment() {
     private var downloadManagerViewModel: DownloadManagerViewModel? = null
     private var aria: DownloadReceiver? = null
+    private lateinit var fileItemAdapter: FileItemAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -59,7 +60,7 @@ open class DownloadManagerFragment : Fragment() {
         } ?: kotlin.run {
             1
         };
-        val fileItemAdapter =
+        fileItemAdapter =
             FileItemAdapter(
                 requireContext(),
                 Aria.download(requireActivity()).getTaskList(
