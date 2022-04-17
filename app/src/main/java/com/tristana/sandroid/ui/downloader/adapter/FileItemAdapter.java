@@ -15,6 +15,9 @@ import com.blankj.utilcode.util.LogUtils;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.ui.downloader.DownloadStateEnums;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,9 +33,11 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.FileIt
     private AppCompatTextView file_name;
     private AppCompatTextView file_type;
     private AppCompatTextView task_status;
+    private AppCompatTextView file_size;
 
     public FileItemAdapter(Context context, List<DownloadEntity> fileInfoList) {
         this.context = context;
+        Collections.reverse(fileInfoList);
         this.fileInfoList = fileInfoList;
     }
 
@@ -56,12 +61,17 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.FileIt
         return 0;
     }
 
+    public void insertView(@Nullable DownloadEntity entity) {
+        this.fileInfoList.add(0, entity);
+    }
+
     class FileItemHolder extends RecyclerView.ViewHolder {
         public FileItemHolder(@NonNull View itemView) {
             super(itemView);
             file_name = itemView.findViewById(R.id.file_name);
             file_type = itemView.findViewById(R.id.file_type);
             task_status = itemView.findViewById(R.id.task_status);
+            file_size = itemView.findViewById(R.id.file_size);
         }
 
         public void setData(DownloadEntity downloadEntity) {
@@ -71,6 +81,15 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.FileIt
             if (status != null && !status.trim().equals("")) {
                 task_status.setText(status);
                 refreshTaskTag(task_status, downloadEntity);
+            }
+            String fileSize = downloadEntity.getConvertFileSize();
+            GradientDrawable gradientDrawable = (GradientDrawable) file_size.getBackground();
+            gradientDrawable.setColor(context.getResources().getColor(R.color.tag_483D8B));
+            if (fileSize != null && !fileSize.equals("")) {
+                file_size.setText(fileSize);
+                file_size.setVisibility(View.VISIBLE);
+            } else {
+                file_size.setVisibility(View.GONE);
             }
         }
 

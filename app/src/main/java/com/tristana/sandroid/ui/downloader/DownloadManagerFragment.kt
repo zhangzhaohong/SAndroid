@@ -23,6 +23,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.math.floor
 
 
 class DownloadManagerFragment : Fragment() {
@@ -41,14 +42,33 @@ class DownloadManagerFragment : Fragment() {
         val testDownloader1 = root.findViewById<AppCompatButton>(R.id.test_downloader_1)
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val downloaderTaskView = root.findViewById<RecyclerView>(R.id.downloader_task_view)
+        val aria = Aria.download(requireActivity())
+        val pageSize = 10
+        val pageNum = floor((aria.taskList.size / pageSize).toDouble()).toInt().let {
+            if (it < 1) {
+                1
+            } else {
+                it
+            }
+        };
+        val fileItemAdapter =
+            FileItemAdapter(
+                requireContext(), Aria.download(requireActivity()).getTaskList(
+                    pageNum,
+                    pageSize
+                )
+            )
+        val layoutManager = LinearLayoutManager(null)
+        downloaderTaskView.adapter = fileItemAdapter
+        downloaderTaskView.layoutManager = layoutManager
         downloadManagerViewModel!!.text.observe(viewLifecycleOwner) { s -> textView.text = s }
         testDownloader1.setOnClickListener {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
             FileUtils.createOrExistsDir(filePath)
             val downloadUrl =
                 "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
-                // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
-                // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
+            // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
+            // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
             MainScope().launch {
                 withContext(Dispatchers.IO) {
                     filePath = "$filePath/"
@@ -112,14 +132,13 @@ class DownloadManagerFragment : Fragment() {
                         .setFilePath(filePath) //设置文件保存的完整路径
                         .create() //启动下载
                     LogUtils.i("currentTaskId: $taskId")
+                    val taskInfo = aria.load(taskId)
+                    taskInfo.setExtendField(taskId.toString()).save()
+                    fileItemAdapter.insertView(taskInfo.entity)
+                    fileItemAdapter.notifyItemRangeInserted(0, 1)
                 }
             }
-            LogUtils.i(Aria.download(requireActivity()).getTaskList(1, 10))
         }
-        val fileItemAdapter = FileItemAdapter(requireContext(), Aria.download(requireActivity()).getTaskList(1, 10))
-        val layoutManager = LinearLayoutManager(null)
-        downloaderTaskView.adapter = fileItemAdapter
-        downloaderTaskView.layoutManager = layoutManager
         return root
     }
 }
