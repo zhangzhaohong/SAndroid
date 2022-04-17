@@ -14,7 +14,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.arialyy.aria.core.Aria
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -157,7 +156,6 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
-        Aria.download(this).register();
     }
 
     /**
@@ -276,7 +274,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        Aria.download(this).unRegister();
         AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
         super.onDestroy()
     }

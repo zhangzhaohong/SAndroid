@@ -1,11 +1,6 @@
 package com.tristana.sandroid.ui.downloader
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.arialyy.annotations.Download
 import com.arialyy.aria.core.Aria
-import com.arialyy.aria.core.download.DownloadEntity
-import com.arialyy.aria.core.listener.ISchedulers
+import com.arialyy.aria.core.download.DownloadReceiver
+import com.arialyy.aria.core.task.DownloadTask
+import com.arialyy.aria.util.CommonUtil
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.hl.downloader.DownloadListener
@@ -29,13 +26,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import kotlin.math.floor
 
 
 open class DownloadManagerFragment : Fragment() {
     private var downloadManagerViewModel: DownloadManagerViewModel? = null
-    private var receiver: BroadcastReceiver? = null
+    private var aria: DownloadReceiver? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -50,35 +46,19 @@ open class DownloadManagerFragment : Fragment() {
         val testDownloader1 = root.findViewById<AppCompatButton>(R.id.test_downloader_1)
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val downloaderTaskView = root.findViewById<RecyclerView>(R.id.downloader_task_view)
-        receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent) {
-                if (intent.action == ISchedulers.ARIA_TASK_INFO_ACTION) {
-                    try {
-                        val entity = intent.getParcelableExtra<Parcelable>(ISchedulers.TASK_ENTITY) as DownloadEntity;
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    // 获取任务状态
-                    // LogUtils.d("state = " + intent.getIntExtra(ISchedulers.TASK_STATE, -1))
-                    // 获取任务类型
-                    // LogUtils.d("type = " + intent.getIntExtra(ISchedulers.TASK_TYPE, -1))
-                    // 获取任务状态速度，单位为byte/s
-                    // LogUtils.d("speed = " + intent.getLongExtra(ISchedulers.TASK_SPEED, -1))
-                    // 获取任务进度，0-100
-                    // LogUtils.d("percent = " + intent.getIntExtra(ISchedulers.TASK_PERCENT, -1))
-                    // 获取任务实体
-                    // LogUtils.d("entity = " + intent.getParcelableExtra<Parcelable>(ISchedulers.TASK_ENTITY).toString())
+        aria = Aria.download(this)
+        aria?.register()
+        val pageSize = 10
+        val pageNum = aria?.taskList?.size?.let { size ->
+            floor((size / pageSize).toDouble()).toInt().let {
+                if (it < 1) {
+                    1
+                } else {
+                    it
                 }
             }
-        }
-        val aria = Aria.download(requireActivity())
-        val pageSize = 10
-        val pageNum = floor((aria.taskList.size / pageSize).toDouble()).toInt().let {
-            if (it < 1) {
-                1
-            } else {
-                it
-            }
+        } ?: kotlin.run {
+            1
         };
         val fileItemAdapter =
             FileItemAdapter(
@@ -162,23 +142,61 @@ open class DownloadManagerFragment : Fragment() {
                         .resetState()
                         .create() //启动下载
                     LogUtils.i("currentTaskId: $taskId")
-                    fileItemAdapter.insertView(aria.load(taskId).entity)
+                    fileItemAdapter.insertView(aria?.load(taskId)?.entity)
                 }
             }
         }
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireActivity().registerReceiver(
-            receiver,
-            IntentFilter(ISchedulers.ARIA_TASK_INFO_ACTION)
-        );
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        requireActivity().unregisterReceiver(receiver);
+        aria?.unRegister()
     }
+
+    @Download.onWait
+    open fun onWait(task: DownloadTask) {
+        LogUtils.d("wait ==> " + task.downloadEntity.fileName)
+    }
+
+    @Download.onPre
+    protected open fun onPre(task: DownloadTask?) {
+        LogUtils.d("onPre")
+    }
+
+    @Download.onTaskStart
+    open fun taskStart(task: DownloadTask?) {
+        LogUtils.d("onStart")
+    }
+
+    @Download.onTaskRunning
+    protected open fun running(task: DownloadTask?) {
+        LogUtils.d("running")
+    }
+
+    @Download.onTaskResume
+    open fun taskResume(task: DownloadTask?) {
+        LogUtils.d("resume")
+    }
+
+    @Download.onTaskStop
+    open fun taskStop(task: DownloadTask?) {
+        LogUtils.d("stop")
+    }
+
+    @Download.onTaskCancel
+    open fun taskCancel(task: DownloadTask?) {
+        LogUtils.d("cancel")
+    }
+
+    @Download.onTaskFail
+    open fun taskFail(task: DownloadTask?) {
+        LogUtils.d("fail")
+    }
+
+    @Download.onTaskComplete
+    open fun taskComplete(task: DownloadTask) {
+        LogUtils.d("path ==> " + task.downloadEntity.filePath)
+    }
+
 }
