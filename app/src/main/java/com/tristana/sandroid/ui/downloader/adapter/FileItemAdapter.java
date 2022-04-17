@@ -67,6 +67,7 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.FileIt
 
     public void insertView(@Nullable DownloadEntity entity) {
         this.fileInfoList.add(0, entity);
+        this.notifyItemRangeInserted(0, 1);
     }
 
     class FileItemHolder extends RecyclerView.ViewHolder {
