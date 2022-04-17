@@ -149,11 +149,6 @@ open class DownloadManagerFragment : Fragment() {
         return root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        aria?.unRegister()
-    }
-
     @Download.onWait
     open fun onWait(task: DownloadTask) {
         LogUtils.d("wait ==> " + task.downloadEntity.fileName)
@@ -197,6 +192,7 @@ open class DownloadManagerFragment : Fragment() {
     @Download.onTaskComplete
     open fun taskComplete(task: DownloadTask) {
         LogUtils.d("path ==> " + task.downloadEntity.filePath)
+        LogUtils.d("id ==> " + task.downloadEntity.id)
     }
 
 }
