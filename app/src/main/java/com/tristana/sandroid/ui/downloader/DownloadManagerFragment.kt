@@ -14,7 +14,6 @@ import com.arialyy.annotations.Download
 import com.arialyy.aria.core.Aria
 import com.arialyy.aria.core.download.DownloadReceiver
 import com.arialyy.aria.core.task.DownloadTask
-import com.arialyy.aria.util.CommonUtil
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.hl.downloader.DownloadListener
@@ -62,10 +61,12 @@ open class DownloadManagerFragment : Fragment() {
         };
         val fileItemAdapter =
             FileItemAdapter(
-                requireContext(), Aria.download(requireActivity()).getTaskList(
+                requireContext(),
+                Aria.download(requireActivity()).getTaskList(
                     pageNum,
                     pageSize
-                )
+                ),
+                aria
             )
         val layoutManager = LinearLayoutManager(null)
         downloaderTaskView.adapter = fileItemAdapter
