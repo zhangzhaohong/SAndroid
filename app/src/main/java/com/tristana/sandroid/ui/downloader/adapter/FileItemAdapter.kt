@@ -81,22 +81,22 @@ class FileItemAdapter(
     }
 
     fun onAddOrUpdate(entity: DownloadEntity?) {
-        this.fileInfoList.sortByDescending {
-            it?.id
-        }
-        this.fileInfoList[this.fileInfoList.size - 1]?.let {
-            entity?.id?.let { taskId ->
-                if (taskId > it.id) {
-                    this.fileInfoList.add(0, entity)
+        if (this.fileInfoList.size >= 1) {
+            this.fileInfoList[0]?.let {
+                entity?.id?.let { taskId ->
+                    if (taskId > it.id) {
+                        this.fileInfoList.add(0, entity)
+                        this.notifyItemInserted(0)
+                    } else {
+                        onTaskStateUpdate(entity)
+                    }
+                }?: kotlin.run {
+                    this.fileInfoList.add(entity)
                     this.notifyItemInserted(0)
-                } else {
-                    onTaskStateUpdate(entity)
-                    return
                 }
-            }?: kotlin.run {
-                this.fileInfoList.add(entity)
-                this.notifyItemInserted(0)
             }
+        } else {
+            insertView(entity)
         }
     }
 

@@ -147,7 +147,6 @@ open class DownloadManagerFragment : Fragment() {
                         .resetState()
                         .create() //启动下载
                     LogUtils.i("currentTaskId: $taskId")
-                    fileItemAdapter.insertView(Aria.download(this).load(taskId)?.entity)
                 }
             }
         }
@@ -156,49 +155,49 @@ open class DownloadManagerFragment : Fragment() {
 
     @Download.onWait
     open fun onWait(task: DownloadTask) {
-        LogUtils.d("wait ==> " + task.downloadEntity.fileName)
+        fileItemAdapter.onAddOrUpdate(task.downloadEntity)
     }
 
     @Download.onPre
     protected open fun onPre(task: DownloadTask?) {
-        LogUtils.d("onPre")
+        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
     }
 
     @Download.onTaskStart
     open fun taskStart(task: DownloadTask?) {
-        LogUtils.d("onStart")
+        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
     }
 
     @Download.onTaskRunning
     protected open fun running(task: DownloadTask?) {
-        LogUtils.d("running")
+        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
     }
 
     @Download.onTaskResume
     open fun taskResume(task: DownloadTask?) {
-        LogUtils.d("resume")
+        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
     }
 
     @Download.onTaskStop
     open fun taskStop(task: DownloadTask?) {
-        LogUtils.d("stop")
+        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
     }
 
     @Download.onTaskCancel
     open fun taskCancel(task: DownloadTask?) {
-        LogUtils.d("cancel")
+        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
     }
 
     @Download.onTaskFail
     open fun taskFail(task: DownloadTask?) {
-        LogUtils.d("fail")
+        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
     }
 
     @Download.onTaskComplete
     open fun taskComplete(task: DownloadTask) {
         LogUtils.d("path ==> " + task.downloadEntity.filePath)
         LogUtils.d("id ==> " + task.downloadEntity.id)
-        fileItemAdapter.onTaskStateUpdate(task.downloadEntity)
+        fileItemAdapter.onAddOrUpdate(task.downloadEntity)
     }
 
 }
