@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arialyy.annotations.Download
 import com.arialyy.aria.core.Aria
-import com.arialyy.aria.core.download.DownloadReceiver
 import com.arialyy.aria.core.task.DownloadTask
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
@@ -144,7 +143,6 @@ open class DownloadManagerFragment : Fragment() {
                     val taskId: Long = Aria.download(this)
                         .load(downloadUrl) //读取下载地址
                         .setFilePath(filePath) //设置文件保存的完整路径
-                        .resetState()
                         .create() //启动下载
                     LogUtils.i("currentTaskId: $taskId")
                 }

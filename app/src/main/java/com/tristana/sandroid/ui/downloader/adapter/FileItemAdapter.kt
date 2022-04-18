@@ -58,7 +58,7 @@ class FileItemAdapter(
         return 0
     }
 
-    fun insertView(entity: DownloadEntity?) {
+    private fun insertView(entity: DownloadEntity?) {
         if (this.fileInfoList.isEmpty()) {
             this.fileInfoList.add(entity)
         } else {
@@ -69,7 +69,7 @@ class FileItemAdapter(
         // this.notifyItemRangeChanged(0, this.fileInfoList.size)
     }
 
-    fun onTaskStateUpdate(taskEntity: DownloadEntity?) {
+    private fun onTaskStateUpdate(taskEntity: DownloadEntity?) {
         this.fileInfoList.forEachIndexed { index, item ->
             if (item?.id == taskEntity?.id && item?.id != null) {
                 this.fileInfoList[index] = taskEntity
