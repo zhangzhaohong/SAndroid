@@ -12,14 +12,15 @@ import java.util.Optional;
  * @description
  */
 public enum DownloadStateEnums {
-    ON_FAILED(0, "下载失败"),
-    ON_SUCCESS(1, "下载成功"),
-    ON_PAUSED(2, "下载暂停"),
-    WAITING_DOWNLOAD(3, "等待下载"),
-    DOWNLOADING(4, "正在下载"),
-    PREFETCH(5, "预处理"),
-    PREFETCH_SUCCESS(6, "预处理完成"),
-    ON_CANCEL(7, "任务取消"),
+    ON_QUEUED(1, "已加入队列"),
+    ON_DOWNLOADING(2, "下载中"),
+    ON_PAUSED(3, "下载暂停"),
+    ON_COMPLETED(4, "下载完成"),
+    ON_CANCELLED(5, "下载取消"),
+    ON_FAILED(6, "下载失败"),
+    ON_REMOVED(7, "任务已移除"),
+    ON_DELETED(8, "任务已删除"),
+    ON_ADDED(9, "任务已添加"),
     ;
 
     private final int num;
@@ -38,7 +39,7 @@ public enum DownloadStateEnums {
         this.msg = msg;
     }
 
-    public static String getMsgByNum(int num) {
+    public static String getMsgByNum(Integer num) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Optional<DownloadStateEnums> optional = Arrays.stream(DownloadStateEnums.values()).filter(item -> item.num == num).findFirst();
             if (optional.isPresent()) {

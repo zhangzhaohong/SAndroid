@@ -82,5 +82,10 @@ dependencies {
     // downloader 1
     implementation "com.github.Heart-Beats:Downloader:v1.0.5"
     // downloader 2
-    implementation 'com.ixuea:android-downloader:3.0.0'
+    def fetch_downloader_version = "3.1.6"
+    implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch_downloader_version"
+    implementation "androidx.tonyodev.fetch2rx:xfetch2rx:$fetch_downloader_version"
+    implementation "androidx.tonyodev.fetch2:xfetch2:$fetch_downloader_version"
+    implementation "androidx.tonyodev.fetchmigrator:xfetchmigrator:$fetch_downloader_version"
+    // implementation "androidx.tonyodev.fetch2fileserver:xfetch2fileserver:$fetch_downloader_version"
 }

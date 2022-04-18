@@ -3,11 +3,9 @@ package com.tristana.sandroid
 import android.app.Activity
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.arialyy.aria.core.Aria
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.Utils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
@@ -26,7 +24,7 @@ class MyApplication : Application() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
-                    Aria.init(instance);
+
                 }
             }
             withContext(Dispatchers.IO) {

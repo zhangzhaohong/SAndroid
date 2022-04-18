@@ -3,13 +3,16 @@ package com.tristana.sandroid.ui.downloader.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.text.format.Formatter
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import com.arialyy.aria.core.download.DownloadEntity
-import com.arialyy.aria.core.download.DownloadReceiver
 import com.blankj.utilcode.util.ColorUtils
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.LogUtils
+import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.Status
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.downloader.DownloadStateEnums
 import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter.FileItemHolder
@@ -22,12 +25,11 @@ import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter.FileItemHolde
  */
 class FileItemAdapter(
     private val context: Context,
-    fileInfoList: List<DownloadEntity?>?,
+    fileInfoList: List<Download?>?,
 ) : RecyclerView.Adapter<FileItemHolder>() {
-    private val fileInfoList: ArrayList<DownloadEntity?> = ArrayList()
+    private val fileInfoList: ArrayList<Download?> = ArrayList()
     private var fileNameTextView: AppCompatTextView? = null
     private var fileTypeTextView: AppCompatTextView? = null
-    private var taskIdTextView: AppCompatTextView? = null
     private var taskStatusTextView: AppCompatTextView? = null
     private var fileSizeTextView: AppCompatTextView? = null
 
@@ -46,19 +48,19 @@ class FileItemAdapter(
 
     override fun getItemViewType(position: Int): Int {
         fileInfoList[position]?.id?.let {
-            return it.toInt()
+            return it
         }
         return 0
     }
 
     override fun getItemId(position: Int): Long {
         fileInfoList[position]?.id?.let {
-            return it
+            return it.toLong()
         }
         return 0
     }
 
-    private fun insertView(entity: DownloadEntity?) {
+    private fun insertView(entity: Download?) {
         if (this.fileInfoList.isEmpty()) {
             this.fileInfoList.add(entity)
         } else {
@@ -69,58 +71,44 @@ class FileItemAdapter(
         // this.notifyItemRangeChanged(0, this.fileInfoList.size)
     }
 
-    private fun onTaskStateUpdate(taskEntity: DownloadEntity?) {
+    fun onAddOrUpdate(entity: Download?) {
         this.fileInfoList.forEachIndexed { index, item ->
-            if (item?.id == taskEntity?.id && item?.id != null) {
-                this.fileInfoList[index] = taskEntity
+            if (item?.id == entity?.id && item?.id != null) {
+                this.fileInfoList[index] = entity
                 this.notifyItemChanged(index)
                 // this.notifyItemRangeChanged(index, this.fileInfoList.size - index)
-                return@forEachIndexed
+                return
             }
         }
+        insertView(entity)
     }
 
-    fun onAddOrUpdate(entity: DownloadEntity?) {
-        if (this.fileInfoList.size >= 1) {
-            this.fileInfoList[0]?.let {
-                entity?.id?.let { taskId ->
-                    if (taskId > it.id) {
-                        this.fileInfoList.add(0, entity)
-                        this.notifyItemInserted(0)
-                    } else {
-                        onTaskStateUpdate(entity)
-                    }
-                }?: kotlin.run {
-                    this.fileInfoList.add(entity)
-                    this.notifyItemInserted(0)
-                }
-            }
-        } else {
-            insertView(entity)
+    fun setData(taskList: List<Download>) {
+        taskList.forEach {
+            insertView(it)
         }
     }
 
     inner class FileItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun setData(downloadEntity: DownloadEntity?) {
-            fileNameTextView!!.text = downloadEntity!!.fileName
-            val fileType = getFileTypeByDownloadPath(downloadEntity)
+        fun setData(downloadEntity: Download?) {
+            fileNameTextView!!.text = FileUtils.getFileName(downloadEntity?.file)
+            val fileType = FileUtils.getFileExtension(downloadEntity?.file)
             if (fileType != null && fileType.trim() != "") {
-                fileTypeTextView!!.text = getFileTypeByDownloadPath(downloadEntity)
+                fileTypeTextView!!.text = fileType
                 fileTypeTextView!!.visibility = View.VISIBLE
             } else {
                 fileTypeTextView!!.visibility = View.GONE
             }
-            val id = "# ${downloadEntity.id}"
-            taskIdTextView!!.text = id
-            val status = DownloadStateEnums.getMsgByNum(downloadEntity.state)
+            val status = DownloadStateEnums.getMsgByNum(downloadEntity?.status?.value)
             if (status != null && status.trim { it <= ' ' } != "") {
                 taskStatusTextView!!.text = status
                 refreshTaskTag(taskStatusTextView, downloadEntity)
             }
-            val fileSize = downloadEntity.convertFileSize
+            val fileSize = Formatter.formatFileSize(context, downloadEntity?.total ?: 0L)
             val gradientDrawable = fileSizeTextView!!.background as GradientDrawable
             gradientDrawable.setColor(ColorUtils.getColor(R.color.tag_483D8B))
-            if (fileSize != null && fileSize != "") {
+            LogUtils.i(fileSize)
+            if (fileSize != null && fileSize != "" && fileSize != "-1 B") {
                 fileSizeTextView!!.text = fileSize
                 fileSizeTextView!!.visibility = View.VISIBLE
             } else {
@@ -130,35 +118,28 @@ class FileItemAdapter(
 
         private fun refreshTaskTag(
             taskStatus: AppCompatTextView?,
-            downloadEntity: DownloadEntity?
+            downloadEntity: Download?
         ) {
             val gradientDrawable = taskStatus!!.background as GradientDrawable
-            when (downloadEntity!!.state) {
-                0 -> gradientDrawable.setColor(Color.RED)
-                1 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.green_006400))
-                2 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.yellow_EE7942))
-                3 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_4A708B))
-                4 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.blue_008B8B))
-                5 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B636C))
-                6 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B475D))
-                7 -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
-                else -> {}
-            }
-        }
-
-        private fun getFileTypeByDownloadPath(downloadEntity: DownloadEntity?): String? {
-            downloadEntity?.let {
-                val data = downloadEntity.filePath.split(".").toTypedArray()
-                return data[data.size - 1]
-            } ?: kotlin.run {
-                return null
+            when (downloadEntity!!.status) {
+                Status.QUEUED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B636C))
+                Status.DOWNLOADING -> gradientDrawable.setColor(ColorUtils.getColor(R.color.blue_008B8B))
+                Status.PAUSED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B475D))
+                Status.COMPLETED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.green_006400))
+                Status.CANCELLED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
+                Status.FAILED -> gradientDrawable.setColor(Color.RED)
+                Status.REMOVED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
+                Status.DELETED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
+                Status.ADDED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_4A708B))
+                else -> {
+                    gradientDrawable.setColor(ColorUtils.getColor(R.color.tag_483D8B))
+                }
             }
         }
 
         init {
             fileNameTextView = itemView.findViewById(R.id.file_name)
             fileTypeTextView = itemView.findViewById(R.id.file_type)
-            taskIdTextView = itemView.findViewById(R.id.task_id)
             taskStatusTextView = itemView.findViewById(R.id.task_status)
             fileSizeTextView = itemView.findViewById(R.id.file_size)
         }

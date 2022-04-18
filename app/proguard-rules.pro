@@ -39,5 +39,3 @@
 -keep class com.tencent.tbs.** {
     *;
 }
-
--keep public class * implements com.ixuea.android.downloader.db.DownloadDBController
