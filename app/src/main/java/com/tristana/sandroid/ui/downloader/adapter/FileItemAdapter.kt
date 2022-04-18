@@ -25,48 +25,48 @@ class FileItemAdapter(
     fileInfoList: List<DownloadEntity?>?,
     aria: DownloadReceiver?
 ) : RecyclerView.Adapter<FileItemHolder>() {
-    private val fileInfoList: ArrayList<DownloadEntity?>?
+    private val fileInfoList: ArrayList<DownloadEntity?> = ArrayList()
     private val aria: DownloadReceiver?
     private var fileNameTextView: AppCompatTextView? = null
     private var fileTypeTextView: AppCompatTextView? = null
     private var taskStatusTextView: AppCompatTextView? = null
     private var fileSizeTextView: AppCompatTextView? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileItemHolder {
         val itemView = View.inflate(parent.context, R.layout.item_downloader_view, null)
         return FileItemHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: FileItemHolder, position: Int) {
-        holder.setData(fileInfoList!![position])
+        holder.setData(fileInfoList[position])
     }
 
     override fun getItemCount(): Int {
-        return fileInfoList?.size ?: 0
+        return fileInfoList.size ?: 0
     }
 
     override fun getItemId(position: Int): Long {
-        fileInfoList?.get(position)?.id?.let {
+        fileInfoList[position]?.id?.let {
             return it
         }
-        return System.currentTimeMillis()
+        return 0
     }
+
 
     fun insertView(entity: DownloadEntity?) {
-        this.fileInfoList?.let {
-            if (it.isEmpty()) {
-                it.add(entity)
-            } else {
-                it.add(0, entity)
-            }
-            this.notifyItemRangeInserted(0, 1)
+        if (this.fileInfoList.isEmpty()) {
+            this.fileInfoList.add(entity)
+        } else {
+            this.fileInfoList.add(0, entity)
         }
+        this.notifyItemInserted(0)
     }
 
-    fun onTaskStateUpdate(taskEntity: DownloadEntity) {
-        this.fileInfoList?.forEachIndexed { index, item ->
-            if (item?.id == taskEntity.id) {
+    fun onTaskStateUpdate(taskEntity: DownloadEntity?) {
+        this.fileInfoList.forEachIndexed { index, item ->
+            if (item?.id == taskEntity?.id && item?.id != null) {
                 this.fileInfoList[index] = taskEntity
-                this.notifyItemRangeChanged(index, this.fileInfoList.size - index)
+                this.notifyItemChanged(index)
                 return@forEachIndexed
             }
         }
@@ -134,8 +134,9 @@ class FileItemAdapter(
     }
 
     init {
-        fileInfoList?.reversed()
-        this.fileInfoList = fileInfoList as ArrayList<DownloadEntity?>?
+        fileInfoList?.forEach {
+            insertView(it)
+        }
         this.aria = aria
     }
 }
