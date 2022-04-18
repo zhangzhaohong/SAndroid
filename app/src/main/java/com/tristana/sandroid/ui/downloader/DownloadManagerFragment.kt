@@ -25,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.floor
+import kotlin.math.ceil
 
 
 open class DownloadManagerFragment : Fragment() {
@@ -50,7 +50,7 @@ open class DownloadManagerFragment : Fragment() {
         aria?.register()
         val pageSize = 10
         val pageNum = aria?.taskList?.size?.let { size ->
-            floor((size / pageSize).toDouble()).toInt().let {
+            ceil((size.toFloat() / pageSize.toFloat()).toDouble()).toInt().let {
                 if (it < 1) {
                     1
                 } else {

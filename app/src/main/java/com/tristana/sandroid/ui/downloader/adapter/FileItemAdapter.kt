@@ -29,6 +29,7 @@ class FileItemAdapter(
     private val aria: DownloadReceiver?
     private var fileNameTextView: AppCompatTextView? = null
     private var fileTypeTextView: AppCompatTextView? = null
+    private var taskIdTextView: AppCompatTextView? = null
     private var taskStatusTextView: AppCompatTextView? = null
     private var fileSizeTextView: AppCompatTextView? = null
 
@@ -45,13 +46,19 @@ class FileItemAdapter(
         return fileInfoList.size ?: 0
     }
 
+    override fun getItemViewType(position: Int): Int {
+        fileInfoList[position]?.id?.let {
+            return it.toInt()
+        }
+        return 0
+    }
+
     override fun getItemId(position: Int): Long {
         fileInfoList[position]?.id?.let {
             return it
         }
         return 0
     }
-
 
     fun insertView(entity: DownloadEntity?) {
         if (this.fileInfoList.isEmpty()) {
@@ -60,6 +67,8 @@ class FileItemAdapter(
             this.fileInfoList.add(0, entity)
         }
         this.notifyItemInserted(0)
+        // this.notifyItemRangeInserted(0, 1)
+        // this.notifyItemRangeChanged(0, this.fileInfoList.size)
     }
 
     fun onTaskStateUpdate(taskEntity: DownloadEntity?) {
@@ -67,6 +76,7 @@ class FileItemAdapter(
             if (item?.id == taskEntity?.id && item?.id != null) {
                 this.fileInfoList[index] = taskEntity
                 this.notifyItemChanged(index)
+                // this.notifyItemRangeChanged(index, this.fileInfoList.size - index)
                 return@forEachIndexed
             }
         }
@@ -82,6 +92,8 @@ class FileItemAdapter(
             } else {
                 fileTypeTextView!!.visibility = View.GONE
             }
+            val id = "# ${downloadEntity.id}"
+            taskIdTextView!!.text = id
             val status = DownloadStateEnums.getMsgByNum(downloadEntity.state)
             if (status != null && status.trim { it <= ' ' } != "") {
                 taskStatusTextView!!.text = status
@@ -128,6 +140,7 @@ class FileItemAdapter(
         init {
             fileNameTextView = itemView.findViewById(R.id.file_name)
             fileTypeTextView = itemView.findViewById(R.id.file_type)
+            taskIdTextView = itemView.findViewById(R.id.task_id)
             taskStatusTextView = itemView.findViewById(R.id.task_status)
             fileSizeTextView = itemView.findViewById(R.id.file_size)
         }

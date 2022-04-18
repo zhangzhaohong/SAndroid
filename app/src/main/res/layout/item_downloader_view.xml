@@ -64,6 +64,18 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/task_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/downloader_tag"
+                        android:gravity="center"
+                        android:padding="6dip"
+                        android:text="@string/unknown_name"
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/task_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
