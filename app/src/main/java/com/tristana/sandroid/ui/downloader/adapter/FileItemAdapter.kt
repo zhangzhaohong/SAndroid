@@ -25,9 +25,8 @@ import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter.FileItemHolde
  */
 class FileItemAdapter(
     private val context: Context,
-    fileInfoList: List<Download?>?,
 ) : RecyclerView.Adapter<FileItemHolder>() {
-    private val fileInfoList: ArrayList<Download?> = ArrayList()
+    private var fileInfoList: ArrayList<Download?> = ArrayList()
     private var fileNameTextView: AppCompatTextView? = null
     private var fileTypeTextView: AppCompatTextView? = null
     private var taskStatusTextView: AppCompatTextView? = null
@@ -84,9 +83,9 @@ class FileItemAdapter(
     }
 
     fun setData(taskList: List<Download>) {
-        taskList.forEach {
-            insertView(it)
-        }
+        this.fileInfoList.clear()
+        this.fileInfoList.addAll(taskList)
+        this.notifyItemRangeInserted(0, this.fileInfoList.size)
     }
 
     inner class FileItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -142,12 +141,6 @@ class FileItemAdapter(
             fileTypeTextView = itemView.findViewById(R.id.file_type)
             taskStatusTextView = itemView.findViewById(R.id.task_status)
             fileSizeTextView = itemView.findViewById(R.id.file_size)
-        }
-    }
-
-    init {
-        fileInfoList?.forEach {
-            insertView(it)
         }
     }
 }
