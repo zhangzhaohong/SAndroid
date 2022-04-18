@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arialyy.annotations.Download
 import com.arialyy.aria.core.Aria
@@ -31,7 +31,6 @@ import kotlin.math.ceil
 
 open class DownloadManagerFragment : Fragment() {
     private var downloadManagerViewModel: DownloadManagerViewModel? = null
-    private var aria: DownloadReceiver? = null
     private lateinit var fileItemAdapter: FileItemAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,10 +46,9 @@ open class DownloadManagerFragment : Fragment() {
         val testDownloader1 = root.findViewById<AppCompatButton>(R.id.test_downloader_1)
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val downloaderTaskView = root.findViewById<RecyclerView>(R.id.downloader_task_view)
-        aria = Aria.download(this)
-        aria?.register()
+        Aria.download(this).register()
         val pageSize = 10
-        val pageNum = aria?.taskList?.size?.let { size ->
+        val pageNum = Aria.download(this).taskList?.size?.let { size ->
             ceil((size.toFloat() / pageSize.toFloat()).toDouble()).toInt().let {
                 if (it < 1) {
                     1
@@ -64,13 +62,12 @@ open class DownloadManagerFragment : Fragment() {
         fileItemAdapter =
             FileItemAdapter(
                 requireContext(),
-                Aria.download(requireActivity()).getTaskList(
+                Aria.download(this).getTaskList(
                     pageNum,
                     pageSize
-                ),
-                aria
+                )
             )
-        val layoutManager = GridLayoutManager(context,1)
+        val layoutManager = LinearLayoutManager(context)
         downloaderTaskView.adapter = fileItemAdapter
         downloaderTaskView.layoutManager = layoutManager
         downloaderTaskView.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
@@ -150,7 +147,7 @@ open class DownloadManagerFragment : Fragment() {
                         .resetState()
                         .create() //启动下载
                     LogUtils.i("currentTaskId: $taskId")
-                    fileItemAdapter.insertView(aria?.load(taskId)?.entity)
+                    fileItemAdapter.insertView(Aria.download(this).load(taskId)?.entity)
                 }
             }
         }

@@ -23,10 +23,8 @@ import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter.FileItemHolde
 class FileItemAdapter(
     private val context: Context,
     fileInfoList: List<DownloadEntity?>?,
-    aria: DownloadReceiver?
 ) : RecyclerView.Adapter<FileItemHolder>() {
     private val fileInfoList: ArrayList<DownloadEntity?> = ArrayList()
-    private val aria: DownloadReceiver?
     private var fileNameTextView: AppCompatTextView? = null
     private var fileTypeTextView: AppCompatTextView? = null
     private var taskIdTextView: AppCompatTextView? = null
@@ -150,6 +148,5 @@ class FileItemAdapter(
         fileInfoList?.forEach {
             insertView(it)
         }
-        this.aria = aria
     }
 }
