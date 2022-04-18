@@ -8,29 +8,40 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.arialyy.annotations.Download
-import com.arialyy.aria.core.Aria
-import com.arialyy.aria.core.task.DownloadTask
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.hl.downloader.DownloadListener
 import com.hl.downloader.DownloadManager
+import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.Error
+import com.tonyodev.fetch2.Fetch
+import com.tonyodev.fetch2.Fetch.Impl.getInstance
+import com.tonyodev.fetch2.FetchConfiguration
+import com.tonyodev.fetch2.FetchListener
+import com.tonyodev.fetch2core.DownloadBlock
+import com.tonyodev.fetch2core.Downloader.FileDownloaderType
+import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
 import com.tristana.sandroid.R
+import com.tristana.sandroid.downloader.utils.RequestObjectUtils
 import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter
 import com.tristana.sandroid.ui.downloader.listener.EndlessRecyclerOnScrollListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.ceil
 
 
 open class DownloadManagerFragment : Fragment() {
+    private val namespace = "DownloadManagerFragment"
+    private val groupId = "public".hashCode()
     private var downloadManagerViewModel: DownloadManagerViewModel? = null
     private lateinit var fileItemAdapter: FileItemAdapter
+    private var fetch: Fetch? = null
+    private lateinit var fetchListener: FetchListener
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,30 +57,91 @@ open class DownloadManagerFragment : Fragment() {
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val testDownloader3 = root.findViewById<AppCompatButton>(R.id.test_downloader_3)
         val downloaderTaskView = root.findViewById<RecyclerView>(R.id.downloader_task_view)
-        Aria.download(this).register()
-        val pageSize = 10
-        val pageNum = Aria.download(this).taskList?.size?.let { size ->
-            ceil((size.toFloat() / pageSize.toFloat()).toDouble()).toInt().let {
-                if (it < 1) {
-                    1
-                } else {
-                    it
-                }
-            }
-        } ?: kotlin.run {
-            1
-        };
         fileItemAdapter =
             FileItemAdapter(
-                requireContext(),
-                Aria.download(this).getTaskList(
-                    pageNum,
-                    pageSize
-                )
+                requireContext()
             )
-        val layoutManager = LinearLayoutManager(context)
+        val layoutManager = GridLayoutManager(context, 1)
         downloaderTaskView.adapter = fileItemAdapter
         downloaderTaskView.layoutManager = layoutManager
+        // init
+        val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(requireContext())
+            .setDownloadConcurrentLimit(3)
+            .setHttpDownloader(OkHttpDownloader(FileDownloaderType.PARALLEL))
+            .setNamespace(namespace)
+            .build()
+        fetch = getInstance(fetchConfiguration)
+        fetchListener = object : FetchListener {
+            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onCompleted(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onProgress(
+                download: Download,
+                etaInMilliSeconds: Long,
+                downloadedBytesPerSecond: Long
+            ) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onPaused(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onResumed(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onStarted(
+                download: Download,
+                downloadBlocks: List<DownloadBlock>,
+                totalBlocks: Int
+            ) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onWaitingNetwork(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onAdded(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onCancelled(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onRemoved(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onDeleted(download: Download) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onDownloadBlockUpdated(
+                download: Download,
+                downloadBlock: DownloadBlock,
+                totalBlocks: Int
+            ) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+
+            override fun onError(download: Download, error: Error, throwable: Throwable?) {
+                fileItemAdapter.onAddOrUpdate(download)
+            }
+        }
+        fetch?.addListener(fetchListener)
+        fetch?.getDownloadsInGroup(groupId) { taskList ->
+            run {
+                fileItemAdapter.setData(taskList)
+            }
+        }
         downloaderTaskView.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
             override fun onLoadMore() {
                 LogUtils.i("onLoadMore")
@@ -127,7 +199,8 @@ open class DownloadManagerFragment : Fragment() {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
             FileUtils.createOrExistsDir(filePath)
             val downloadUrl =
-                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
+                "http://speedtest.ftp.otenet.gr/files/test100Mb.db"
+            // "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
             // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
             // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
             MainScope().launch {
@@ -136,16 +209,22 @@ open class DownloadManagerFragment : Fragment() {
                     HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)?.let {
                         filePath += it
                     } ?: kotlin.run {
+                        val path = downloadUrl.split("/")
+                        val fileName = path[path.size - 1].split(".")
                         filePath += System.currentTimeMillis()
+                            .toString() + "." + fileName[fileName.size - 1]
                     }
                     LogUtils.i(filePath)
                 }
                 withContext(Dispatchers.Main) {
-                    val taskId: Long = Aria.download(this)
-                        .load(downloadUrl) //读取下载地址
-                        .setFilePath(filePath) //设置文件保存的完整路径
-                        .create() //启动下载
-                    LogUtils.i("currentTaskId: $taskId")
+                    RequestObjectUtils.getFetchRequests(
+                        requireContext(),
+                        downloadUrl,
+                        filePath,
+                        groupId
+                    ).let {
+                        fetch?.enqueue(it)
+                    }
                 }
             }
         }
@@ -153,7 +232,8 @@ open class DownloadManagerFragment : Fragment() {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
             FileUtils.createOrExistsDir(filePath)
             val downloadUrl =
-                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c5v5ha3c77u5r9jepv6g&ratio=540p&isDownload=1"
+                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
+            //    "http://speedtest.ftp.otenet.gr/files/test100Mb.db"
             // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
             // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
             MainScope().launch {
@@ -162,67 +242,31 @@ open class DownloadManagerFragment : Fragment() {
                     HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)?.let {
                         filePath += it
                     } ?: kotlin.run {
+                        val path = downloadUrl.split("/")
+                        val fileName = path[path.size - 1].split(".")
                         filePath += System.currentTimeMillis()
+                            .toString() + fileName[fileName.size - 1]
                     }
                     LogUtils.i(filePath)
                 }
                 withContext(Dispatchers.Main) {
-                    val taskId: Long = Aria.download(this)
-                        .load(downloadUrl) //读取下载地址
-                        .setFilePath(filePath) //设置文件保存的完整路径
-                        .create() //启动下载
-                    LogUtils.i("currentTaskId: $taskId")
+                    RequestObjectUtils.getFetchRequests(
+                        requireContext(),
+                        downloadUrl,
+                        filePath,
+                        groupId
+                    ).let {
+                        fetch?.enqueue(it)
+                    }
                 }
             }
         }
         return root
     }
 
-    @Download.onWait
-    open fun onWait(task: DownloadTask) {
-        fileItemAdapter.onAddOrUpdate(task.downloadEntity)
-    }
-
-    @Download.onPre
-    protected open fun onPre(task: DownloadTask?) {
-        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
-    }
-
-    @Download.onTaskStart
-    open fun taskStart(task: DownloadTask?) {
-        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
-    }
-
-    @Download.onTaskRunning
-    protected open fun running(task: DownloadTask?) {
-        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
-    }
-
-    @Download.onTaskResume
-    open fun taskResume(task: DownloadTask?) {
-        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
-    }
-
-    @Download.onTaskStop
-    open fun taskStop(task: DownloadTask?) {
-        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
-    }
-
-    @Download.onTaskCancel
-    open fun taskCancel(task: DownloadTask?) {
-        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
-    }
-
-    @Download.onTaskFail
-    open fun taskFail(task: DownloadTask?) {
-        fileItemAdapter.onAddOrUpdate(task?.downloadEntity)
-    }
-
-    @Download.onTaskComplete
-    open fun taskComplete(task: DownloadTask) {
-        LogUtils.d("path ==> " + task.downloadEntity.filePath)
-        LogUtils.d("id ==> " + task.downloadEntity.id)
-        fileItemAdapter.onAddOrUpdate(task.downloadEntity)
+    override fun onDestroy() {
+        fetch?.removeListener(fetchListener)
+        super.onDestroy()
     }
 
 }
