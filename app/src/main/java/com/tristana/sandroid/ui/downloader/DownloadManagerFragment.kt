@@ -73,7 +73,7 @@ open class DownloadManagerFragment : Fragment() {
         fetch = getInstance(fetchConfiguration)
         fetchListener = object : FetchListener {
             override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onCompleted(download: Download) {
@@ -85,7 +85,7 @@ open class DownloadManagerFragment : Fragment() {
                 etaInMilliSeconds: Long,
                 downloadedBytesPerSecond: Long
             ) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onPaused(download: Download) {
@@ -105,11 +105,11 @@ open class DownloadManagerFragment : Fragment() {
             }
 
             override fun onWaitingNetwork(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onAdded(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onCancelled(download: Download) {
@@ -117,11 +117,11 @@ open class DownloadManagerFragment : Fragment() {
             }
 
             override fun onRemoved(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onDeleted(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onDownloadBlockUpdated(
@@ -129,7 +129,7 @@ open class DownloadManagerFragment : Fragment() {
                 downloadBlock: DownloadBlock,
                 totalBlocks: Int
             ) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onError(download: Download, error: Error, throwable: Throwable?) {
@@ -264,9 +264,9 @@ open class DownloadManagerFragment : Fragment() {
         return root
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         fetch?.removeListener(fetchListener)
-        super.onDestroy()
+        super.onDestroyView()
     }
 
 }
