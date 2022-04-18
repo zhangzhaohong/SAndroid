@@ -44,6 +44,7 @@ open class DownloadManagerFragment : Fragment() {
         val textView = root.findViewById<TextView>(R.id.text_download_manager)
         val testDownloader1 = root.findViewById<AppCompatButton>(R.id.test_downloader_1)
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
+        val testDownloader3 = root.findViewById<AppCompatButton>(R.id.test_downloader_3)
         val downloaderTaskView = root.findViewById<RecyclerView>(R.id.downloader_task_view)
         Aria.download(this).register()
         val pageSize = 10
@@ -127,6 +128,32 @@ open class DownloadManagerFragment : Fragment() {
             FileUtils.createOrExistsDir(filePath)
             val downloadUrl =
                 "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
+            // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
+            // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
+            MainScope().launch {
+                withContext(Dispatchers.IO) {
+                    filePath = "$filePath/"
+                    HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)?.let {
+                        filePath += it
+                    } ?: kotlin.run {
+                        filePath += System.currentTimeMillis()
+                    }
+                    LogUtils.i(filePath)
+                }
+                withContext(Dispatchers.Main) {
+                    val taskId: Long = Aria.download(this)
+                        .load(downloadUrl) //读取下载地址
+                        .setFilePath(filePath) //设置文件保存的完整路径
+                        .create() //启动下载
+                    LogUtils.i("currentTaskId: $taskId")
+                }
+            }
+        }
+        testDownloader3.setOnClickListener {
+            var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
+            FileUtils.createOrExistsDir(filePath)
+            val downloadUrl =
+                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c5v5ha3c77u5r9jepv6g&ratio=540p&isDownload=1"
             // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
             // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
             MainScope().launch {

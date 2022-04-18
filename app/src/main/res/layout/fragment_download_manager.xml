@@ -31,6 +31,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/test_2" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/test_downloader_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/test_3" />
+
             <TextView
                 android:id="@+id/text_download_manager"
                 android:layout_width="match_parent"
