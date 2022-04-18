@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arialyy.annotations.Download
 import com.arialyy.aria.core.Aria
@@ -21,6 +21,7 @@ import com.hl.downloader.DownloadManager
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter
+import com.tristana.sandroid.ui.downloader.listener.EndlessRecyclerOnScrollListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -69,9 +70,14 @@ open class DownloadManagerFragment : Fragment() {
                 ),
                 aria
             )
-        val layoutManager = LinearLayoutManager(null)
+        val layoutManager = GridLayoutManager(context,1)
         downloaderTaskView.adapter = fileItemAdapter
         downloaderTaskView.layoutManager = layoutManager
+        downloaderTaskView.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
+            override fun onLoadMore() {
+                LogUtils.i("onLoadMore")
+            }
+        })
         downloadManagerViewModel!!.text.observe(viewLifecycleOwner) { s -> textView.text = s }
         testDownloader1.setOnClickListener {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath

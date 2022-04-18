@@ -82,7 +82,7 @@ dependencies {
     // downloader 1
     implementation "com.github.Heart-Beats:Downloader:v1.0.5"
     // downloader 2
-    def aria_version = '3.8.12'
+    def aria_version = '3.8.15'
     implementation "com.arialyy.aria:core:$aria_version"
     kapt "com.arialyy.aria:compiler:$aria_version"
     // 如果需要使用ftp，请增加该组件
