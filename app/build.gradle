@@ -82,13 +82,5 @@ dependencies {
     // downloader 1
     implementation "com.github.Heart-Beats:Downloader:v1.0.5"
     // downloader 2
-    def aria_version = '3.8.15'
-    implementation "com.arialyy.aria:core:$aria_version"
-    kapt "com.arialyy.aria:compiler:$aria_version"
-    // 如果需要使用ftp，请增加该组件
-    implementation "com.arialyy.aria:ftpComponent:$aria_version"
-    // 如果需要使用sftp，请增加该组件
-    implementation "com.arialyy.aria:sftpComponent:$aria_version"
-    // 如果需要使用m3u8下载功能，请增加该组件
-    implementation "com.arialyy.aria:m3u8Component:$aria_version"
+    implementation 'com.ixuea:android-downloader:3.0.0'
 }
