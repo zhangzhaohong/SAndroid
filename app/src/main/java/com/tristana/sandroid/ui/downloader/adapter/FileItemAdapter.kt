@@ -80,6 +80,26 @@ class FileItemAdapter(
         }
     }
 
+    fun onAddOrUpdate(entity: DownloadEntity?) {
+        this.fileInfoList.sortByDescending {
+            it?.id
+        }
+        this.fileInfoList[this.fileInfoList.size - 1]?.let {
+            entity?.id?.let { taskId ->
+                if (taskId > it.id) {
+                    this.fileInfoList.add(0, entity)
+                    this.notifyItemInserted(0)
+                } else {
+                    onTaskStateUpdate(entity)
+                    return
+                }
+            }?: kotlin.run {
+                this.fileInfoList.add(entity)
+                this.notifyItemInserted(0)
+            }
+        }
+    }
+
     inner class FileItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(downloadEntity: DownloadEntity?) {
             fileNameTextView!!.text = downloadEntity!!.fileName
