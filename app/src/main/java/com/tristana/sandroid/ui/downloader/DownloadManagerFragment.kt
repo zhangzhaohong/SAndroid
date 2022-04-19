@@ -100,6 +100,7 @@ open class DownloadManagerFragment : Fragment() {
 
             override fun onError(download: Download, error: Error, throwable: Throwable?) {
                 downloadManagerViewModel?.addOrUpdate(download)
+                LogUtils.e(throwable)
             }
         }
     }

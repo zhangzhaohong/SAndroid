@@ -30,7 +30,7 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
     @EpoxyAttribute
     lateinit var context: Context
 
-    @EpoxyAttribute
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
     lateinit var taskInfo: Download
 
     override fun bind(holder: Holder) {
