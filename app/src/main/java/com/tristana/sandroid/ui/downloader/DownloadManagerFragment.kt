@@ -117,11 +117,11 @@ open class DownloadManagerFragment : Fragment() {
             }
 
             override fun onRemoved(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onDeleted(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
+                // fileItemAdapter.onAddOrUpdate(download)
             }
 
             override fun onDownloadBlockUpdated(
