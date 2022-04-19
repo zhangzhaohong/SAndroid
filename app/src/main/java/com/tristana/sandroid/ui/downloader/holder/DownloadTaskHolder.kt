@@ -5,8 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.text.format.Formatter
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
