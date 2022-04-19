@@ -33,7 +33,7 @@ class FileItemAdapter(
     private var fileSizeTextView: AppCompatTextView? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileItemHolder {
-        val itemView = View.inflate(parent.context, R.layout.item_downloader_view, null)
+        val itemView = View.inflate(parent.context, R.layout.holder_download_task_view, null)
         return FileItemHolder(itemView)
     }
 

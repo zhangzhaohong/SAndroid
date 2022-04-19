@@ -39,3 +39,8 @@
 -keep class com.tencent.tbs.** {
     *;
 }
+
+-keep class com.airbnb.lottie.LottieTask {*;}
+-keep class com.airbnb.lottie.LottieAnimationView {*;}
+
+-keep class com.airbnb.lottie.LottieTask {*;}

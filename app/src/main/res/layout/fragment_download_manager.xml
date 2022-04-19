@@ -48,7 +48,7 @@
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.airbnb.epoxy.EpoxyRecyclerView
                 android:id="@+id/downloader_task_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

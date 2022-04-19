@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.EpoxyRecyclerView
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.hl.downloader.DownloadListener
@@ -27,20 +28,21 @@ import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils
 import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter
+import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
 import com.tristana.sandroid.ui.downloader.listener.EndlessRecyclerOnScrollListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
+import kotlinx.coroutines.*
 
 
 open class DownloadManagerFragment : Fragment() {
     private val namespace = "DownloadManagerFragment"
     private val groupId = "public".hashCode()
-    private var downloadManagerViewModel: DownloadManagerViewModel? = null
     private lateinit var fileItemAdapter: FileItemAdapter
     private var fetch: Fetch? = null
     private lateinit var fetchListener: FetchListener
+    private lateinit var downloadTaskListController: DownloadTaskListController
+    private lateinit var layoutManager: QuickScrollLinearLayoutManager
+    private var downloadManagerViewModel: DownloadManagerViewModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,14 +58,18 @@ open class DownloadManagerFragment : Fragment() {
         val testDownloader1 = root.findViewById<AppCompatButton>(R.id.test_downloader_1)
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val testDownloader3 = root.findViewById<AppCompatButton>(R.id.test_downloader_3)
-        val downloaderTaskView = root.findViewById<RecyclerView>(R.id.downloader_task_view)
-        fileItemAdapter =
-            FileItemAdapter(
-                requireContext()
-            )
-        val layoutManager = GridLayoutManager(context, 1)
-        downloaderTaskView.adapter = fileItemAdapter
+        val downloaderTaskView = root.findViewById<EpoxyRecyclerView>(R.id.downloader_task_view)
+        layoutManager =  QuickScrollLinearLayoutManager(
+            requireContext(),
+            RecyclerView.VERTICAL,
+            false
+        )
         downloaderTaskView.layoutManager = layoutManager
+        layoutManager.stackFromEnd = false
+        downloaderTaskView.overScrollMode = View.OVER_SCROLL_NEVER
+        downloadTaskListController = DownloadTaskListController(requireContext())
+        downloaderTaskView.setController(downloadTaskListController)
+        initObserver()
         // init
         val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(requireContext())
             .setDownloadConcurrentLimit(3)
@@ -137,17 +143,14 @@ open class DownloadManagerFragment : Fragment() {
             }
         }
         fetch?.addListener(fetchListener)
-        fetch?.getDownloadsInGroup(groupId) { taskList ->
-            run {
-                fileItemAdapter.setData(taskList)
-            }
+        MainScope().launch {
+            downloadManagerViewModel?.getData(fetch, groupId)
         }
         downloaderTaskView.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
             override fun onLoadMore() {
                 LogUtils.i("onLoadMore")
             }
         })
-        downloadManagerViewModel!!.text.observe(viewLifecycleOwner) { s -> textView.text = s }
         testDownloader1.setOnClickListener {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
             FileUtils.createOrExistsDir(filePath)
@@ -262,6 +265,12 @@ open class DownloadManagerFragment : Fragment() {
             }
         }
         return root
+    }
+
+    private fun initObserver() {
+        downloadManagerViewModel!!.fileInfoList.observe(viewLifecycleOwner) {
+            downloadTaskListController.fileInfoList = it
+        }
     }
 
     override fun onDestroyView() {
