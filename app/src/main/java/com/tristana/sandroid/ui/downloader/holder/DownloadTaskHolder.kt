@@ -25,7 +25,7 @@ import com.tristana.sandroid.ui.downloader.DownloadStateEnums
  * @description
  */
 @EpoxyModelClass(layout = R.layout.holder_download_task_view)
-abstract class DownloadTaskHolder: EpoxyModelWithHolder<DownloadTaskHolder.Holder>() {
+abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Holder>() {
 
     @EpoxyAttribute
     lateinit var context: Context
@@ -80,7 +80,7 @@ abstract class DownloadTaskHolder: EpoxyModelWithHolder<DownloadTaskHolder.Holde
         }
     }
 
-    class Holder: EpoxyHolder() {
+    class Holder : EpoxyHolder() {
 
         lateinit var fileNameTextView: AppCompatTextView
         lateinit var fileTypeTextView: AppCompatTextView
