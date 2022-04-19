@@ -6,10 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.text.format.Formatter
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
-import com.airbnb.epoxy.EpoxyAttribute
-import com.airbnb.epoxy.EpoxyHolder
-import com.airbnb.epoxy.EpoxyModelClass
-import com.airbnb.epoxy.EpoxyModelWithHolder
+import com.airbnb.epoxy.*
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.FileUtils
 import com.tonyodev.fetch2.Download
