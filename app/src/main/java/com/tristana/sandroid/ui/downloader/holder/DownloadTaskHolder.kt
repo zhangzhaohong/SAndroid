@@ -28,31 +28,33 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
     lateinit var context: Context
 
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
-    lateinit var taskInfo: Download
+    var taskInfo: Download? = null
 
     override fun bind(holder: Holder) {
         super.bind(holder)
-        holder.fileNameTextView.text = FileUtils.getFileName(taskInfo.file)
-        val fileType = FileUtils.getFileExtension(taskInfo.file)
-        if (fileType != null && fileType.trim() != "") {
-            holder.fileTypeTextView.text = fileType
-            holder.fileTypeTextView.visibility = View.VISIBLE
-        } else {
-            holder.fileTypeTextView.visibility = View.GONE
-        }
-        val status = DownloadStateEnums.getMsgByNum(taskInfo.status.value)
-        if (status != null && status.trim { it <= ' ' } != "") {
-            holder.taskStatusTextView.text = status
-            refreshTaskTag(holder.taskStatusTextView, taskInfo)
-        }
-        val fileSize = Formatter.formatFileSize(context, taskInfo.total)
-        val gradientDrawable = holder.fileSizeTextView.background as GradientDrawable
-        gradientDrawable.setColor(ColorUtils.getColor(R.color.tag_483D8B))
-        if (fileSize != null && fileSize != "" && fileSize != "-1 B") {
-            holder.fileSizeTextView.text = fileSize
-            holder.fileSizeTextView.visibility = View.VISIBLE
-        } else {
-            holder.fileSizeTextView.visibility = View.GONE
+        taskInfo?.let { info ->
+            holder.fileNameTextView.text = FileUtils.getFileName(info.file)
+            val fileType = FileUtils.getFileExtension(info.file)
+            if (fileType != null && fileType.trim() != "") {
+                holder.fileTypeTextView.text = fileType
+                holder.fileTypeTextView.visibility = View.VISIBLE
+            } else {
+                holder.fileTypeTextView.visibility = View.GONE
+            }
+            val status = DownloadStateEnums.getMsgByNum(info.status.value)
+            if (status != null && status.trim { it <= ' ' } != "") {
+                holder.taskStatusTextView.text = status
+                refreshTaskTag(holder.taskStatusTextView, taskInfo)
+            }
+            val fileSize = Formatter.formatFileSize(context, info.total)
+            val gradientDrawable = holder.fileSizeTextView.background as GradientDrawable
+            gradientDrawable.setColor(ColorUtils.getColor(R.color.tag_483D8B))
+            if (fileSize != null && fileSize != "" && fileSize != "-1 B") {
+                holder.fileSizeTextView.text = fileSize
+                holder.fileSizeTextView.visibility = View.VISIBLE
+            } else {
+                holder.fileSizeTextView.visibility = View.GONE
+            }
         }
     }
 
