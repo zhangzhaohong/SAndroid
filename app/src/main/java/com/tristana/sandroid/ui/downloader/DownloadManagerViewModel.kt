@@ -13,9 +13,8 @@ class DownloadManagerViewModel : ViewModel() {
 
     suspend fun getData(fetch: Fetch?, groupId: Int) {
         return withContext(Dispatchers.IO) {
-            fetch?.getDownloadsInGroup(groupId) { taskList ->
-                run {
-                    fileInfoList.value?.clear()
+            kotlin.run {
+                fetch?.getDownloadsInGroup(groupId) { taskList ->
                     val data: ArrayList<Download> = ArrayList()
                     data.addAll(taskList)
                     fileInfoList.value = sortData(data)
@@ -38,8 +37,8 @@ class DownloadManagerViewModel : ViewModel() {
         fileInfoList.value = sortData(data)
     }
 
-    fun sortData(input: ArrayList<Download>): ArrayList<Download> {
-        input.sortByDescending {
+    private fun sortData(input: ArrayList<Download>?): ArrayList<Download>? {
+        input?.sortByDescending {
             it.created
         }
         return input

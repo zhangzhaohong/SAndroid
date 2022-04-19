@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
@@ -15,12 +14,8 @@ import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.hl.downloader.DownloadListener
 import com.hl.downloader.DownloadManager
-import com.tonyodev.fetch2.Download
-import com.tonyodev.fetch2.Error
-import com.tonyodev.fetch2.Fetch
+import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2.Fetch.Impl.getInstance
-import com.tonyodev.fetch2.FetchConfiguration
-import com.tonyodev.fetch2.FetchListener
 import com.tonyodev.fetch2core.DownloadBlock
 import com.tonyodev.fetch2core.Downloader.FileDownloaderType
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
@@ -28,16 +23,87 @@ import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils
 import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
-import com.tristana.sandroid.ui.downloader.listener.EndlessRecyclerOnScrollListener
 import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 
 open class DownloadManagerFragment : Fragment() {
     private val namespace = "DownloadManagerFragment"
     private val groupId = "public".hashCode()
+    private val mutex = Mutex()
     private var fetch: Fetch? = null
-    private lateinit var fetchListener: FetchListener
+    private var fetchListener: FetchListener = getFetchListener()
+
+    private fun getFetchListener(): FetchListener {
+        return object : FetchListener {
+            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onCompleted(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onProgress(
+                download: Download,
+                etaInMilliSeconds: Long,
+                downloadedBytesPerSecond: Long
+            ) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onPaused(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onResumed(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onStarted(
+                download: Download,
+                downloadBlocks: List<DownloadBlock>,
+                totalBlocks: Int
+            ) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onWaitingNetwork(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onAdded(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onCancelled(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onRemoved(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onDeleted(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onDownloadBlockUpdated(
+                download: Download,
+                downloadBlock: DownloadBlock,
+                totalBlocks: Int
+            ) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+
+            override fun onError(download: Download, error: Error, throwable: Throwable?) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+        }
+    }
+
     private lateinit var downloadTaskListController: DownloadTaskListController
     private lateinit var layoutManager: QuickScrollLinearLayoutManager
     private var downloadManagerViewModel: DownloadManagerViewModel? = null
@@ -57,7 +123,7 @@ open class DownloadManagerFragment : Fragment() {
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val testDownloader3 = root.findViewById<AppCompatButton>(R.id.test_downloader_3)
         val downloaderTaskView = root.findViewById<EpoxyRecyclerView>(R.id.downloader_task_view)
-        layoutManager =  QuickScrollLinearLayoutManager(
+        layoutManager = QuickScrollLinearLayoutManager(
             requireContext(),
             RecyclerView.VERTICAL,
             false
@@ -72,52 +138,13 @@ open class DownloadManagerFragment : Fragment() {
             .setDownloadConcurrentLimit(3)
             .setHttpDownloader(OkHttpDownloader(FileDownloaderType.PARALLEL))
             .setNamespace(namespace)
+            .enableAutoStart(true)
             .build()
         fetch = getInstance(fetchConfiguration)
-        fetchListener = object : FetchListener {
-            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
-                downloadManagerViewModel?.addOrUpdate(download)
-            }
-            override fun onCompleted(download: Download) {
-                downloadManagerViewModel?.addOrUpdate(download)
-            }
-            override fun onProgress(
-                download: Download,
-                etaInMilliSeconds: Long,
-                downloadedBytesPerSecond: Long
-            ) {
-                downloadManagerViewModel?.addOrUpdate(download)
-            }
-            override fun onPaused(download: Download) {}
-            override fun onResumed(download: Download) {}
-            override fun onStarted(
-                download: Download,
-                downloadBlocks: List<DownloadBlock>,
-                totalBlocks: Int
-            ) {}
-            override fun onWaitingNetwork(download: Download) {}
-            override fun onAdded(download: Download) {
-                downloadManagerViewModel?.addOrUpdate(download)
-            }
-            override fun onCancelled(download: Download) {}
-            override fun onRemoved(download: Download) {}
-            override fun onDeleted(download: Download) {}
-            override fun onDownloadBlockUpdated(
-                download: Download,
-                downloadBlock: DownloadBlock,
-                totalBlocks: Int
-            ) {}
-            override fun onError(download: Download, error: Error, throwable: Throwable?) {}
-        }
         fetch?.addListener(fetchListener)
         MainScope().launch {
             downloadManagerViewModel?.getData(fetch, groupId)
         }
-        downloaderTaskView.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
-            override fun onLoadMore() {
-                LogUtils.i("onLoadMore")
-            }
-        })
         testDownloader1.setOnClickListener {
             var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
             FileUtils.createOrExistsDir(filePath)
@@ -236,7 +263,17 @@ open class DownloadManagerFragment : Fragment() {
 
     private fun initObserver() {
         downloadManagerViewModel!!.fileInfoList.observe(viewLifecycleOwner) {
-            downloadTaskListController.fileInfoList = it
+            MainScope().launch {
+                refreshRecyclerView(it)
+            }
+        }
+    }
+
+    private suspend fun refreshRecyclerView(data: MutableList<Download>) {
+        mutex.withLock {
+            delay(1000)
+            downloadTaskListController.fileInfoList = data
+            LogUtils.i("on Refresh recyclerview")
         }
     }
 
