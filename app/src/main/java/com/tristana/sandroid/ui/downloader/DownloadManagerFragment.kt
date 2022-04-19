@@ -37,7 +37,6 @@ import kotlinx.coroutines.*
 open class DownloadManagerFragment : Fragment() {
     private val namespace = "DownloadManagerFragment"
     private val groupId = "public".hashCode()
-    private lateinit var fileItemAdapter: FileItemAdapter
     private var fetch: Fetch? = null
     private lateinit var fetchListener: FetchListener
     private lateinit var downloadTaskListController: DownloadTaskListController
@@ -78,69 +77,31 @@ open class DownloadManagerFragment : Fragment() {
             .build()
         fetch = getInstance(fetchConfiguration)
         fetchListener = object : FetchListener {
-            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onCompleted(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
+            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {}
+            override fun onCompleted(download: Download) {}
             override fun onProgress(
                 download: Download,
                 etaInMilliSeconds: Long,
                 downloadedBytesPerSecond: Long
-            ) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onPaused(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onResumed(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
+            ) {}
+            override fun onPaused(download: Download) {}
+            override fun onResumed(download: Download) {}
             override fun onStarted(
                 download: Download,
                 downloadBlocks: List<DownloadBlock>,
                 totalBlocks: Int
-            ) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onWaitingNetwork(download: Download) {
-                // fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onAdded(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onCancelled(download: Download) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onRemoved(download: Download) {
-                // fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onDeleted(download: Download) {
-                // fileItemAdapter.onAddOrUpdate(download)
-            }
-
+            ) {}
+            override fun onWaitingNetwork(download: Download) {}
+            override fun onAdded(download: Download) {}
+            override fun onCancelled(download: Download) {}
+            override fun onRemoved(download: Download) {}
+            override fun onDeleted(download: Download) {}
             override fun onDownloadBlockUpdated(
                 download: Download,
                 downloadBlock: DownloadBlock,
                 totalBlocks: Int
-            ) {
-                // fileItemAdapter.onAddOrUpdate(download)
-            }
-
-            override fun onError(download: Download, error: Error, throwable: Throwable?) {
-                fileItemAdapter.onAddOrUpdate(download)
-            }
+            ) {}
+            override fun onError(download: Download, error: Error, throwable: Throwable?) {}
         }
         fetch?.addListener(fetchListener)
         MainScope().launch {

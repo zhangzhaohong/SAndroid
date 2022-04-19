@@ -4,7 +4,9 @@ import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import com.tonyodev.fetch2.Download
 import com.tristana.sandroid.ui.downloader.common.CommonFooter
+import com.tristana.sandroid.ui.downloader.common.CommonFooter_
 import com.tristana.sandroid.ui.downloader.common.commonFooter
+import com.tristana.sandroid.ui.downloader.holder.DownloadTaskHolder_
 import com.tristana.sandroid.ui.downloader.holder.downloadTaskHolder
 
 /**
@@ -26,17 +28,17 @@ class DownloadTaskListController(
 
     override fun buildModels() {
         fileInfoList?.forEach { item ->
-            downloadTaskHolder {
-                context(this@DownloadTaskListController.context)
-                taskInfo(item)
-                id(item.id)
-            }
-            commonFooter {
-                hasMore(false)
-                bottomPadding(this@DownloadTaskListController.bottomPadding)
-                id("footer")
-            }
+            DownloadTaskHolder_()
+                .context(context)
+                .taskInfo(item)
+                .id(item.id)
+                .addTo(this)
         }
+        CommonFooter_()
+            .hasMore(false)
+            .bottomPadding(bottomPadding)
+            .id("footer")
+            .addTo(this)
     }
 
 }
