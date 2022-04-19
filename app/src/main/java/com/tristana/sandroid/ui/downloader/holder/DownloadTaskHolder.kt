@@ -81,6 +81,12 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         }
     }
 
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + context.hashCode()
+        return result
+    }
+
     class Holder : EpoxyHolder() {
 
         lateinit var fileNameTextView: AppCompatTextView
