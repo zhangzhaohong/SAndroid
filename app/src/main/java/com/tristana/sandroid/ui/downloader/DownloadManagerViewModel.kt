@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 
 class DownloadManagerViewModel : ViewModel() {
 
-    val fileInfoList = MutableLiveData<MutableList<Download>>()
+    var fileInfoList = MutableLiveData<MutableList<Download>>()
 
     suspend fun getData(fetch: Fetch?, groupId: Int) {
         return withContext(Dispatchers.IO) {
@@ -18,7 +18,7 @@ class DownloadManagerViewModel : ViewModel() {
                     fileInfoList.value?.clear()
                     val data: ArrayList<Download> = ArrayList()
                     data.addAll(taskList)
-                    fileInfoList.value = data
+                    fileInfoList.value = sortData(data)
                 }
             }
         }
@@ -35,7 +35,14 @@ class DownloadManagerViewModel : ViewModel() {
         } ?: kotlin.run {
             data.add(0, download)
         }
-        fileInfoList.value = data
+        fileInfoList.value = sortData(data)
+    }
+
+    fun sortData(input: ArrayList<Download>): ArrayList<Download> {
+        input.sortByDescending {
+            it.created
+        }
+        return input
     }
 
     companion object {
