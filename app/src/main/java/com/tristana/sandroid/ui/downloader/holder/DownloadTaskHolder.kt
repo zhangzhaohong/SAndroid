@@ -1,16 +1,24 @@
 package com.tristana.sandroid.ui.downloader.holder
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.text.format.Formatter
 import android.view.View
-import android.view.ViewParent
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
+import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.FileUtils
 import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.Status
 import com.tristana.sandroid.R
+import com.tristana.sandroid.ui.downloader.DownloadStateEnums
+
 
 /**
  * @author koala
@@ -30,6 +38,48 @@ abstract class DownloadTaskHolder: EpoxyModelWithHolder<DownloadTaskHolder.Holde
     override fun bind(holder: Holder) {
         super.bind(holder)
         holder.fileNameTextView.text = FileUtils.getFileName(taskInfo.file)
+        val fileType = FileUtils.getFileExtension(taskInfo.file)
+        if (fileType != null && fileType.trim() != "") {
+            holder.fileTypeTextView.text = fileType
+            holder.fileTypeTextView.visibility = View.VISIBLE
+        } else {
+            holder.fileTypeTextView.visibility = View.GONE
+        }
+        val status = DownloadStateEnums.getMsgByNum(taskInfo.status.value)
+        if (status != null && status.trim { it <= ' ' } != "") {
+            holder.taskStatusTextView.text = status
+            refreshTaskTag(holder.taskStatusTextView, taskInfo)
+        }
+        val fileSize = Formatter.formatFileSize(context, taskInfo.total)
+        val gradientDrawable = holder.fileSizeTextView.background as GradientDrawable
+        gradientDrawable.setColor(ColorUtils.getColor(R.color.tag_483D8B))
+        if (fileSize != null && fileSize != "" && fileSize != "-1 B") {
+            holder.fileSizeTextView.text = fileSize
+            holder.fileSizeTextView.visibility = View.VISIBLE
+        } else {
+            holder.fileSizeTextView.visibility = View.GONE
+        }
+    }
+
+    private fun refreshTaskTag(
+        taskStatus: AppCompatTextView,
+        downloadEntity: Download?
+    ) {
+        val gradientDrawable = taskStatus.background as GradientDrawable
+        when (downloadEntity!!.status) {
+            Status.QUEUED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B636C))
+            Status.DOWNLOADING -> gradientDrawable.setColor(ColorUtils.getColor(R.color.blue_008B8B))
+            Status.PAUSED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.red_8B475D))
+            Status.COMPLETED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.green_006400))
+            Status.CANCELLED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
+            Status.FAILED -> gradientDrawable.setColor(Color.RED)
+            Status.REMOVED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
+            Status.DELETED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_555555))
+            Status.ADDED -> gradientDrawable.setColor(ColorUtils.getColor(R.color.gray_4A708B))
+            else -> {
+                gradientDrawable.setColor(ColorUtils.getColor(R.color.tag_483D8B))
+            }
+        }
     }
 
     class Holder: EpoxyHolder() {

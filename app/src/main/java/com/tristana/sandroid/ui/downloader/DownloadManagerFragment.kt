@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
@@ -27,7 +27,6 @@ import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils
-import com.tristana.sandroid.ui.downloader.adapter.FileItemAdapter
 import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
 import com.tristana.sandroid.ui.downloader.listener.EndlessRecyclerOnScrollListener
 import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
@@ -65,7 +64,6 @@ open class DownloadManagerFragment : Fragment() {
         )
         downloaderTaskView.layoutManager = layoutManager
         layoutManager.stackFromEnd = false
-        downloaderTaskView.overScrollMode = View.OVER_SCROLL_NEVER
         downloadTaskListController = DownloadTaskListController(requireContext())
         downloaderTaskView.setController(downloadTaskListController)
         initObserver()
@@ -77,13 +75,19 @@ open class DownloadManagerFragment : Fragment() {
             .build()
         fetch = getInstance(fetchConfiguration)
         fetchListener = object : FetchListener {
-            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {}
-            override fun onCompleted(download: Download) {}
+            override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
+            override fun onCompleted(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
             override fun onProgress(
                 download: Download,
                 etaInMilliSeconds: Long,
                 downloadedBytesPerSecond: Long
-            ) {}
+            ) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
             override fun onPaused(download: Download) {}
             override fun onResumed(download: Download) {}
             override fun onStarted(
@@ -92,7 +96,9 @@ open class DownloadManagerFragment : Fragment() {
                 totalBlocks: Int
             ) {}
             override fun onWaitingNetwork(download: Download) {}
-            override fun onAdded(download: Download) {}
+            override fun onAdded(download: Download) {
+                downloadManagerViewModel?.addOrUpdate(download)
+            }
             override fun onCancelled(download: Download) {}
             override fun onRemoved(download: Download) {}
             override fun onDeleted(download: Download) {}

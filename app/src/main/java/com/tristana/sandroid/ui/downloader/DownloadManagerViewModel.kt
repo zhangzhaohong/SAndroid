@@ -24,6 +24,20 @@ class DownloadManagerViewModel : ViewModel() {
         }
     }
 
+    fun addOrUpdate(download: Download) {
+        val data: ArrayList<Download> = fileInfoList.value as ArrayList<Download>
+        fileInfoList.value?.indexOfFirst { item -> item.id == download.id }?.let { index ->
+            if (index >= 0 && index < data.size) {
+                data[index] = download
+            } else {
+                data.add(0, download)
+            }
+        } ?: kotlin.run {
+            data.add(0, download)
+        }
+        fileInfoList.value = data
+    }
+
     companion object {
         const val TAG = "DownloadManagerViewModel"
     }
