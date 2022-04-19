@@ -95,7 +95,7 @@ open class DownloadManagerFragment : Fragment() {
                 downloadBlock: DownloadBlock,
                 totalBlocks: Int
             ) {
-                downloadManagerViewModel?.addOrUpdate(download)
+                // downloadManagerViewModel?.addOrUpdate(download)
             }
 
             override fun onError(download: Download, error: Error, throwable: Throwable?) {
