@@ -26,6 +26,12 @@ class DownloadTaskListController(
             requestModelBuild()
         }
 
+    var hasMore: Boolean = false
+        set(value) {
+            field = value
+            requestModelBuild()
+        }
+
     override fun buildModels() {
         fileInfoList?.forEach { item ->
             DownloadTaskHolder_()
@@ -35,7 +41,7 @@ class DownloadTaskListController(
                 .addTo(this)
         }
         CommonFooter_()
-            .hasMore(false)
+            .hasMore(hasMore)
             .bottomPadding(bottomPadding)
             .id("footer")
             .addTo(this)

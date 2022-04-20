@@ -265,9 +265,9 @@ open class DownloadManagerFragment : Fragment() {
     private fun initObserver() {
         downloadManagerViewModel!!.fileInfoList.observe(viewLifecycleOwner) {
             downloadTaskListController.fileInfoList = it
-//            MainScope().launch {
-//                refreshRecyclerView(it)
-//            }
+        }
+        downloadManagerViewModel!!.hasMore.observe(viewLifecycleOwner) {
+            downloadTaskListController.hasMore = it
         }
     }
 

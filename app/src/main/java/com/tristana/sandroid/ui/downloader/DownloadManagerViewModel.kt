@@ -9,7 +9,11 @@ import kotlinx.coroutines.withContext
 
 class DownloadManagerViewModel : ViewModel() {
 
-    var fileInfoList = MutableLiveData<MutableList<Download>>()
+    var pageNum = MutableLiveData(1)
+    private var pageSize = MutableLiveData(10)
+    var hasMore = MutableLiveData(true)
+    var taskListData = MutableLiveData<MutableList<Download>>(ArrayList())
+    var fileInfoList = MutableLiveData<MutableList<Download>>(ArrayList())
 
     suspend fun getData(fetch: Fetch?, groupId: Int) {
         return withContext(Dispatchers.IO) {
@@ -17,7 +21,21 @@ class DownloadManagerViewModel : ViewModel() {
                 fetch?.getDownloadsInGroup(groupId) { taskList ->
                     val data: ArrayList<Download> = ArrayList()
                     data.addAll(taskList)
-                    fileInfoList.value = sortData(data)
+                    sortData(data)?.let { currentTaskListData ->
+                        taskListData.value = currentTaskListData
+                        val pageData: ArrayList<Download> = ArrayList()
+                        var size = pageSize.value!!
+                        currentTaskListData.forEach {
+                            if (size > 0) {
+                                pageData.add(it)
+                                size--
+                            } else {
+                                return@forEach
+                            }
+                        }
+                        fileInfoList.value = pageData
+                        hasMore.value = data.size != pageData.size
+                    }
                 }
             }
         }
@@ -46,9 +64,5 @@ class DownloadManagerViewModel : ViewModel() {
 
     companion object {
         const val TAG = "DownloadManagerViewModel"
-    }
-
-    init {
-        this.fileInfoList.value = ArrayList()
     }
 }
