@@ -20,6 +20,7 @@ import com.tonyodev.fetch2core.DownloadBlock
 import com.tonyodev.fetch2core.Downloader.FileDownloaderType
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils
 import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
@@ -30,7 +31,6 @@ import kotlinx.coroutines.sync.withLock
 
 
 open class DownloadManagerFragment : Fragment() {
-    private val namespace = "DownloadManagerFragment"
     private val groupId = "public".hashCode()
     private val mutex = Mutex()
     private var fetch: Fetch? = null
@@ -150,13 +150,7 @@ open class DownloadManagerFragment : Fragment() {
         downloaderTaskView.addOnScrollListener(onScrollListener)
         initObserver()
         // init
-        val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(requireContext())
-            .setDownloadConcurrentLimit(3)
-            .setHttpDownloader(OkHttpDownloader(FileDownloaderType.PARALLEL))
-            .setNamespace(namespace)
-            .enableAutoStart(true)
-            .build()
-        fetch = getInstance(fetchConfiguration)
+        fetch = getInstance(MyApplication.fetchConfiguration!!)
         fetch?.addListener(fetchListener)
         MainScope().launch {
             downloadManagerViewModel?.getData(fetch, groupId)
@@ -209,72 +203,41 @@ open class DownloadManagerFragment : Fragment() {
             }
         }
         testDownloader2.setOnClickListener {
-            var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
-            FileUtils.createOrExistsDir(filePath)
-            val downloadUrl =
-                "http://speedtest.ftp.otenet.gr/files/test100Mb.db"
-            // "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
-            // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
-            // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
-            MainScope().launch {
-                withContext(Dispatchers.IO) {
-                    filePath = "$filePath/"
-                    HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)?.let {
-                        filePath += it
-                    } ?: kotlin.run {
-                        val path = downloadUrl.split("/")
-                        val fileName = path[path.size - 1].split(".")
-                        filePath += System.currentTimeMillis()
-                            .toString() + "." + fileName[fileName.size - 1]
-                    }
-                    LogUtils.i(filePath)
-                }
-                withContext(Dispatchers.Main) {
-                    RequestObjectUtils.getFetchRequests(
-                        requireContext(),
-                        downloadUrl,
-                        filePath,
-                        groupId
-                    ).let {
-                        fetch?.enqueue(it)
-                    }
-                }
-            }
+            startDownloadFile("http://speedtest.ftp.otenet.gr/files/test100Mb.db")
         }
         testDownloader3.setOnClickListener {
-            var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
-            FileUtils.createOrExistsDir(filePath)
-            val downloadUrl =
-                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1"
-            //    "http://speedtest.ftp.otenet.gr/files/test100Mb.db"
-            // "https://developer.lanzoug.com/file/?BmBTbVloBTQCCwM7AzZUOAQ7UGgACQI4VXxQZlIgBjcCLFM1CWRTNQVgCgNXZwZiADhVJQc/C1ZQFABuXWQEZgZtU01ZagUOAmYDZQNmVG0EblBiAG8CNVUNUHhSbwZ3AmlTIgkyU24FPwo5V1wGbgA+VW0HbAs5UGYANF05BDcGP1MiWWIFIgJpA2wDblRjBGdQZwBmAjBVdFAmUn4GOgIwUzQJZVM/BXwKbFc0BigAalVmB3cLOlBmAGVdNAQyBmVTN1k2BTcCMQNmAzJUMQRrUDQAPQI3VWZQZFI+BjQCN1NgCWdTNAVmCmpXNAY+AGJVZgdoCydQNgB2XWoEIwZzU3dZYQUjAj0DMQNqVGMEb1BlAGoCM1VqUHBSegZuAm9TYQkyUzoFYgpqVzYGNwBrVWEHaAsxUG4AMl0nBGMGalNzWTkFYAJiA2ADZ1RkBG5QbABmAjVVZlBwUnsGdwJ1UzkJZVMyBWAKbFc7Bj4AaFVmB28LPVBxAHNdaAR1BjtTMlkwBX8CZgNlA2VUewRsUGcAawIuVWNQZlI+BiECZlNoCWlTNw=="
-            // "https://dev-081.baidupan.com/622e908803e44f19673750430e3a649f/1650102340/2018/07/06/31c57c32fe3ed5ab742035d335679860.apk?filename=V8.0.0.1023_debug_CheckIn_20180705_.apk"
-            MainScope().launch {
-                withContext(Dispatchers.IO) {
-                    filePath = "$filePath/"
-                    HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)?.let {
-                        filePath += it
-                    } ?: kotlin.run {
-                        val path = downloadUrl.split("/")
-                        val fileName = path[path.size - 1].split(".")
-                        filePath += System.currentTimeMillis()
-                            .toString() + fileName[fileName.size - 1]
-                    }
-                    LogUtils.i(filePath)
+            startDownloadFile("http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c8t94c3c77u933tk63m0&ratio=540p&isDownload=1")
+        }
+        return root
+    }
+
+    private fun startDownloadFile(downloadUrl: String) {
+        var filePath = this.context?.getExternalFilesDir("download")?.absolutePath
+        FileUtils.createOrExistsDir(filePath)
+        MainScope().launch {
+            withContext(Dispatchers.IO) {
+                filePath = "$filePath/"
+                HttpUtils().getFileNameFromUrlByOkHttp3(downloadUrl, null, null)?.let {
+                    filePath += it
+                } ?: kotlin.run {
+                    val path = downloadUrl.split("/")
+                    val fileName = path[path.size - 1].split(".")
+                    filePath += System.currentTimeMillis()
+                        .toString() + "." + fileName[fileName.size - 1]
                 }
-                withContext(Dispatchers.Main) {
-                    RequestObjectUtils.getFetchRequests(
-                        requireContext(),
-                        downloadUrl,
-                        filePath,
-                        groupId
-                    ).let {
-                        fetch?.enqueue(it)
-                    }
+                LogUtils.i(filePath)
+            }
+            withContext(Dispatchers.Main) {
+                RequestObjectUtils.getFetchRequests(
+                    requireContext(),
+                    downloadUrl,
+                    filePath,
+                    groupId
+                ).let {
+                    fetch?.enqueue(it)
                 }
             }
         }
-        return root
     }
 
     private fun initObserver() {

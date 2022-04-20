@@ -2,12 +2,16 @@ package com.tristana.sandroid
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
+import com.tonyodev.fetch2.FetchConfiguration
+import com.tonyodev.fetch2core.Downloader
+import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.model.data.DataModel
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +28,12 @@ class MyApplication : Application() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
-
+                    fetchConfiguration = FetchConfiguration.Builder(applicationContext)
+                        .setDownloadConcurrentLimit(3)
+                        .setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
+                        .setNamespace("SAndroidApplication")
+                        .enableAutoStart(true)
+                        .build()
                 }
             }
             withContext(Dispatchers.IO) {
@@ -63,6 +72,8 @@ class MyApplication : Application() {
                 LogUtils.i("AppStatus: onBackground", System.currentTimeMillis())
             }
         }
+            private set
+        var fetchConfiguration: FetchConfiguration? = null
             private set
     }
 }

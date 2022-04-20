@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.text.format.Formatter
 import android.view.View
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.epoxy.*
 import com.blankj.utilcode.util.ColorUtils
@@ -68,6 +69,9 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         } else {
             holder.downloadProgressBar.visibility = View.GONE
         }
+        holder.cancelButtonImageView.setOnClickListener {
+
+        }
     }
 
     private fun checkDownloadProgress(downloadEntity: Download): Boolean {
@@ -121,6 +125,8 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         lateinit var taskStatusTextView: AppCompatTextView
         lateinit var fileSizeTextView: AppCompatTextView
         lateinit var downloadProgressBar: NumberProgressBar
+        lateinit var operationButtonImageView: AppCompatImageView
+        lateinit var cancelButtonImageView: AppCompatImageView
 
         override fun bindView(itemView: View) {
             fileNameTextView = itemView.findViewById(R.id.file_name)
@@ -128,6 +134,8 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
             taskStatusTextView = itemView.findViewById(R.id.task_status)
             fileSizeTextView = itemView.findViewById(R.id.file_size)
             downloadProgressBar = itemView.findViewById(R.id.download_progress_bar)
+            operationButtonImageView = itemView.findViewById(R.id.operation_button)
+            cancelButtonImageView = itemView.findViewById(R.id.cancel_button)
         }
     }
 }

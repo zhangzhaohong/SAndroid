@@ -70,6 +70,7 @@
                         android:id="@+id/task_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginEnd="6dp"
                         android:background="@drawable/downloader_tag"
                         android:gravity="center"
@@ -82,6 +83,7 @@
                         android:id="@+id/file_size"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginEnd="6dp"
                         android:background="@drawable/downloader_tag"
                         android:gravity="center"
@@ -89,6 +91,33 @@
                         android:text="@string/unknown_name"
                         android:textColor="@color/white"
                         android:textSize="11sp" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/operation_button"
+                            android:layout_width="30dip"
+                            android:layout_height="30dip"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/ic_start"
+                            android:padding="6dip" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/cancel_button"
+                            android:layout_width="30dip"
+                            android:layout_height="30dip"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/ic_cancel"
+                            android:padding="6dip" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

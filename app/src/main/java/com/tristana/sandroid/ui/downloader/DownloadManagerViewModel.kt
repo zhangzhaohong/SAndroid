@@ -23,10 +23,10 @@ class DownloadManagerViewModel : ViewModel() {
                     sortData(data)?.let { currentTaskListData ->
                         taskListData.value = currentTaskListData
                         val pageData: ArrayList<Download> = ArrayList()
-                        val indicate = if (currentTaskListData.size > 10 - 1) {
-                            10 - 1
+                        val indicate = if (currentTaskListData.size > pageSize.value!! - 1) {
+                            pageSize.value!! - 1
                         } else {
-                            currentTaskListData.size
+                            currentTaskListData.size - 1
                         }
                         for (index in 0..indicate) {
                             pageData.add(currentTaskListData[index])
@@ -58,8 +58,8 @@ class DownloadManagerViewModel : ViewModel() {
         val taskListData: ArrayList<Download> = taskListData.value as ArrayList<Download>
         pageData[pageData.size - 1].let { lastItem ->
             taskListData.indexOfFirst { item -> item.id == lastItem.id }.let {
-                val indicate = if (taskListData.size - 1 >= it + 10) {
-                    it + 10
+                val indicate = if (taskListData.size - 1 >= it + pageSize.value!!) {
+                    it + pageSize.value!!
                 } else {
                     taskListData.size - 1
                 }
