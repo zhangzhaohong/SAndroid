@@ -10,8 +10,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.epoxy.*
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.LogUtils
 import com.daimajia.numberprogressbar.NumberProgressBar
 import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.Status
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.downloader.DownloadStateEnums
@@ -32,8 +34,11 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
     lateinit var taskInfo: Download
 
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var fetch: Fetch
+
     override fun equals(other: Any?): Boolean {
-        if (taskInfo.etaInMilliSeconds <= 0 && !checkDownloadProgress(taskInfo)) {
+        if (taskInfo.etaInMilliSeconds <= 0 && !checkEquals(taskInfo)) {
             return true
         }
         return false
@@ -69,12 +74,51 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         } else {
             holder.downloadProgressBar.visibility = View.GONE
         }
+        if (checkEnableCancel(taskInfo)) {
+            holder.cancelButtonImageView.visibility = View.VISIBLE
+        } else {
+            holder.cancelButtonImageView.visibility = View.GONE
+        }
         holder.cancelButtonImageView.setOnClickListener {
+            fetch.cancel(taskInfo.id)
+        }
+    }
 
+    private fun checkEnableCancel(downloadEntity: Download): Boolean {
+        return when(downloadEntity.status) {
+            Status.QUEUED -> false
+            Status.DOWNLOADING -> true
+            Status.PAUSED -> true
+            Status.COMPLETED -> false
+            Status.CANCELLED -> false
+            Status.FAILED -> false
+            Status.REMOVED -> false
+            Status.DELETED -> false
+            Status.ADDED -> true
+            else -> {
+                false
+            }
         }
     }
 
     private fun checkDownloadProgress(downloadEntity: Download): Boolean {
+        return when(downloadEntity.status) {
+            Status.QUEUED -> false
+            Status.DOWNLOADING -> true
+            Status.PAUSED -> true
+            Status.COMPLETED -> false
+            Status.CANCELLED -> false
+            Status.FAILED -> false
+            Status.REMOVED -> false
+            Status.DELETED -> false
+            Status.ADDED -> false
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun checkEquals(downloadEntity: Download): Boolean {
         return when(downloadEntity.status) {
             Status.QUEUED -> false
             Status.DOWNLOADING -> true

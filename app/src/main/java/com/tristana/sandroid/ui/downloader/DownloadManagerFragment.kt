@@ -17,8 +17,6 @@ import com.hl.downloader.DownloadManager
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2.Fetch.Impl.getInstance
 import com.tonyodev.fetch2core.DownloadBlock
-import com.tonyodev.fetch2core.Downloader.FileDownloaderType
-import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
@@ -138,6 +136,7 @@ open class DownloadManagerFragment : Fragment() {
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val testDownloader3 = root.findViewById<AppCompatButton>(R.id.test_downloader_3)
         val downloaderTaskView = root.findViewById<EpoxyRecyclerView>(R.id.downloader_task_view)
+        fetch = getInstance(MyApplication.fetchConfiguration!!)
         layoutManager = QuickScrollLinearLayoutManager(
             requireContext(),
             RecyclerView.VERTICAL,
@@ -145,12 +144,11 @@ open class DownloadManagerFragment : Fragment() {
         )
         downloaderTaskView.layoutManager = layoutManager
         layoutManager.stackFromEnd = false
-        downloadTaskListController = DownloadTaskListController(requireContext())
+        downloadTaskListController = DownloadTaskListController(requireContext(), fetch)
         downloaderTaskView.setController(downloadTaskListController)
         downloaderTaskView.addOnScrollListener(onScrollListener)
         initObserver()
         // init
-        fetch = getInstance(MyApplication.fetchConfiguration!!)
         fetch?.addListener(fetchListener)
         MainScope().launch {
             downloadManagerViewModel?.getData(fetch, groupId)

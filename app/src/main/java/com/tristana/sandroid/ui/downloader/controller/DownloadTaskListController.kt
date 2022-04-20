@@ -3,6 +3,7 @@ package com.tristana.sandroid.ui.downloader.controller
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.Fetch
 import com.tristana.sandroid.ui.downloader.common.CommonFooter
 import com.tristana.sandroid.ui.downloader.common.CommonFooter_
 import com.tristana.sandroid.ui.downloader.common.commonFooter
@@ -17,6 +18,7 @@ import com.tristana.sandroid.ui.downloader.holder.downloadTaskHolder
  */
 class DownloadTaskListController(
     private val context: Context,
+    private val fetch: Fetch?,
     private val bottomPadding: Float = CommonFooter.NORMAL_PADDING
 ) : EpoxyController() {
 
@@ -37,6 +39,7 @@ class DownloadTaskListController(
             DownloadTaskHolder_()
                 .context(context)
                 .taskInfo(item)
+                .fetch(fetch)
                 .id(item.id)
                 .addTo(this)
         }
