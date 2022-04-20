@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.epoxy.*
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.FileUtils
+import com.daimajia.numberprogressbar.NumberProgressBar
 import com.tonyodev.fetch2.Download
 import com.tonyodev.fetch2.Status
 import com.tristana.sandroid.R
@@ -61,6 +62,29 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         } else {
             holder.fileSizeTextView.visibility = View.GONE
         }
+        if (checkDownloadProgress(taskInfo)) {
+            holder.downloadProgressBar.visibility = View.VISIBLE
+            holder.downloadProgressBar.progress = taskInfo.progress
+        } else {
+            holder.downloadProgressBar.visibility = View.GONE
+        }
+    }
+
+    private fun checkDownloadProgress(downloadEntity: Download): Boolean {
+        return when(downloadEntity.status) {
+            Status.QUEUED -> false
+            Status.DOWNLOADING -> true
+            Status.PAUSED -> true
+            Status.COMPLETED -> false
+            Status.CANCELLED -> false
+            Status.FAILED -> false
+            Status.REMOVED -> false
+            Status.DELETED -> false
+            Status.ADDED -> false
+            else -> {
+                false
+            }
+        }
     }
 
     private fun refreshTaskTag(
@@ -96,12 +120,14 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         lateinit var fileTypeTextView: AppCompatTextView
         lateinit var taskStatusTextView: AppCompatTextView
         lateinit var fileSizeTextView: AppCompatTextView
+        lateinit var downloadProgressBar: NumberProgressBar
 
         override fun bindView(itemView: View) {
             fileNameTextView = itemView.findViewById(R.id.file_name)
             fileTypeTextView = itemView.findViewById(R.id.file_type)
             taskStatusTextView = itemView.findViewById(R.id.task_status)
             fileSizeTextView = itemView.findViewById(R.id.file_size)
+            downloadProgressBar = itemView.findViewById(R.id.download_progress_bar)
         }
     }
 }
