@@ -3,10 +3,8 @@ package com.tristana.sandroid.downloader.utils
 import android.content.Context
 import android.net.Uri
 import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.LogUtils
+import com.tonyodev.fetch2.Priority
 import com.tonyodev.fetch2.Request
-import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
-import kotlinx.coroutines.*
 
 /**
  * @author koala
@@ -19,10 +17,12 @@ object RequestObjectUtils {
         context: Context,
         url: String,
         filePath: String?,
-        groupId: Int
+        groupId: Int,
+        priority: Priority = Priority.NORMAL
     ): List<Request> {
         val requests: MutableList<Request> = ArrayList()
         val request = Request(url, filePath ?: kotlin.run { getFilePath(context, url) })
+        request.priority = priority
         request.groupId = groupId
         requests.add(request)
         return requests
