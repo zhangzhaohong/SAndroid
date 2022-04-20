@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.epoxy.*
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.ResourceUtils
 import com.daimajia.numberprogressbar.NumberProgressBar
 import com.tonyodev.fetch2.Download
 import com.tonyodev.fetch2.Fetch
@@ -77,6 +78,29 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         } else {
             holder.downloadProgressBar.visibility = View.GONE
         }
+        if (showResumeButton(taskInfo)) {
+            holder.operationButtonImageView.visibility = View.VISIBLE
+            holder.operationButtonImageView.background = ResourceUtils.getDrawable(R.drawable.ic_start)
+            holder.operationButtonImageView.setOnClickListener {
+                fetch.resume(taskInfo.id)
+            }
+        } else if (showStopButton(taskInfo)) {
+            holder.operationButtonImageView.visibility = View.VISIBLE
+            holder.operationButtonImageView.background = ResourceUtils.getDrawable(R.drawable.ic_stop)
+            holder.operationButtonImageView.setOnClickListener {
+                fetch.pause(taskInfo.id)
+            }
+        } else if (showRetryButton(taskInfo)) {
+            holder.operationButtonImageView.visibility = View.VISIBLE
+            holder.operationButtonImageView.background = ResourceUtils.getDrawable(R.drawable.ic_retry)
+            holder.operationButtonImageView.setOnClickListener {
+                fetch.retry(taskInfo.id)
+                holder.operationButtonImageView.visibility = View.GONE
+            }
+        } else {
+            holder.operationButtonImageView.visibility = View.GONE
+            holder.operationButtonImageView.setOnClickListener(null)
+        }
         if (showCancel(taskInfo)) {
             holder.cancelButtonImageView.visibility = View.VISIBLE
         } else {
@@ -84,6 +108,23 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         }
         holder.cancelButtonImageView.setOnClickListener {
             fetch.cancel(taskInfo.id)
+        }
+    }
+
+    private fun showRetryButton(downloadEntity: Download): Boolean {
+        return when(downloadEntity.status) {
+            Status.QUEUED -> false
+            Status.DOWNLOADING -> false
+            Status.PAUSED -> false
+            Status.COMPLETED -> false
+            Status.CANCELLED -> true
+            Status.FAILED -> true
+            Status.REMOVED -> false
+            Status.DELETED -> false
+            Status.ADDED -> false
+            else -> {
+                false
+            }
         }
     }
 
@@ -138,17 +179,34 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         }
     }
 
-    private fun showStartButton(downloadEntity: Download): Boolean {
+    private fun showResumeButton(downloadEntity: Download): Boolean {
         return when(downloadEntity.status) {
             Status.QUEUED -> false
-            Status.DOWNLOADING -> true
+            Status.DOWNLOADING -> false
             Status.PAUSED -> true
             Status.COMPLETED -> false
             Status.CANCELLED -> false
             Status.FAILED -> false
             Status.REMOVED -> false
             Status.DELETED -> false
-            Status.ADDED -> true
+            Status.ADDED -> false
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun showStopButton(downloadEntity: Download): Boolean {
+        return when(downloadEntity.status) {
+            Status.QUEUED -> false
+            Status.DOWNLOADING -> true
+            Status.PAUSED -> false
+            Status.COMPLETED -> false
+            Status.CANCELLED -> false
+            Status.FAILED -> false
+            Status.REMOVED -> false
+            Status.DELETED -> false
+            Status.ADDED -> false
             else -> {
                 false
             }
