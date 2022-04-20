@@ -9,7 +9,6 @@ import kotlinx.coroutines.withContext
 
 class DownloadManagerViewModel : ViewModel() {
 
-    var pageNum = MutableLiveData(1)
     private var pageSize = MutableLiveData(10)
     var hasMore = MutableLiveData(true)
     var taskListData = MutableLiveData<MutableList<Download>>(ArrayList())
@@ -24,14 +23,13 @@ class DownloadManagerViewModel : ViewModel() {
                     sortData(data)?.let { currentTaskListData ->
                         taskListData.value = currentTaskListData
                         val pageData: ArrayList<Download> = ArrayList()
-                        var size = pageSize.value!!
-                        currentTaskListData.forEach {
-                            if (size > 0) {
-                                pageData.add(it)
-                                size--
-                            } else {
-                                return@forEach
-                            }
+                        val indicate = if (currentTaskListData.size > 10 - 1) {
+                            10 - 1
+                        } else {
+                            currentTaskListData.size
+                        }
+                        for (index in 0..indicate) {
+                            pageData.add(currentTaskListData[index])
                         }
                         fileInfoList.value = pageData
                         hasMore.value = data.size != pageData.size
@@ -53,6 +51,25 @@ class DownloadManagerViewModel : ViewModel() {
             }
         }
         fileInfoList.value = sortData(data)
+    }
+
+    fun loadMore() {
+        val pageData: ArrayList<Download> = fileInfoList.value as ArrayList<Download>
+        val taskListData: ArrayList<Download> = taskListData.value as ArrayList<Download>
+        pageData[pageData.size - 1].let { lastItem ->
+            taskListData.indexOfFirst { item -> item.id == lastItem.id }.let {
+                val indicate = if (taskListData.size - 1 >= it + 10) {
+                    it + 10
+                } else {
+                    taskListData.size - 1
+                }
+                for (index in it + 1..indicate) {
+                    pageData.add(taskListData[index])
+                }
+                hasMore.value = indicate < taskListData.size - 1
+            }
+        }
+        fileInfoList.value = sortData(pageData)
     }
 
     private fun sortData(input: ArrayList<Download>?): ArrayList<Download>? {

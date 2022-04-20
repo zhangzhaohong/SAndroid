@@ -35,6 +35,20 @@ open class DownloadManagerFragment : Fragment() {
     private val mutex = Mutex()
     private var fetch: Fetch? = null
     private var fetchListener: FetchListener = getFetchListener()
+    private var onScrollListener: RecyclerView.OnScrollListener = getOnScrollLister()
+
+    private fun getOnScrollLister(): RecyclerView.OnScrollListener {
+        return object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(
+                recyclerView: RecyclerView,
+                newState: Int
+            ) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    downloadManagerViewModel?.loadMore()
+                }
+            }
+        }
+    }
 
     private fun getFetchListener(): FetchListener {
         return object : FetchListener {
@@ -133,6 +147,7 @@ open class DownloadManagerFragment : Fragment() {
         layoutManager.stackFromEnd = false
         downloadTaskListController = DownloadTaskListController(requireContext())
         downloaderTaskView.setController(downloadTaskListController)
+        downloaderTaskView.addOnScrollListener(onScrollListener)
         initObserver()
         // init
         val fetchConfiguration: FetchConfiguration = FetchConfiguration.Builder(requireContext())
