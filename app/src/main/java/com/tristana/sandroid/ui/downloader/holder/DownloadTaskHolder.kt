@@ -10,7 +10,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.airbnb.epoxy.*
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.LogUtils
 import com.daimajia.numberprogressbar.NumberProgressBar
 import com.tonyodev.fetch2.Download
 import com.tonyodev.fetch2.Fetch
@@ -36,6 +35,10 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
 
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
     lateinit var fetch: Fetch
+
+    override fun getViewType(): Int {
+        return taskInfo.id
+    }
 
     override fun equals(other: Any?): Boolean {
         if (taskInfo.etaInMilliSeconds <= 0 && !checkEquals(taskInfo)) {
@@ -74,7 +77,7 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         } else {
             holder.downloadProgressBar.visibility = View.GONE
         }
-        if (checkEnableCancel(taskInfo)) {
+        if (showCancel(taskInfo)) {
             holder.cancelButtonImageView.visibility = View.VISIBLE
         } else {
             holder.cancelButtonImageView.visibility = View.GONE
@@ -84,7 +87,7 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         }
     }
 
-    private fun checkEnableCancel(downloadEntity: Download): Boolean {
+    private fun showCancel(downloadEntity: Download): Boolean {
         return when(downloadEntity.status) {
             Status.QUEUED -> false
             Status.DOWNLOADING -> true
