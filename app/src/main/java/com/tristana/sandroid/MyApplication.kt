@@ -15,6 +15,7 @@ import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.model.data.DataModel
+import com.tristana.sandroid.model.data.SettingModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -30,11 +31,29 @@ class MyApplication : Application() {
             withContext(Dispatchers.IO) {
                 instance?.let {
                     val fetchConfiguration = FetchConfiguration.Builder(applicationContext)
-                        .setDownloadConcurrentLimit(3)
-                        .setProgressReportingInterval(1000)
+                        .setDownloadConcurrentLimit(
+                            SpUtils.get(
+                                it,
+                                DataModel.MAX_DOWNLOAD_CONCURRENT_LIMIT_SP,
+                                3
+                            ) as Int
+                        )
+                        .setProgressReportingInterval(
+                            SpUtils.get(
+                                it,
+                                SettingModel.DOWNLOAD_PROGRESS_REPORTING_INTERVAL,
+                                1000L
+                            ) as Long
+                        )
                         .setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
                         .setNamespace("SAndroidApplication")
-                        .enableAutoStart(true)
+                        .enableAutoStart(
+                            SpUtils.get(
+                                it,
+                                SettingModel.DOWNLOAD_AUTO_START,
+                                true
+                            ) as Boolean
+                        )
                         .build()
                     fetch = Fetch.getInstance(fetchConfiguration)
                 }

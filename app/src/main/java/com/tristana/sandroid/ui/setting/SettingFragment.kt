@@ -168,6 +168,69 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+                MAX_DOWNLOAD_CONCURRENT_LIMIT -> {
+                    val builder = EditTextDialogBuilder(activity)
+                    builder
+                        .setTitle("设置$MAX_DOWNLOAD_CONCURRENT_LIMIT")
+                        .setPlaceholder("在此输入$MAX_DOWNLOAD_CONCURRENT_LIMIT")
+                        .setInputType(InputType.TYPE_CLASS_NUMBER)
+                        .setDefaultText(
+                            "${
+                                SpUtils.get(
+                                    context,
+                                    MAX_DOWNLOAD_CONCURRENT_LIMIT_SP,
+                                    3
+                                ) as Int
+                            }"
+                        )
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction("保存修改") { dialog, _ ->
+                            val input: CharSequence? = builder.editText.text
+                            if (input.isNullOrEmpty()) {
+                                SpUtils.put(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, (3))
+                            } else {
+                                SpUtils.put(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, input.toString().toInt())
+                            }
+                            v.detailText = "$input 个"
+                            dialog.dismiss()
+                            needRestart()
+                        }
+                        .show()
+                }
+                DOWNLOAD_PROGRESS_REPORTING_INTERVAL -> {
+                    val builder = EditTextDialogBuilder(activity)
+                    builder
+                        .setTitle("设置$DOWNLOAD_PROGRESS_REPORTING_INTERVAL")
+                        .setPlaceholder("在此输入$DOWNLOAD_PROGRESS_REPORTING_INTERVAL")
+                        .setInputType(InputType.TYPE_CLASS_NUMBER)
+                        .setDefaultText(
+                            "${
+                                SpUtils.get(
+                                    context,
+                                    DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP,
+                                    1000L
+                                ) as Long
+                            }"
+                        )
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction("保存修改") { dialog, _ ->
+                            val input: CharSequence? = builder.editText.text
+                            if (input.isNullOrEmpty()) {
+                                SpUtils.put(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, (1000L))
+                            } else {
+                                SpUtils.put(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, input.toString().toLong())
+                            }
+                            v.detailText = "$input ms"
+                            dialog.dismiss()
+                            needRestart()
+                        }
+                        .show()
+                }
+                DOWNLOAD_AUTO_START -> {}
                 RESET_SETTINGS -> {
                     MessageDialogBuilder(activity)
                         .setTitle("提示")
@@ -232,6 +295,11 @@ class SettingFragment : Fragment() {
         val logLocalSize: QMUICommonListItemView = createTextElement(LOG_LOCAL_SIZE, height)
         val resetSettings: QMUICommonListItemView = createElement(RESET_SETTINGS, height, true)
         refreshLogLocalSize(logLocalSize)
+        val maxDownloadConcurrent: QMUICommonListItemView = createTextElement(MAX_DOWNLOAD_CONCURRENT_LIMIT, height)
+        maxDownloadConcurrent.detailText = "${SpUtils.get(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, 3) as Int} 个"
+        val downloadProgressReportingInterval: QMUICommonListItemView = createTextElement(DOWNLOAD_PROGRESS_REPORTING_INTERVAL, height)
+        downloadProgressReportingInterval.detailText = "${SpUtils.get(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, 1000L) as Long} ms"
+        val downloadAutoStart = createSwitchElement(DOWNLOAD_AUTO_START, height, DOWNLOAD_AUTO_START_SP, true, needRestart = true)
 
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(context)
@@ -260,6 +328,15 @@ class SettingFragment : Fragment() {
             .addItemView(log2Local, onClickListener)
             .addItemView(logSaveDay, onClickListener)
             .addItemView(logLocalSize, onClickListener)
+            .setShowSeparator(true)
+            .addTo(mGroupListView)
+        QMUIGroupListView.newSection(requireContext())
+            .setTitle("下载设置")
+            .setDescription("")
+            .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(maxDownloadConcurrent, onClickListener)
+            .addItemView(downloadProgressReportingInterval, onClickListener)
+            .addItemView(downloadAutoStart, onClickListener)
             .setShowSeparator(true)
             .addTo(mGroupListView)
         QMUIGroupListView.newSection(requireContext())
