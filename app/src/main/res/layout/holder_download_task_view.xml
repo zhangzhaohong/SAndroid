@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dip">
+    android:paddingStart="12dip"
+    android:paddingTop="6dip"
+    android:paddingEnd="12dip"
+    android:paddingBottom="6dip">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -32,9 +35,9 @@
                     android:ellipsize="end"
                     android:gravity="center_horizontal"
                     android:maxLines="1"
-                    android:paddingBottom="12dp"
                     android:paddingStart="6dp"
                     android:paddingEnd="6dp"
+                    android:paddingBottom="12dp"
                     android:text="@string/unknown_file_type" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -95,10 +98,9 @@
 
         <com.daimajia.numberprogressbar.NumberProgressBar
             android:id="@+id/download_progress_bar"
-            android:layout_marginTop="6dip"
-            android:layout_marginBottom="6dip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dip" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
