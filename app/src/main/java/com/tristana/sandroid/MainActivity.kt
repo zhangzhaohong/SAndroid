@@ -274,6 +274,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        MyApplication.fetch?.close()
         AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
         super.onDestroy()
     }

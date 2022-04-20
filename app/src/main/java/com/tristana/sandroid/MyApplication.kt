@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
+import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
@@ -28,12 +29,14 @@ class MyApplication : Application() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
-                    fetchConfiguration = FetchConfiguration.Builder(applicationContext)
+                    val fetchConfiguration = FetchConfiguration.Builder(applicationContext)
                         .setDownloadConcurrentLimit(3)
+                        .setProgressReportingInterval(1000)
                         .setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
                         .setNamespace("SAndroidApplication")
                         .enableAutoStart(true)
                         .build()
+                    fetch = Fetch.getInstance(fetchConfiguration)
                 }
             }
             withContext(Dispatchers.IO) {
@@ -73,7 +76,7 @@ class MyApplication : Application() {
             }
         }
             private set
-        var fetchConfiguration: FetchConfiguration? = null
+        var fetch: Fetch? = null
             private set
     }
 }

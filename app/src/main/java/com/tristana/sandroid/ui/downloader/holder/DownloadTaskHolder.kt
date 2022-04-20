@@ -138,6 +138,23 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
         }
     }
 
+    private fun showStartButton(downloadEntity: Download): Boolean {
+        return when(downloadEntity.status) {
+            Status.QUEUED -> false
+            Status.DOWNLOADING -> true
+            Status.PAUSED -> true
+            Status.COMPLETED -> false
+            Status.CANCELLED -> false
+            Status.FAILED -> false
+            Status.REMOVED -> false
+            Status.DELETED -> false
+            Status.ADDED -> true
+            else -> {
+                false
+            }
+        }
+    }
+
     private fun refreshTaskTag(
         taskStatus: AppCompatTextView,
         downloadEntity: Download?
