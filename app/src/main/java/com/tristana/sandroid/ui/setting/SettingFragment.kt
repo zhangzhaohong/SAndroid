@@ -231,6 +231,25 @@ class SettingFragment : Fragment() {
                         .show()
                 }
                 DOWNLOAD_AUTO_START -> {}
+                DOWNLOAD_LOCAL_SIZE -> {
+                    MessageDialogBuilder(activity)
+                        .setTitle("提示")
+                        .setMessage("是否清空本地下载目录？")
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction(
+                            "确定"
+                        ) { dialog, _ ->
+                            run {
+                                dialog.dismiss()
+                                FileUtils.deleteAllInDir(requireContext().getExternalFilesDir("download")?.absolutePath)
+                                refreshDownloadLocalSize(v)
+                                ToastUtils.showLong("清空目录成功")
+                            }
+                        }
+                        .show()
+                }
                 RESET_SETTINGS -> {
                     MessageDialogBuilder(activity)
                         .setTitle("提示")
@@ -294,12 +313,14 @@ class SettingFragment : Fragment() {
         logSaveDay.detailText = "${SpUtils.get(context, LOG_SAVE_DAY_SP, 3) as Int} 天"
         val logLocalSize: QMUICommonListItemView = createTextElement(LOG_LOCAL_SIZE, height)
         val resetSettings: QMUICommonListItemView = createElement(RESET_SETTINGS, height, true)
-        refreshLogLocalSize(logLocalSize)
         val maxDownloadConcurrent: QMUICommonListItemView = createTextElement(MAX_DOWNLOAD_CONCURRENT_LIMIT, height)
         maxDownloadConcurrent.detailText = "${SpUtils.get(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, 3) as Int} 个"
         val downloadProgressReportingInterval: QMUICommonListItemView = createTextElement(DOWNLOAD_PROGRESS_REPORTING_INTERVAL, height)
         downloadProgressReportingInterval.detailText = "${SpUtils.get(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, 1000L) as Long} ms"
+        val downloadLocalSize: QMUICommonListItemView = createTextElement(DOWNLOAD_LOCAL_SIZE, height)
         val downloadAutoStart = createSwitchElement(DOWNLOAD_AUTO_START, height, DOWNLOAD_AUTO_START_SP, true, needRestart = true)
+        refreshLogLocalSize(logLocalSize)
+        refreshDownloadLocalSize(downloadLocalSize)
 
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(context)
@@ -337,6 +358,7 @@ class SettingFragment : Fragment() {
             .addItemView(maxDownloadConcurrent, onClickListener)
             .addItemView(downloadProgressReportingInterval, onClickListener)
             .addItemView(downloadAutoStart, onClickListener)
+            .addItemView(downloadLocalSize, onClickListener)
             .setShowSeparator(true)
             .addTo(mGroupListView)
         QMUIGroupListView.newSection(requireContext())
@@ -451,6 +473,18 @@ class SettingFragment : Fragment() {
             var folderSize: String?
             withContext(Dispatchers.IO) {
                 folderSize = FileUtils.getSize(LogUtils.getConfig().dir)
+            }
+            withContext(Dispatchers.Main) {
+                item.detailText = folderSize
+            }
+        }
+    }
+
+    private fun refreshDownloadLocalSize(item: QMUICommonListItemView) {
+        MainScope().launch {
+            var folderSize: String?
+            withContext(Dispatchers.IO) {
+                folderSize = FileUtils.getSize(requireContext().getExternalFilesDir("download")?.absolutePath)
             }
             withContext(Dispatchers.Main) {
                 item.detailText = folderSize

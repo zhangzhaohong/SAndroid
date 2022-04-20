@@ -20,5 +20,6 @@ public class SettingModel {
     public static final String MAX_DOWNLOAD_CONCURRENT_LIMIT = "最大同时下载任务数";
     public static final String DOWNLOAD_PROGRESS_REPORTING_INTERVAL = "下载进度更新间隔";
     public static final String DOWNLOAD_AUTO_START = "自动开始下载";
+    public static final String DOWNLOAD_LOCAL_SIZE = "本地下载目录占用空间";
     public static final String RESET_SETTINGS = "重置全部设置";
 }
