@@ -138,7 +138,7 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
             Status.FAILED -> false
             Status.REMOVED -> false
             Status.DELETED -> false
-            Status.ADDED -> true
+            Status.ADDED -> false
             else -> {
                 false
             }
