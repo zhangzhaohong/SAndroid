@@ -131,7 +131,7 @@ open class DownloadManagerFragment : Fragment() {
         val testDownloader2 = root.findViewById<AppCompatButton>(R.id.test_downloader_2)
         val testDownloader3 = root.findViewById<AppCompatButton>(R.id.test_downloader_3)
         val downloaderTaskView = root.findViewById<EpoxyRecyclerView>(R.id.downloader_task_view)
-        fetch = MyApplication.fetch
+        fetch = MyApplication().getFetchInstance(MyApplication.instance!!)
         layoutManager = QuickScrollLinearLayoutManager(
             requireContext(),
             RecyclerView.VERTICAL,

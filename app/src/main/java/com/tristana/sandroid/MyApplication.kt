@@ -30,32 +30,7 @@ class MyApplication : Application() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
-                    val fetchConfiguration = FetchConfiguration.Builder(applicationContext)
-                        .setDownloadConcurrentLimit(
-                            SpUtils.get(
-                                it,
-                                DataModel.MAX_DOWNLOAD_CONCURRENT_LIMIT_SP,
-                                3
-                            ) as Int
-                        )
-                        .setProgressReportingInterval(
-                            SpUtils.get(
-                                it,
-                                SettingModel.DOWNLOAD_PROGRESS_REPORTING_INTERVAL,
-                                1000L
-                            ) as Long
-                        )
-                        .setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
-                        .setNamespace("SAndroidApplication")
-                        .enableAutoStart(
-                            SpUtils.get(
-                                it,
-                                SettingModel.DOWNLOAD_AUTO_START,
-                                true
-                            ) as Boolean
-                        )
-                        .build()
-                    fetch = Fetch.getInstance(fetchConfiguration)
+                    fetch = Fetch.getInstance(getFetchConfiguration(it))
                 }
             }
             withContext(Dispatchers.IO) {
@@ -82,6 +57,41 @@ class MyApplication : Application() {
         AppUtils.registerAppStatusChangedListener(appStatusChangeListener)
     }
 
+    private fun getFetchConfiguration(application: Application): FetchConfiguration {
+        return FetchConfiguration.Builder(application)
+            .setDownloadConcurrentLimit(
+                SpUtils.get(
+                    application,
+                    DataModel.MAX_DOWNLOAD_CONCURRENT_LIMIT_SP,
+                    3
+                ) as Int
+            )
+            .setProgressReportingInterval(
+                SpUtils.get(
+                    application,
+                    SettingModel.DOWNLOAD_PROGRESS_REPORTING_INTERVAL,
+                    1000L
+                ) as Long
+            )
+            .setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
+            .setNamespace("SAndroidApplication")
+            .enableAutoStart(
+                SpUtils.get(
+                    application,
+                    SettingModel.DOWNLOAD_AUTO_START,
+                    true
+                ) as Boolean
+            )
+            .build()
+    }
+
+    fun getFetchInstance(application: Application): Fetch? {
+        if (fetch == null || fetch?.isClosed == true) {
+            fetch = Fetch.getInstance(getFetchConfiguration(application))
+        }
+        return fetch
+    }
+
     companion object {
         var instance: Application? = null
             private set
@@ -96,6 +106,5 @@ class MyApplication : Application() {
         }
             private set
         var fetch: Fetch? = null
-            private set
     }
 }
