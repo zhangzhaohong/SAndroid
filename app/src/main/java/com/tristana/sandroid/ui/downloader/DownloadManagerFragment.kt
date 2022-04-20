@@ -75,7 +75,7 @@ open class DownloadManagerFragment : Fragment() {
             }
 
             override fun onAdded(download: Download) {
-                downloadManagerViewModel?.addOrUpdate(download)
+                downloadManagerViewModel?.addOrUpdate(download, true)
             }
 
             override fun onCancelled(download: Download) {

@@ -23,16 +23,16 @@ class DownloadManagerViewModel : ViewModel() {
         }
     }
 
-    fun addOrUpdate(download: Download) {
+    fun addOrUpdate(download: Download, isAdd: Boolean = false) {
         val data: ArrayList<Download> = fileInfoList.value as ArrayList<Download>
-        fileInfoList.value?.indexOfFirst { item -> item.id == download.id }?.let { index ->
-            if (index >= 0 && index < data.size) {
-                data[index] = download
-            } else {
-                data.add(0, download)
-            }
-        } ?: kotlin.run {
+        if (isAdd) {
             data.add(0, download)
+        } else {
+            fileInfoList.value?.indexOfFirst { item -> item.id == download.id }?.let { index ->
+                if (index >= 0 && index < data.size) {
+                    data[index] = download
+                }
+            }
         }
         fileInfoList.value = sortData(data)
     }
