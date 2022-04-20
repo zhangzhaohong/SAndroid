@@ -32,7 +32,7 @@ abstract class DownloadTaskHolder : EpoxyModelWithHolder<DownloadTaskHolder.Hold
     lateinit var taskInfo: Download
 
     override fun equals(other: Any?): Boolean {
-        if (taskInfo.etaInMilliSeconds <= 0 && (taskInfo.status == Status.CANCELLED || taskInfo.status == Status.COMPLETED)) {
+        if (taskInfo.etaInMilliSeconds <= 0 && !checkDownloadProgress(taskInfo)) {
             return true
         }
         return false
