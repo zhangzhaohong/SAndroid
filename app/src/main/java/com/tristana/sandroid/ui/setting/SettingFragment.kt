@@ -24,6 +24,7 @@ import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel.*
 import com.tristana.sandroid.model.data.SettingModel.*
+import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -282,10 +283,12 @@ class SettingFragment : Fragment() {
     private fun jumpToBrowser(url: String) {
         val bundle = Bundle()
         bundle.putString("url", url)
-        parentFragmentManager.beginTransaction().remove(this)
-            .add(requireParentFragment().requireView().id, X5WebViewFragment::class.java, bundle)
-            .addToBackStack(null)
-            .commit()
+        val fragment = AdWebViewFragment()
+        fragment.arguments = bundle
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.add(requireParentFragment().requireView().id, fragment)
+        fragmentTransaction.addToBackStack(requireParentFragment().tag)
+        fragmentTransaction.commit()
     }
 
     override fun onCreateView(
@@ -484,7 +487,7 @@ class SettingFragment : Fragment() {
         MainScope().launch {
             var folderSize: String?
             withContext(Dispatchers.IO) {
-                folderSize = FileUtils.getSize(requireContext().getExternalFilesDir("download")?.absolutePath)
+                folderSize = FileUtils.getSize(requireActivity().getExternalFilesDir("download")?.absolutePath)
             }
             withContext(Dispatchers.Main) {
                 item.detailText = folderSize
