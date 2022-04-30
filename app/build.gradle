@@ -3,9 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'com.alibaba.arouter'
 
 kapt {
     correctErrorTypes = true
+    arguments {
+        arg("AROUTER_MODULE_NAME", "super_app")
+        arg("AROUTER_GENERATE_DOC", "enable")
+    }
 }
 
 android {
@@ -101,4 +106,8 @@ dependencies {
     // lottie
     implementation 'com.airbnb.android:lottie:5.0.3'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
+    //
+    def arouter_version = '1.5.2'
+    implementation "com.alibaba:arouter-api:$arouter_version"
+    kapt "com.alibaba:arouter-compiler:$arouter_version"
 }

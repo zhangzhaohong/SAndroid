@@ -2,7 +2,6 @@ package com.tristana.sandroid
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -10,6 +9,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.BarUtils
 import com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomSplashView
 
@@ -19,6 +19,7 @@ import com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomSplashVie
  */
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
+
     private lateinit var fullscreenCustomSplash: CustomSplashView
 
     @SuppressLint("ClickableViewAccessibility")
@@ -58,8 +59,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun jumpToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        ARouter.getInstance().build(MainActivity.ROUTE).navigation()
         finish()
     }
 

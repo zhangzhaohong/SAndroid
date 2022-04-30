@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
@@ -28,6 +29,11 @@ class MyApplication : Application() {
         instance = this
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         MainScope().launch {
+            withContext(Dispatchers.IO) {
+                instance?.let {
+                    ARouter.init(it);
+                }
+            }
             withContext(Dispatchers.IO) {
                 instance?.let {
                     fetch = Fetch.getInstance(getFetchConfiguration(it))
