@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.BarUtils
 import com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomSplashView
+import utils.arouter.ARouterUtils
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -59,7 +60,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun jumpToMainActivity() {
-        ARouter.getInstance().build(MainActivity.ROUTE).navigation()
+        ARouterUtils.route(MainActivity.ROUTE)
         finish()
     }
 

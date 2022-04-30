@@ -12,6 +12,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.*
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
@@ -37,7 +39,13 @@ import kotlinx.coroutines.withContext
  * Use the [SettingFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@Route(path = SettingFragment.ROUTE)
 class SettingFragment : Fragment() {
+
+    companion object {
+        const val ROUTE = "/app/settings"
+    }
+
     private lateinit var mGroupListView: QMUIGroupListView
     private var na: String = "N/A"
 
@@ -289,6 +297,11 @@ class SettingFragment : Fragment() {
         fragmentTransaction.add(requireParentFragment().requireView().id, fragment)
         fragmentTransaction.addToBackStack(requireParentFragment().tag)
         fragmentTransaction.commit()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ARouter.getInstance().inject(this)
     }
 
     override fun onCreateView(
