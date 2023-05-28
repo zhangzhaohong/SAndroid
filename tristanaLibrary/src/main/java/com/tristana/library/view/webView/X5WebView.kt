@@ -29,7 +29,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.tencent.smtt.export.external.interfaces.GeolocationPermissionsCallback
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient
 import com.tencent.smtt.sdk.*
-import com.tristana.library.customInterface.IOnPageFinishedInterface
+import com.tristana.library.componentInterface.IOnPageFinishedInterface
 import com.tristana.library.data.DataModel
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.library.R

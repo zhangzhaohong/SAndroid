@@ -9,7 +9,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.tristana.library.customInterface.IOnPageFinishedInterface
+import com.tristana.library.componentInterface.IOnPageFinishedInterface
 import com.tristana.library.view.editTextView.CustomEditTextView
 import com.tristana.library.view.webView.X5WebView
 import com.tristana.sandroid.MainActivity
