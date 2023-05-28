@@ -212,54 +212,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initTestProject() {
-        val menuRead = menu!!.findItem(R.id.action_read)
-        val menuWrite = menu!!.findItem(R.id.action_write)
-        val menuTextToArray = menu!!.findItem(R.id.action_textToArray)
-        val menuArrayToText = menu!!.findItem(R.id.action_arrayToText)
-        val menuDelFile = menu!!.findItem(R.id.action_delFile)
-        menuRead.setOnMenuItemClickListener {
-            val data = FileUtils().readLine(this@MainActivity, "data_TEST")
-            for (i in data.indices) {
-                LogUtils.d("Data_read[" + i + "] " + data[i])
-            }
-            true
-        }
-        menuWrite.setOnMenuItemClickListener {
-            FileUtils().writeData(
-                this@MainActivity,
-                "data_TEST",
-                "This is the data!" + System.currentTimeMillis()
-            )
-            true
-        }
-        menuTextToArray.setOnMenuItemClickListener {
-            val data = "111,222,333,444,555"
-            val result = ArrayUtils().textToArrayList(data)
-            for (i in result.indices) {
-                LogUtils.d("Data_textToArray[" + i + "] " + result[i])
-            }
-            true
-        }
-        menuArrayToText.setOnMenuItemClickListener {
-            val data = ArrayList<String>()
-            data.add("111")
-            data.add("222")
-            data.add("333")
-            data.add("444")
-            data.add("555")
-            data.add("666")
-            val result = ArrayUtils().arrayListToString(data)
-            LogUtils.d("Data_arrayToText: $result")
-            true
-        }
-        menuDelFile.setOnMenuItemClickListener {
-            if (FileUtils().deleteFile(this@MainActivity, "data_TEST")) {
-                ToastUtils.showToast(this@MainActivity, "删除成功！")
-            } else {
-                ToastUtils.showToast(this@MainActivity, "删除失败！")
-            }
-            true
-        }
+//        val menuRead = menu!!.findItem(R.id.action_read)
+//        menuRead.setOnMenuItemClickListener {
+//            true
+//        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
