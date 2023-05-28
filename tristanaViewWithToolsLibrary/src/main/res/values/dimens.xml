@@ -1,5 +1,0 @@
-<resources>
-    <dimen name="view_splash_bottom">60dp</dimen>
-    <dimen name="view_inputEditText">24dp</dimen>
-    <dimen name="view_inputEditTextExtension">24dip</dimen>
-</resources>

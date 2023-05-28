@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorTitleBg">#6F7AC1</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
+    <!--透明色 -->
+    <color name="transparent">#00000000</color>
+    <!--白色 -->
+    <color name="white">#FFFFFF</color>
+    <color name="edit_text_solid">#6F7AC1</color>
+    <color name="edit_text_popWindow_background">#6F7AC1</color>
+</resources>
