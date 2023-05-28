@@ -48,7 +48,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.11'
-    implementation 'com.github.razerdp:BasePopup:3.2.1'
+    implementation group: 'io.github.razerdp', name: 'BasePopup', version: '3.2.1'
     implementation 'com.tencent.tbs:tbssdk:44286'
     implementation 'com.blankj:utilcodex:1.31.1'
 }
