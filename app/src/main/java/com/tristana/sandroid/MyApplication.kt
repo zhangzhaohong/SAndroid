@@ -2,7 +2,6 @@ package com.tristana.sandroid
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.AppUtils
@@ -14,7 +13,7 @@ import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
-import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
+import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.SettingModel
 import kotlinx.coroutines.Dispatchers

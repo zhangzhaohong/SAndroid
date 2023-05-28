@@ -9,9 +9,8 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.BarUtils
-import com.tristana.customViewWithToolsLibrary.view.splashLayout.CustomSplashView
+import com.tristana.library.view.splashLayout.CustomSplashView
 import utils.arouter.ARouterUtils
 
 /**

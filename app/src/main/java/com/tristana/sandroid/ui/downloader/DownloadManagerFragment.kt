@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
-import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils
+import com.tristana.library.tools.http.HttpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils

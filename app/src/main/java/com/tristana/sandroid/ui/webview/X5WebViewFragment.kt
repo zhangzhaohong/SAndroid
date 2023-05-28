@@ -9,9 +9,9 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.tristana.customViewWithToolsLibrary.customInterface.IOnPageFinishedInterface
-import com.tristana.customViewWithToolsLibrary.view.editTextView.CustomEditTextView
-import com.tristana.customViewWithToolsLibrary.view.webView.X5WebView
+import com.tristana.library.customInterface.IOnPageFinishedInterface
+import com.tristana.library.view.editTextView.CustomEditTextView
+import com.tristana.library.view.webView.X5WebView
 import com.tristana.sandroid.MainActivity
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface

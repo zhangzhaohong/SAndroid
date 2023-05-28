@@ -11,16 +11,16 @@ import android.widget.CompoundButton;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
-import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
-import com.tristana.customViewWithToolsLibrary.tools.http.RequestInfo;
-import com.tristana.customViewWithToolsLibrary.tools.text.TextUtils;
-import com.tristana.customViewWithToolsLibrary.tools.toast.ToastUtils;
-import com.tristana.customViewWithToolsLibrary.view.editTextView.CustomEditTextView;
+import com.tristana.library.tools.http.HttpUtils;
+import com.tristana.library.tools.http.RequestInfo;
+import com.tristana.library.tools.text.TextUtils;
+import com.tristana.library.tools.toast.ToastUtils;
+import com.tristana.library.view.editTextView.CustomEditTextView;
 import com.tristana.sandroid.R;
 import com.tristana.sandroid.model.HandlerType;
 import com.tristana.sandroid.model.data.DataModel;
 import com.tristana.sandroid.model.login.LoginRespModel;
-import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils;
+import com.tristana.library.tools.sharedPreferences.SpUtils;
 
 import java.util.HashMap;
 import java.util.Map;

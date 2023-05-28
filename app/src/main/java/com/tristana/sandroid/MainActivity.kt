@@ -28,9 +28,9 @@ import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
-import com.tristana.customViewWithToolsLibrary.tools.array.ArrayUtils
-import com.tristana.customViewWithToolsLibrary.tools.file.FileUtils
-import com.tristana.customViewWithToolsLibrary.tools.toast.ToastUtils
+import com.tristana.library.tools.array.ArrayUtils
+import com.tristana.library.tools.file.FileUtils
+import com.tristana.library.tools.toast.ToastUtils
 import com.tristana.sandroid.customInterface.IOnBackPressedInterface
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers

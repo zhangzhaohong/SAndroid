@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.tristana.customViewWithToolsLibrary.tools.http.HttpUtils;
-import com.tristana.customViewWithToolsLibrary.tools.http.RequestInfo;
+import com.tristana.library.tools.http.HttpUtils;
+import com.tristana.library.tools.http.RequestInfo;
 
 public class HttpTesterViewModel extends ViewModel {
 
