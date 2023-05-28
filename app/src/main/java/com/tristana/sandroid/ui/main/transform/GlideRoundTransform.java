@@ -28,7 +28,7 @@ public class GlideRoundTransform extends BitmapTransformation {
 
     public GlideRoundTransform(int dp) {
         super();
-        this.radius = Resources.getSystem().getDisplayMetrics().density * dp;
+        radius = Resources.getSystem().getDisplayMetrics().density * dp;
     }
 
 
@@ -40,7 +40,7 @@ public class GlideRoundTransform extends BitmapTransformation {
     }
 
     @Override
-    public void updateDiskCacheKey(MessageDigest messageDigest) {
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 
     }
 
@@ -50,9 +50,6 @@ public class GlideRoundTransform extends BitmapTransformation {
             return null;
         }
         Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-        if (result == null) {
-            result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-        }
         Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
         paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
