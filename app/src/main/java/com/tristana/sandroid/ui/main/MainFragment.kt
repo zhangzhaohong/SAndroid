@@ -1,7 +1,7 @@
 package com.tristana.sandroid.ui.main
 
 import android.graphics.Color
-import com.tristana.sandroid.customInterface.IOnClickBannerInterface
+import com.tristana.sandroid.customizeInterface.IOnClickBannerInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle

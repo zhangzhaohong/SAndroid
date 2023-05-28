@@ -31,7 +31,7 @@ import com.tencent.smtt.sdk.TbsListener
 import com.tristana.library.tools.array.ArrayUtils
 import com.tristana.library.tools.file.FileUtils
 import com.tristana.library.tools.toast.ToastUtils
-import com.tristana.sandroid.customInterface.IOnBackPressedInterface
+import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope

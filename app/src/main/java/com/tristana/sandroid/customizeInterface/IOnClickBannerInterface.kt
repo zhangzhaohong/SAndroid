@@ -1,4 +1,4 @@
-package com.tristana.sandroid.customInterface
+package com.tristana.sandroid.customizeInterface
 
 import android.view.View
 
