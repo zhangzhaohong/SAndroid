@@ -48,7 +48,7 @@ class DownloadTaskListController(
                 "footer-" + if (hasMore) {
                     "more"
                 } else {
-                    "end"
+                    "none"
                 }
             )
             .addTo(this)
