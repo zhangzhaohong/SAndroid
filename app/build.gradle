@@ -30,6 +30,7 @@ android {
         versionCode 1
         versionName '1.0.1(C01E0420R20P22)'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BUILD_TIME", getBuildTime())
 
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", 'x86_64', "mips"
@@ -129,4 +130,9 @@ dependencies {
     implementation "xyz.doikki.android.dkplayer:player-ijk:$dkplayer_version"
     // 可选，如需要缓存或者抖音预加载功能请引入此库
     implementation "xyz.doikki.android.dkplayer:videocache:$dkplayer_version"
+}
+
+static String getBuildTime() {
+    Date date = new Date();
+    return "\"" + date + "\"";
 }
