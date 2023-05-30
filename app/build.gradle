@@ -27,10 +27,15 @@ android {
         applicationId "com.tristana.sandroid"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode rootProject.ext.version_code
+        versionCode rootProject.ext.main_version_code
         versionName rootProject.ext.version_name
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BUILD_TIME", getBuildTime())
+        buildConfigField("String", "MAIN_VERSION_CODE", "\"" + rootProject.ext.main_version_code + "\"")
+        buildConfigField("String", "EXPAND_VERSION_CODE", "\"" + rootProject.ext.expand_version_code + "\"")
+        buildConfigField("String", "APP_VERSION_CODE", "\"" + rootProject.ext.app_version_code + "\"")
+        buildConfigField("String", "MAIN_VERSION_NAME", "\"" + rootProject.ext.main_version_name + "\"")
+        buildConfigField("String", "EXPAND_VERSION_NAME", "\"" + rootProject.ext.expand_version_name + "\"")
 
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", 'x86_64', "mips"

@@ -2,8 +2,12 @@ apply plugin: 'com.alibaba.arouter'
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.version_name = '1.0.1(C01E0420R20P22)'
-    ext.version_code = 1
+    ext.version_name = '1.0.1(C01E04R20P23)'
+    ext.main_version_code = 1000001
+    ext.expand_version_code = 1004020023
+    ext.app_version_code = 1000001001004020023
+    ext.main_version_name = '1.0.1'
+    ext.expand_version_name = 'C01E04R20P23'
     ext.kotlin_version = '1.8.21'
     repositories {
         mavenCentral()
