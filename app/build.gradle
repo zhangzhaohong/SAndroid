@@ -27,8 +27,8 @@ android {
         applicationId "com.tristana.sandroid"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1
-        versionName '1.0.1(C01E0420R20P22)'
+        versionCode rootProject.ext.version_code
+        versionName rootProject.ext.version_name
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BUILD_TIME", getBuildTime())
 
@@ -135,6 +135,6 @@ dependencies {
 }
 
 static String getBuildTime() {
-    Date date = new Date();
-    return "\"" + date + "\"";
+    Date date = new Date()
+    return "\"" + date + "\""
 }
