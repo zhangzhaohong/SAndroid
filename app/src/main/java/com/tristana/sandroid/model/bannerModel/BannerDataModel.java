@@ -1,5 +1,8 @@
 package com.tristana.sandroid.model.bannerModel;
 
+import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -9,21 +12,8 @@ import lombok.Data;
  * @description
  */
 @Data
-public class BannerDataModel {
-    private final String imagePath;
-
-    public BannerDataModel(String imagePath, String directionPath) {
-        this.imagePath = imagePath;
-        this.directionPath = directionPath;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public String getDirectionPath() {
-        return directionPath;
-    }
-
-    private final String directionPath;
+@AllArgsConstructor
+public class BannerDataModel implements Serializable {
+    private String imagePath;
+    private String directionPath;
 }

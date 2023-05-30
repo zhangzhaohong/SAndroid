@@ -54,16 +54,15 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 
     compileSdkVersion 33
     buildToolsVersion '32.1.0 rc1'
     ndkVersion '24.0.8215888'
+    namespace 'com.tristana.sandroid'
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {
@@ -79,6 +78,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation project(path: ':tristanaLibrary')
+    implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
