@@ -9,7 +9,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.reflect.Field
-import java.util.*
 
 class AboutViewModel : ViewModel() {
 
@@ -18,7 +17,7 @@ class AboutViewModel : ViewModel() {
     val appPackageName: MutableLiveData<String?> = MutableLiveData()
     val appVersionName: MutableLiveData<String?> = MutableLiveData()
     val appVersionCode: MutableLiveData<String?> = MutableLiveData()
-    val appBuildTime: MutableLiveData<String?> = MutableLiveData()
+    val appBuildInfo: MutableLiveData<String?> = MutableLiveData()
     val appPathName: MutableLiveData<String?> = MutableLiveData()
     val appRootMode: MutableLiveData<String?> = MutableLiveData()
     val appDebugMode: MutableLiveData<String?> = MutableLiveData()
@@ -109,8 +108,11 @@ class AboutViewModel : ViewModel() {
                 appVersionCode.value = withContext(Dispatchers.IO) {
                     AppUtils.getAppVersionCode().toString()
                 }
-                appBuildTime.value = withContext(Dispatchers.IO) {
-                    getBuildConfigValue("BUILD_TIME")
+                appBuildInfo.value = withContext(Dispatchers.IO) {
+                    getBuildConfigValue("MAIN_VERSION_NAME") + "(" + getBuildConfigValue("MAIN_VERSION_CODE") + ")" + "\n" +
+                            getBuildConfigValue("EXPAND_VERSION_NAME") + "(" + getBuildConfigValue("EXPAND_VERSION_CODE") + ")" + "\n" +
+                            getBuildConfigValue("APP_VERSION_CODE") + "\n" +
+                            getBuildConfigValue("BUILD_TIME")
                 }
                 appPathName.value = withContext(Dispatchers.IO) {
                     AppUtils.getAppPath()

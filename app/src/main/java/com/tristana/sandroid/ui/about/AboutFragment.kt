@@ -130,7 +130,7 @@ class AboutFragment : Fragment() {
         val appPackageName = createElement(APP_PACKAGE_NAME, height)
         val appVersionName = createElement(APP_VERSION_NAME, height)
         val appVersionCode = createElement(APP_VERSION_CODE, height)
-        val appBuildTime = createElement(APP_BUILD_TIME, height)
+        val appBuildInfo = createElement(APP_BUILD_INFO, height)
         val appPathName = createElement(APP_PATH_NAME, height)
         val appRootMode = createElement(APP_ROOT_MODE, height)
         val appDebugMode = createElement(APP_DEBUG_MODE, height)
@@ -148,7 +148,7 @@ class AboutFragment : Fragment() {
             .addItemView(appPackageName, onClickListener)
             .addItemView(appVersionName, onClickListener)
             .addItemView(appVersionCode, onClickListener)
-            .addItemView(appBuildTime, onClickListener)
+            .addItemView(appBuildInfo, onClickListener)
             .addItemView(appPathName, onClickListener)
             .addItemView(appRootMode, onClickListener)
             .addItemView(appDebugMode, onClickListener)
@@ -171,8 +171,8 @@ class AboutFragment : Fragment() {
         aboutViewModel.appVersionCode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appVersionCode, text)
         }
-        aboutViewModel.appBuildTime.observe(viewLifecycleOwner) { text: String? ->
-            updateElement(appBuildTime, text)
+        aboutViewModel.appBuildInfo.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(appBuildInfo, text)
         }
         aboutViewModel.appPathName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appPathName, text)
