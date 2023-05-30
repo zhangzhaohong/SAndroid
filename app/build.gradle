@@ -55,6 +55,9 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 
     compileSdkVersion 33
     buildToolsVersion '32.1.0 rc1'
