@@ -111,7 +111,7 @@ class AboutViewModel : ViewModel() {
                 appBuildInfo.value = withContext(Dispatchers.IO) {
                     getBuildConfigValue("MAIN_VERSION_NAME") + "(" + getBuildConfigValue("MAIN_VERSION_CODE") + ")" + "\n" +
                             getBuildConfigValue("EXPAND_VERSION_NAME") + "(" + getBuildConfigValue("EXPAND_VERSION_CODE") + ")" + "\n" +
-                            getBuildConfigValue("APP_VERSION_CODE") + "\n" +
+                            getBuildConfigValue("APP_VERSION_CODE") + "(" + getBuildConfigValue("GIT_COMMIT_ID") + ")" + "\n" +
                             getBuildConfigValue("BUILD_TIME")
                 }
                 appPathName.value = withContext(Dispatchers.IO) {

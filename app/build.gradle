@@ -36,6 +36,7 @@ android {
         buildConfigField("String", "APP_VERSION_CODE", "\"" + rootProject.ext.app_version_code + "\"")
         buildConfigField("String", "MAIN_VERSION_NAME", "\"" + rootProject.ext.main_version_name + "\"")
         buildConfigField("String", "EXPAND_VERSION_NAME", "\"" + rootProject.ext.expand_version_name + "\"")
+        buildConfigField "String", "GIT_COMMIT_ID", getGitRevision()
 
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86", 'x86_64', "mips"
@@ -142,4 +143,8 @@ dependencies {
 static String getBuildTime() {
     Date date = new Date()
     return "\"" + date + "\""
+}
+
+static def getGitRevision() {
+    return "\"" + "git rev-parse --short HEAD".execute().text.trim() + "\""
 }
