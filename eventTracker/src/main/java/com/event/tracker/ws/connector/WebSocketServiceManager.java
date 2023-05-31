@@ -10,8 +10,8 @@ import com.blankj.utilcode.util.LogUtils;
 
 public class WebSocketServiceManager {
 
-    private Context context;
-    private EventTrackerWebSocketService myWebSocketService;
+    private final Context context;
+    private EventTrackerWebSocketService eventTrackerWebSocketService;
     private boolean serviceBindSucc = false;    //绑定成功
     private boolean binding = false;            //是否正在绑定
     private int bindTime = 0;       //重复连接次数
@@ -29,9 +29,9 @@ public class WebSocketServiceManager {
             serviceBindSucc = true;
             binding = false;
             bindTime = 0;   //连接成功后归零
-            myWebSocketService = ((EventTrackerWebSocketService.WebSocketBinder) service).getWebSocketService();
-            myWebSocketService.addSocketListener(socketResultListener);
-            if (myWebSocketService.isSendConnected()) {
+            eventTrackerWebSocketService = ((EventTrackerWebSocketService.WebSocketBinder) service).getWebSocketService();
+            eventTrackerWebSocketService.addSocketListener(socketResultListener);
+            if (eventTrackerWebSocketService.isSendConnected()) {
                 if (socketResultListener != null) {
                     socketResultListener.connection();
                 }
@@ -68,8 +68,8 @@ public class WebSocketServiceManager {
 
     //发送文本
     public boolean sendText(String textContent) {
-        if (myWebSocketService != null && serviceBindSucc) {
-            return myWebSocketService.sendText(textContent);
+        if (eventTrackerWebSocketService != null && serviceBindSucc) {
+            return eventTrackerWebSocketService.sendText(textContent);
         } else if (!binding) {
             bindService();
         }
