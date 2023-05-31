@@ -97,8 +97,11 @@ class MyApplication : Application() {
         }
         return fetch
     }
-
-    fun getEventTrackerInstance(): TrackerInstance? {
+    
+    fun getEventTrackerInstance() : TrackerInstance? {
+        if (eventTrackerInstance == null) {
+            eventTrackerInstance = TrackerInstance.get()
+        }
         return eventTrackerInstance
     }
 
