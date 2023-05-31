@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
+import com.event.tracker.TrackerInstance
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
 import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
@@ -97,6 +98,10 @@ class MyApplication : Application() {
         return fetch
     }
 
+    fun getEventTrackerInstance(): TrackerInstance? {
+        return eventTrackerInstance
+    }
+
     companion object {
         var instance: Application? = null
             private set
@@ -111,5 +116,6 @@ class MyApplication : Application() {
         }
             private set
         var fetch: Fetch? = null
+        var eventTrackerInstance: TrackerInstance? = null
     }
 }
