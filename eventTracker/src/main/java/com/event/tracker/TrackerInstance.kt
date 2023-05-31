@@ -1,6 +1,8 @@
 package com.event.tracker
 
+import android.app.Application
 import com.blankj.utilcode.util.LogUtils
+import com.event.tracker.ws.EventTrackerCenter
 import java.util.UUID
 
 /**
@@ -12,18 +14,31 @@ import java.util.UUID
 class TrackerInstance private constructor() {
 
     fun getTrackerId(): String? {
-        LogUtils.i("[EventTrackerInstance] current tracker: $uuid")
         return uuid
+    }
+
+    fun getApplication(): Application? {
+        application?.let {
+            return it
+        }
+        LogUtils.i("[EventTrackerInstance] Get application failed, have you initContext before?")
+        return null
+    }
+
+    fun initContext(myApplication: Application) {
+        application = myApplication
+        uuid = UUID.randomUUID().toString()
+        EventTrackerCenter.EventTrackerStart(application)
+        LogUtils.i("[EventTrackerInstance] Init event tracker finished: $uuid")
     }
 
     companion object {
         private var uuid: String? = null
+        private var application: Application? = null
         private var instance: TrackerInstance? = null
             get() {
                 if (field == null) {
                     field = TrackerInstance()
-                    uuid = UUID.randomUUID().toString()
-                    LogUtils.i("[EventTrackerInstance] Init event tracker finished: $uuid")
                 }
                 return field
             }

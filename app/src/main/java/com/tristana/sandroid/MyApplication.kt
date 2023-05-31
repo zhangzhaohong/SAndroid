@@ -27,6 +27,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        eventTrackerInstance = getEventTrackerInstance()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         MainScope().launch {
             withContext(Dispatchers.IO) {
@@ -97,10 +98,11 @@ class MyApplication : Application() {
         }
         return fetch
     }
-    
-    fun getEventTrackerInstance() : TrackerInstance? {
+
+    private fun getEventTrackerInstance(): TrackerInstance? {
         if (eventTrackerInstance == null) {
             eventTrackerInstance = TrackerInstance.get()
+            eventTrackerInstance?.initContext(this)
         }
         return eventTrackerInstance
     }

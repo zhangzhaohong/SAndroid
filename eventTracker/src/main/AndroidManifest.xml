@@ -18,4 +18,7 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <application>
+        <service android:name="com.event.tracker.ws.connector.EventTrackerWebSocketService"/>
+    </application>
 </manifest>
