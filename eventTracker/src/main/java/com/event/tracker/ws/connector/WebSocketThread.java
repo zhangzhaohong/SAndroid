@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.event.tracker.TrackerInstance;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,7 @@ import okio.ByteString;
 public class WebSocketThread extends Thread {
 
     public static final String TAG = "EventTrackerWebSocket";
-    public static final String WEB_SOCKET_URL = "ws://47.74.235.101:8190/ws-community-im-websocket";
+    public static final String WEB_SOCKET_URL = "ws://192.168.2.250:8080/websocket/v1/connection/" + TrackerInstance.Companion.get().getTrackerId();
     private final Map<String, String> headerMap = new HashMap<>();
     private Request request;
     private WebSocketHandler webSocketHandler;

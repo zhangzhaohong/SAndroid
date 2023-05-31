@@ -2,9 +2,12 @@ package com.event.tracker.ws.connector;
 
 import android.content.Context;
 
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.LogUtils;
 
 import com.event.tracker.TrackerInstance;
+import com.event.tracker.ws.Constants;
+import com.event.tracker.ws.model.WebSocketDataModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -127,7 +130,7 @@ public class EventTrackerWebSocketBackgroundService extends IEventTrackerWebSock
     }
 
     private String defineText() {
-        return String.format("{\"data\":{\"userId\":%s},\"event\":\"ping\"}", TrackerInstance.Companion.get().getTrackerId());
+        return GsonUtils.toJson(new WebSocketDataModel(Constants.EVENT_HEART_BREAK, TrackerInstance.Companion.get().getTrackerId(), null));
     }
 
     private int getDelay() {
