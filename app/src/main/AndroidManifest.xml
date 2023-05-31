@@ -85,6 +85,8 @@
             android:label="dexopt"
             android:process=":dexopt" />
 
+        <service android:name="com.event.tracker.ws.connector.EventTrackerWebSocketService"/>
+
     </application>
 
 </manifest>
