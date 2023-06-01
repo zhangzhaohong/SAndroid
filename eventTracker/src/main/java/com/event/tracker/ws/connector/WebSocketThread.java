@@ -1,5 +1,6 @@
 package com.event.tracker.ws.connector;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -27,7 +28,7 @@ public class WebSocketThread extends Thread {
     public static final String WEB_SOCKET_URL = "ws://192.168.2.250:8080/websocket/v1/connection/" + TrackerInstance.Companion.get().getTrackerId();
     private final Map<String, String> headerMap = new HashMap<>();
     private Request request;
-    private WebSocketHandler webSocketHandler;
+    private final WebSocketHandler webSocketHandler;
     private WebSocket mWebSocket;
     private final ReconnectWebSocketManager reconnectWebSocketManager;
     private WebSocketResultListener webSocketResultListener;
@@ -37,6 +38,7 @@ public class WebSocketThread extends Thread {
 
     public WebSocketThread() {
         sendConnected = false;
+        webSocketHandler = new WebSocketHandler();
         reconnectWebSocketManager = new ReconnectWebSocketManager(this);
         initHeader();
         initRequest();
@@ -65,7 +67,8 @@ public class WebSocketThread extends Thread {
         super.run();
         LogUtils.e("looper==", "run");
         Looper.prepare();
-        webSocketHandler = new WebSocketHandler();
+        // solve handler leak
+        // webSocketHandler = new WebSocketHandler();
         webSocketHandler.sendEmptyMessage(MessageType.CONNECT);
         Looper.loop();
     }
@@ -175,6 +178,7 @@ public class WebSocketThread extends Thread {
     private void quite() {
         disConnect();
         mWebSocket = null;
+        webSocketHandler.removeCallbacksAndMessages(null);
         reconnectWebSocketManager.destroy();
         Looper looper = Looper.myLooper();
         if (looper != null) looper.quit();
@@ -200,6 +204,7 @@ public class WebSocketThread extends Thread {
         this.webSocketResultListener = webSocketResultListener;
     }
 
+    @SuppressLint("HandlerLeak")
     public class WebSocketHandler extends Handler {
 
         @Override
