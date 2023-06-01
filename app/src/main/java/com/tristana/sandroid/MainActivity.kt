@@ -18,7 +18,9 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.LogUtils
+import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
 import com.event.tracker.ws.EventTrackerCenter
+import com.event.tracker.ws.model.EventTrackerDataModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -165,6 +167,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
+        MyApplication.eventTrackerInstance?.sendEvent(EVENT_ON_OPENED_ACTIVITY, EventTrackerDataModel(ROUTE))
     }
 
     /**
@@ -240,7 +243,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         MyApplication.fetch?.close()
-        EventTrackerCenter.EventTrackerStop(MyApplication.instance)
+        MyApplication.eventTrackerInstance?.stopTracker()
         AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
         super.onDestroy()
     }

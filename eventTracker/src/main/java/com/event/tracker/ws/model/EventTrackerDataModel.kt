@@ -7,5 +7,6 @@ package com.event.tracker.ws.model
  * @description
  */
 data class EventTrackerDataModel(
+    val route: String?,
     val platform: String = "Android"
 )

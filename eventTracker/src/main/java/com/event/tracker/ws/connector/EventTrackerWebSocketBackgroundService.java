@@ -1,5 +1,6 @@
 package com.event.tracker.ws.connector;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.blankj.utilcode.util.GsonUtils;
@@ -19,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 public class EventTrackerWebSocketBackgroundService extends IEventTrackerWebSocketPage implements Runnable {
     private static final int SEND_MESSAGE = 601;  //发送消息
     private static final int DISCONNECT_MESSAGE = 602; //断开连接
-
-    private static EventTrackerWebSocketBackgroundService instance;
+    @SuppressLint("StaticFieldLeak")
+    private static volatile EventTrackerWebSocketBackgroundService instance;
     private WebSocketServiceManager webSocketServiceManager;
     private ScheduledExecutorService scheduler;
     private final Context context;
