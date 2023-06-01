@@ -15,4 +15,5 @@ public class DataModel {
     public static final String DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP = "DOWNLOAD_PROGRESS_REPORTING_INTERVAL";
     public static final String DOWNLOAD_AUTO_START_SP = "DOWNLOAD_AUTO_START";
     public static final String X5_ALLOW_THIRD_PART_APP_SP = "X5_ALLOW_THIRD_PART_APP";
+    public static final String ENABLE_SHOW_LAB_SP = "ENABLE_SHOW_LAB_SP";
 }
