@@ -56,6 +56,9 @@ class DownloadManagerViewModel : ViewModel() {
     fun loadMore() {
         val pageData: ArrayList<Download> = fileInfoList.value as ArrayList<Download>
         val taskListData: ArrayList<Download> = taskListData.value as ArrayList<Download>
+        if (pageData.isEmpty()) {
+            return
+        }
         pageData[pageData.size - 1].let { lastItem ->
             taskListData.indexOfFirst { item -> item.id == lastItem.id }.let {
                 val indicate = if (taskListData.size - 1 >= it + pageSize.value!!) {
