@@ -21,7 +21,6 @@ import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
-import com.event.tracker.ws.EventTrackerCenter
 import com.event.tracker.ws.model.AppInfoDataModel
 import com.event.tracker.ws.model.DeviceInfoDataModel
 import com.event.tracker.ws.model.EventTrackerDataModel
@@ -36,9 +35,6 @@ import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
-import com.tristana.library.tools.array.ArrayUtils
-import com.tristana.library.tools.file.FileUtils
-import com.tristana.library.tools.toast.ToastUtils
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
@@ -173,7 +169,10 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
-        MyApplication.eventTrackerInstance?.sendEvent(EVENT_ON_OPENED_ACTIVITY, EventTrackerDataModel(ROUTE))
+        MyApplication.eventTrackerInstance?.sendEvent(
+            EVENT_ON_OPENED_ACTIVITY,
+            EventTrackerDataModel(ROUTE)
+        )
         reportInfoEvent()
     }
 
@@ -284,10 +283,10 @@ class MainActivity : AppCompatActivity() {
                                     AppUtils.getAppVersionName(),
                                     AppUtils.getAppVersionCode(),
                                     getBuildConfigValue("MAIN_VERSION_NAME"),
-                                    getLongVersionCode(getBuildConfigValue("MAIN_VERSION_CODE")),
+                                    getBuildConfigValue("MAIN_VERSION_CODE"),
                                     getBuildConfigValue("EXPAND_VERSION_NAME"),
-                                    getLongVersionCode(getBuildConfigValue("EXPAND_VERSION_CODE")),
-                                    getLongVersionCode(getBuildConfigValue("APP_VERSION_CODE")),
+                                    getBuildConfigValue("EXPAND_VERSION_CODE"),
+                                    getBuildConfigValue("APP_VERSION_CODE"),
                                     getBuildConfigValue("GIT_COMMIT_ID"),
                                     getBuildConfigValue("BUILD_TIME"),
                                     AppUtils.isAppRoot(),
@@ -315,13 +314,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-    }
-
-    private fun getLongVersionCode(input: String?): Long {
-        input?.let {
-            return it.toLong()
-        }
-        return -1L;
     }
 
     private fun getBuildConfigValue(fieldName: String?): String? {
