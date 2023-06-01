@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import com.blankj.utilcode.util.ClickUtils.OnMultiClickListener
 import com.blankj.utilcode.util.ToastUtils
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.library.tools.sharedPreferences.SpUtils
@@ -46,6 +48,7 @@ import com.tristana.sandroid.model.data.AboutModel.SYSTEM_APP_MODE
 import com.tristana.sandroid.model.data.AboutModel.SYSTEM_VERSION_NAME
 import com.tristana.sandroid.model.data.AboutModel.UNIQUE_DEVICE_ID
 import com.tristana.sandroid.model.data.DataModel.ENABLE_SHOW_LAB_SP
+import java.util.Optional
 
 class AboutFragment : Fragment() {
 
@@ -59,8 +62,9 @@ class AboutFragment : Fragment() {
         return object : OnMultiClickListener(count) {
             override fun onTriggerClick(v: View) {
                 if (tag == "APP_VERSION_NAME") {
-                    ToastUtils.showShort("您已成功进入开发者模式")
                     SpUtils.put(requireContext(), ENABLE_SHOW_LAB_SP, true)
+                    needRestart(false, "您已成功进入开发者模式")
+                    ToastUtils.showShort("您已成功进入开发者模式")
                 }
             }
 
@@ -73,6 +77,30 @@ class AboutFragment : Fragment() {
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun needRestart(later: Boolean = true, text: String?) {
+        val builder = QMUIDialog.MessageDialogBuilder(activity)
+        builder
+            .setTitle("提示")
+            .setMessage(Optional.ofNullable(text).orElse("设置已保存，重启App生效"))
+            .setCancelable(later)
+            .setCanceledOnTouchOutside(later)
+        if (later) {
+            builder.addAction(
+                "稍后重启"
+            ) { dialog, _ -> dialog.dismiss() }
+        }
+        builder.addAction(
+            "立即重启"
+        ) { dialog, _ ->
+            run {
+                dialog.dismiss()
+                AppUtils.relaunchApp(true)
+            }
+        }
+        builder.show()
     }
 
     override fun onCreateView(

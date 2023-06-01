@@ -35,7 +35,9 @@ import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
+import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
+import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -212,6 +214,16 @@ class MainActivity : AppCompatActivity() {
         actionSettings.setOnMenuItemClickListener {
             navController.navigate(R.id.nav_setting)
             true
+        }
+        val actionLab = menu.findItem(R.id.action_settings_lab)
+        if (SpUtils.get(applicationContext, DataModel.ENABLE_SHOW_LAB_SP, false) as Boolean) {
+            actionLab.isVisible = true
+            actionLab.setOnMenuItemClickListener {
+                navController.navigate(R.id.nav_setting_lab)
+                true
+            }
+        } else {
+            actionLab.isVisible = false
         }
         val actionDownloadManager = menu.findItem(R.id.action_download_manager)
         actionDownloadManager.setOnMenuItemClickListener {
