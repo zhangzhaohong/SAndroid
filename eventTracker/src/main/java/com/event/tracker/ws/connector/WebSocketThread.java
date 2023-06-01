@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import androidx.annotation.NonNull;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.event.tracker.TrackerInstance;
 
@@ -42,12 +44,9 @@ public class WebSocketThread extends Thread {
 
     private void initRequest() {
         Request.Builder requestBuilder = new Request.Builder().url(WEB_SOCKET_URL);
-        if (headerMap == null) {
-            initHeader();
-        }
-        if (headerMap != null && !headerMap.isEmpty()) {
+        if (!headerMap.isEmpty()) {
             Set<String> strings = headerMap.keySet();
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             for (String string : strings) {
                 stringBuffer.append(string).append(" ").append(headerMap.get(string)).append("\t");
             }
@@ -81,7 +80,7 @@ public class WebSocketThread extends Thread {
 
             mWebSocket = new OkHttpClient().newWebSocket(request, new WebSocketListener() {
                 @Override
-                public void onOpen(WebSocket webSocket, Response response) {
+                public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
                     super.onOpen(webSocket, response);
                     //连接成功 --回调该方法
                     connectStatus = 2;
@@ -95,7 +94,7 @@ public class WebSocketThread extends Thread {
                 }
 
                 @Override
-                public void onMessage(WebSocket webSocket, String text) {
+                public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
                     super.onMessage(webSocket, text);
                     connectStatus = 2;
                     LogUtils.d(TAG, "onMessage==" + text);
@@ -106,12 +105,12 @@ public class WebSocketThread extends Thread {
                 }
 
                 @Override
-                public void onMessage(WebSocket webSocket, ByteString bytes) {
+                public void onMessage(@NonNull WebSocket webSocket, @NonNull ByteString bytes) {
                     super.onMessage(webSocket, bytes);
                 }
 
                 @Override
-                public void onClosing(WebSocket webSocket, int code, String reason) {
+                public void onClosing(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
                     super.onClosing(webSocket, code, reason);
                     connectStatus = 0;
                     LogUtils.d(TAG, "onClosing-reason==" + reason);
@@ -123,14 +122,14 @@ public class WebSocketThread extends Thread {
                 }
 
                 @Override
-                public void onClosed(WebSocket webSocket, int code, String reason) {
+                public void onClosed(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
                     super.onClosed(webSocket, code, reason);
                     connectStatus = 0;
                     LogUtils.d(TAG, "onClosed-reason==" + reason);
                 }
 
                 @Override
-                public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+                public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, Response response) {
                     super.onFailure(webSocket, t, response);
                     connectStatus = 0;
                     LogUtils.d(TAG, "onFailure");
