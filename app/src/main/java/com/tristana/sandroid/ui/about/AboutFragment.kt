@@ -60,6 +60,7 @@ class AboutFragment : Fragment() {
 
     private fun onMultiClickListener(tag: String, count: Int = 10): OnMultiClickListener {
         return object : OnMultiClickListener(count) {
+            @RequiresApi(Build.VERSION_CODES.N)
             override fun onTriggerClick(v: View) {
                 if (tag == "APP_VERSION_NAME") {
                     SpUtils.put(requireContext(), ENABLE_SHOW_LAB_SP, true)
@@ -222,7 +223,14 @@ class AboutFragment : Fragment() {
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
             .addItemView(appName, onClickListener)
             .addItemView(appPackageName, onClickListener)
-            .addItemView(appVersionName, onMultiClickListener("APP_VERSION_NAME"))
+            .addItemView(
+                appVersionName,
+                if (SpUtils.get(context, ENABLE_SHOW_LAB_SP, false) as Boolean) {
+                    onClickListener
+                } else {
+                    onMultiClickListener("APP_VERSION_NAME")
+                }
+            )
             .addItemView(appVersionCode, onClickListener)
             .addItemView(appBuildInfo, onClickListener)
             .addItemView(appPathName, onClickListener)
