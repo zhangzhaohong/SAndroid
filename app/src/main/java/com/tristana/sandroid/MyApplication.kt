@@ -6,9 +6,15 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
+import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
 import com.event.tracker.TrackerInstance
+import com.event.tracker.ws.Constants.EVENT_APPLICATION_INFO
+import com.event.tracker.ws.model.AppInfoDataModel
+import com.event.tracker.ws.model.DeviceInfoDataModel
+import com.event.tracker.ws.model.EventTrackerDataModel
+import com.event.tracker.ws.model.InfoEventDataModel
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
 import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
@@ -21,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.reflect.Field
 
 class MyApplication : Application() {
 
@@ -65,31 +72,20 @@ class MyApplication : Application() {
     }
 
     private fun getFetchConfiguration(application: Application): FetchConfiguration {
-        return FetchConfiguration.Builder(application)
-            .setDownloadConcurrentLimit(
+        return FetchConfiguration.Builder(application).setDownloadConcurrentLimit(
+            SpUtils.get(
+                application, DataModel.MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, 3
+            ) as Int
+        ).setProgressReportingInterval(
+            SpUtils.get(
+                application, SettingModel.DOWNLOAD_PROGRESS_REPORTING_INTERVAL, 1000L
+            ) as Long
+        ).setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
+            .setNamespace("SAndroidApplication").enableAutoStart(
                 SpUtils.get(
-                    application,
-                    DataModel.MAX_DOWNLOAD_CONCURRENT_LIMIT_SP,
-                    3
-                ) as Int
-            )
-            .setProgressReportingInterval(
-                SpUtils.get(
-                    application,
-                    SettingModel.DOWNLOAD_PROGRESS_REPORTING_INTERVAL,
-                    1000L
-                ) as Long
-            )
-            .setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
-            .setNamespace("SAndroidApplication")
-            .enableAutoStart(
-                SpUtils.get(
-                    application,
-                    SettingModel.DOWNLOAD_AUTO_START,
-                    true
+                    application, SettingModel.DOWNLOAD_AUTO_START, true
                 ) as Boolean
-            )
-            .build()
+            ).build()
     }
 
     fun getFetchInstance(application: Application): Fetch? {

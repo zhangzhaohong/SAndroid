@@ -17,10 +17,15 @@ import androidx.navigation.ui.NavigationUI
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
+import com.event.tracker.ws.Constants
 import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
 import com.event.tracker.ws.EventTrackerCenter
+import com.event.tracker.ws.model.AppInfoDataModel
+import com.event.tracker.ws.model.DeviceInfoDataModel
 import com.event.tracker.ws.model.EventTrackerDataModel
+import com.event.tracker.ws.model.InfoEventDataModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -40,6 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.reflect.Field
 import java.util.*
 
 @Route(path = MainActivity.ROUTE)
@@ -168,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         MyApplication.eventTrackerInstance?.sendEvent(EVENT_ON_OPENED_ACTIVITY, EventTrackerDataModel(ROUTE))
+        reportInfoEvent()
     }
 
     /**
@@ -259,6 +266,78 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+        return null
+    }
+
+    private fun reportInfoEvent() {
+        MainScope().launch {
+            withContext(Dispatchers.IO) {
+                MyApplication.eventTrackerInstance?.sendEvent(
+                    Constants.EVENT_APPLICATION_INFO, EventTrackerDataModel(
+                        null, EventTrackerDataModel(
+                            null,
+                            InfoEventDataModel(
+                                AppInfoDataModel(
+                                    AppUtils.getAppName(),
+                                    AppUtils.getAppPackageName(),
+                                    AppUtils.getAppVersionName(),
+                                    AppUtils.getAppVersionCode(),
+                                    getBuildConfigValue("MAIN_VERSION_NAME"),
+                                    getLongVersionCode(getBuildConfigValue("MAIN_VERSION_CODE")),
+                                    getBuildConfigValue("EXPAND_VERSION_NAME"),
+                                    getLongVersionCode(getBuildConfigValue("EXPAND_VERSION_CODE")),
+                                    getLongVersionCode(getBuildConfigValue("APP_VERSION_CODE")),
+                                    getBuildConfigValue("GIT_COMMIT_ID"),
+                                    getBuildConfigValue("BUILD_TIME"),
+                                    AppUtils.isAppRoot(),
+                                    AppUtils.isAppDebug(),
+                                    AppUtils.isAppSystem()
+
+                                ), DeviceInfoDataModel(
+                                    DeviceUtils.isDeviceRooted(),
+                                    DeviceUtils.isAdbEnabled(),
+                                    DeviceUtils.getSDKVersionName(),
+                                    DeviceUtils.getSDKVersionCode(),
+                                    Build.DISPLAY,
+                                    DeviceUtils.getAndroidID(),
+                                    DeviceUtils.getMacAddress().toString(),
+                                    DeviceUtils.getManufacturer(),
+                                    DeviceUtils.getModel(),
+                                    DeviceUtils.getABIs().toString(),
+                                    DeviceUtils.isTablet(),
+                                    DeviceUtils.isEmulator(),
+                                    DeviceUtils.getUniqueDeviceId().toString()
+                                )
+                            )
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    private fun getLongVersionCode(input: String?): Long {
+        input?.let {
+            return it.toLong()
+        }
+        return -1L;
+    }
+
+    private fun getBuildConfigValue(fieldName: String?): String? {
+        fieldName?.let {
+            try {
+                val packageName = AppUtils.getAppPackageName()
+                val clazz = Class.forName("$packageName.BuildConfig")
+                val field: Field = clazz.getField(it)
+                return field.get(null)?.toString()
+            } catch (e: ClassNotFoundException) {
+                e.printStackTrace()
+            } catch (e: NoSuchFieldException) {
+                e.printStackTrace()
+            } catch (e: IllegalAccessException) {
+                e.printStackTrace()
+            }
         }
         return null
     }
