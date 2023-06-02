@@ -58,22 +58,26 @@ class AboutFragment : Fragment() {
 
     private var onClickListener = View.OnClickListener { }
 
-    private fun onMultiClickListener(tag: String, count: Int = 10): OnMultiClickListener {
+    private fun onMultiClickListener(count: Int = 10): OnMultiClickListener {
         return object : OnMultiClickListener(count) {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun onTriggerClick(v: View) {
-                if (tag == "APP_VERSION_NAME") {
-                    SpUtils.put(requireContext(), ENABLE_SHOW_LAB_SP, true)
-                    needRestart(false, "您已成功进入开发者模式")
-                    ToastUtils.showShort("您已成功进入开发者模式")
+                if (v is QMUICommonListItemView) {
+                    if (APP_VERSION_NAME == v.text) {
+                        SpUtils.put(requireContext(), ENABLE_SHOW_LAB_SP, true)
+                        needRestart(false, "您已成功进入开发者模式")
+                        ToastUtils.showShort("您已成功进入开发者模式")
+                    }
                 }
             }
 
             override fun onBeforeTriggerClick(v: View, current: Int) {
-                if (tag == "APP_VERSION_NAME") {
-                    val times = count - current
-                    if (times <= count / 2) {
-                        ToastUtils.showShort("再按${times}即可进入开发者模式")
+                if (v is QMUICommonListItemView) {
+                    if (APP_VERSION_NAME == v.text) {
+                        val times = count - current
+                        if (times <= count / 2) {
+                            ToastUtils.showShort("再按${times}即可进入开发者模式")
+                        }
                     }
                 }
             }
@@ -228,7 +232,7 @@ class AboutFragment : Fragment() {
                 if (SpUtils.get(context, ENABLE_SHOW_LAB_SP, false) as Boolean) {
                     onClickListener
                 } else {
-                    onMultiClickListener("APP_VERSION_NAME")
+                    onMultiClickListener()
                 }
             )
             .addItemView(appVersionCode, onClickListener)
