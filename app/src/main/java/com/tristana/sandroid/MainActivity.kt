@@ -318,7 +318,7 @@ class MainActivity : AppCompatActivity() {
                 //System.currentTimeMillis()系统当前时间
                 mExitTime = System.currentTimeMillis();
             } else {
-                ActivityUtils.finishAllActivities()
+                ActivityUtils.finishAllActivities(true)
                 finish();
             }
             return true;
