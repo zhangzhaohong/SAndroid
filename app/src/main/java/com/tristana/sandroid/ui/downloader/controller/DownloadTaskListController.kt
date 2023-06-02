@@ -33,13 +33,15 @@ class DownloadTaskListController(
         }
 
     override fun buildModels() {
-        fileInfoList?.forEach { item ->
-            DownloadTaskHolder_()
-                .context(context)
-                .taskInfo(item)
-                .fetch(fetch)
-                .id(item.id)
-                .addTo(this)
+        fetch?.let {
+            fileInfoList?.forEach { item ->
+                DownloadTaskHolder_()
+                    .context(context)
+                    .taskInfo(item)
+                    .fetch(it)
+                    .id(item.id)
+                    .addTo(this)
+            }
         }
         CommonFooter_()
             .hasMore(hasMore)

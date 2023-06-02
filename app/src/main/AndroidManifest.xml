@@ -62,7 +62,7 @@
 
                 <data
                     android:host="m.sandroid.com"
-                    android:scheme="arouter" />
+                    android:scheme="router" />
             </intent-filter>
 
             <!-- App Links -->
