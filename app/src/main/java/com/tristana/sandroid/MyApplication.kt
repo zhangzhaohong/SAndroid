@@ -39,11 +39,6 @@ class MyApplication : Application() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
-                    // 可以直接删掉本行 ARouter.init(it);
-                }
-            }
-            withContext(Dispatchers.IO) {
-                instance?.let {
                     fetch = Fetch.getInstance(getFetchConfiguration(it))
                 }
             }
