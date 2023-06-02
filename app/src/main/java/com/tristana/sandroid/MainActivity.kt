@@ -14,8 +14,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.therouter.router.Route
-import com.therouter.TheRouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
@@ -35,7 +33,9 @@ import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
+import com.therouter.TheRouter
 import com.therouter.router.Autowired
+import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 import com.tristana.sandroid.model.data.DataModel
@@ -177,27 +177,36 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
-        LogUtils.i("found direct: $direct")
-        when (direct) {
-            SettingFragment.ROUTE -> {
-                navController.navigate(R.id.nav_setting)
-                return
-            }
-
-            LabFragment.ROUTE -> {
-                navController.navigate(R.id.nav_setting_lab)
-                return
-            }
-
-            else -> {
-                LogUtils.i("unsupported direct: $direct")
-            }
+        if (sendDirect(navController)) {
+            return
         }
         MyApplication.eventTrackerInstance?.sendEvent(
             EVENT_ON_OPENED_ACTIVITY,
             EventTrackerDataModel(ROUTE)
         )
         reportInfoEvent()
+    }
+
+    private fun sendDirect(navController: NavController): Boolean {
+        direct?.let {
+            LogUtils.i("found direct: $it")
+            when (direct) {
+                SettingFragment.ROUTE -> {
+                    navController.navigate(R.id.nav_setting)
+                    return true
+                }
+
+                LabFragment.ROUTE -> {
+                    navController.navigate(R.id.nav_setting_lab)
+                    return true
+                }
+
+                else -> {
+                    LogUtils.i("unsupported direct: $direct")
+                }
+            }
+        }
+        return false
     }
 
     /**

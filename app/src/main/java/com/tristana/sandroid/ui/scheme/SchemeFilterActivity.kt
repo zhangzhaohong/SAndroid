@@ -2,7 +2,6 @@ package com.tristana.sandroid.ui.scheme
 
 import android.app.Activity
 import android.os.Bundle
-import com.blankj.utilcode.util.LogUtils
 import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
