@@ -12,8 +12,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
+import com.therouter.router.Route
+import com.therouter.TheRouter
 import com.blankj.utilcode.util.*
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
@@ -300,7 +300,7 @@ class SettingFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ARouter.getInstance().inject(this)
+        TheRouter.inject(this)
     }
 
     override fun onCreateView(

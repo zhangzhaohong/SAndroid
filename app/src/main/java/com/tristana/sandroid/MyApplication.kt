@@ -3,7 +3,7 @@ package com.tristana.sandroid
 import android.app.Activity
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.alibaba.android.arouter.launcher.ARouter
+import com.therouter.TheRouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.DeviceUtils
@@ -39,7 +39,7 @@ class MyApplication : Application() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
-                    ARouter.init(it);
+                    // 可以直接删掉本行 ARouter.init(it);
                 }
             }
             withContext(Dispatchers.IO) {

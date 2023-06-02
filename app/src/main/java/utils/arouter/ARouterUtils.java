@@ -1,6 +1,6 @@
 package utils.arouter;
 
-import com.alibaba.android.arouter.launcher.ARouter;
+import com.therouter.TheRouter;
 import com.tristana.sandroid.R;
 
 /**

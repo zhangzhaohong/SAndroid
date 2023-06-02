@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
+import com.therouter.router.Route
+import com.therouter.TheRouter
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.sandroid.R
@@ -28,7 +28,7 @@ class LabFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ARouter.getInstance().inject(this)
+        TheRouter.inject(this)
     }
 
     override fun onCreateView(

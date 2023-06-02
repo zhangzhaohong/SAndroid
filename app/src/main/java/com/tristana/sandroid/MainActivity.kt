@@ -14,8 +14,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
+import com.therouter.router.Route
+import com.therouter.TheRouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     private var menu: Menu? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ARouter.getInstance().inject(this)
+        TheRouter.inject(this)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

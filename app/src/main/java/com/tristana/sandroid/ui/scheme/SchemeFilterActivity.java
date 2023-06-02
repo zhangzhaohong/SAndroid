@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.alibaba.android.arouter.facade.Postcard;
+import com.therouter.router.Navigator;
 import com.alibaba.android.arouter.facade.callback.NavCallback;
-import com.alibaba.android.arouter.launcher.ARouter;
+import com.therouter.TheRouter;
 
 public class SchemeFilterActivity extends Activity {
 
@@ -15,9 +15,9 @@ public class SchemeFilterActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         Uri uri = getIntent().getData();
-        ARouter.getInstance().build(uri).navigation(this, new NavCallback() {
+        TheRouter.build(uri).navigation(this, new NavCallback() {
             @Override
-            public void onArrival(Postcard postcard) {
+            public void onArrival(Navigator postcard) {
                 finish();
             }
         });
