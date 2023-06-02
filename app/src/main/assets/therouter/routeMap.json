@@ -1,0 +1,23 @@
+[
+  {
+    "path": "/app/settings",
+    "className": "com.tristana.sandroid.ui.setting.SettingFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/settings/lab",
+    "className": "com.tristana.sandroid.ui.setting.LabFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/activity/main",
+    "className": "com.tristana.sandroid.MainActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  }
+]

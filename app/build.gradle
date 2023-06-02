@@ -123,10 +123,9 @@ dependencies {
     // lottie
     implementation 'com.airbnb.android:lottie:6.0.0'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
-    // arouter
-    def arouter_version = '1.5.2'
-    implementation "com.alibaba:arouter-api:$arouter_version"
-    kapt "com.alibaba:arouter-compiler:$arouter_version"
+    // therouter
+    kapt "cn.therouter:apt:$therouter_version"
+    implementation "cn.therouter:router:$therouter_version"
     // video
     def dkplayer_version = '3.3.7'
     // 必选，内部默认使用系统mediaplayer进行解码

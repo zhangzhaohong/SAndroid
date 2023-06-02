@@ -1,4 +1,4 @@
-package utils.arouter;
+package utils.router;
 
 import com.therouter.TheRouter;
 import com.tristana.sandroid.R;
@@ -9,12 +9,10 @@ import com.tristana.sandroid.R;
  * @date 2022/4/30 14:50
  * @description
  */
-public class ARouterUtils {
+public class RouterUtils {
     public static void route(String path) {
-        ARouter
-                .getInstance()
+        TheRouter
                 .build(path)
-                .withTransition(R.anim.common_slide_in_left, R.anim.common_slide_out_right)
                 .navigation();
     }
 }
