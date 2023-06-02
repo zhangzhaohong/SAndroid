@@ -25,6 +25,6 @@ class SchemeFilterActivity : Activity() {
         TheRouter.inject(this)
         direct = intent.data?.getQueryParameter("direct")
         RouterUtils.routeWithDirect(MainActivity.ROUTE, direct)
-        ActivityUtils.finishToActivity(this@SchemeFilterActivity, true)
+        ActivityUtils.finishActivity(this@SchemeFilterActivity)
     }
 }
