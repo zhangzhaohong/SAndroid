@@ -35,9 +35,12 @@ import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
+import com.therouter.router.Autowired
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 import com.tristana.sandroid.model.data.DataModel
+import com.tristana.sandroid.ui.setting.LabFragment
+import com.tristana.sandroid.ui.setting.SettingFragment
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -46,12 +49,15 @@ import kotlinx.coroutines.withContext
 import java.lang.reflect.Field
 import java.util.*
 
-@Route(path = MainActivity.ROUTE)
+@Route(path = MainActivity.ROUTE, params = ["direct"])
 class MainActivity : AppCompatActivity() {
 
     companion object {
         const val ROUTE = "/app/activity/main"
     }
+
+    @Autowired
+    var direct: String? = null
 
     private var mAppBarConfiguration: AppBarConfiguration? = null
     private var menu: Menu? = null
@@ -171,6 +177,22 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
+        LogUtils.i("found direct: $direct")
+        when (direct) {
+            SettingFragment.ROUTE -> {
+                navController.navigate(R.id.nav_setting)
+                return
+            }
+
+            LabFragment.ROUTE -> {
+                navController.navigate(R.id.nav_setting_lab)
+                return
+            }
+
+            else -> {
+                LogUtils.i("unsupported direct: $direct")
+            }
+        }
         MyApplication.eventTrackerInstance?.sendEvent(
             EVENT_ON_OPENED_ACTIVITY,
             EventTrackerDataModel(ROUTE)

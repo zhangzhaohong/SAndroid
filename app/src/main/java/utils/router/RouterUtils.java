@@ -15,4 +15,11 @@ public class RouterUtils {
                 .build(path)
                 .navigation();
     }
+
+    public static void routeWithDirect(String path, String direct) {
+        TheRouter
+                .build(path)
+                .withString("direct", direct)
+                .navigation();
+    }
 }
