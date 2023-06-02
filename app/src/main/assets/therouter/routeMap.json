@@ -14,6 +14,13 @@
     "params": {}
   },
   {
+    "path": "http://m.sandroid.com/app/activity/scheme",
+    "className": "com.tristana.sandroid.ui.scheme.SchemeFilterActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/app/activity/main",
     "className": "com.tristana.sandroid.MainActivity",
     "action": "",
