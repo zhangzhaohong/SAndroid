@@ -101,7 +101,9 @@ class MainActivity : AppCompatActivity() {
         XXPermissions.with(this)
             .permission(Permission.READ_PHONE_STATE)
             .permission(Permission.WRITE_EXTERNAL_STORAGE)
-            .permission(Permission.READ_EXTERNAL_STORAGE)
+            .permission(Permission.READ_MEDIA_IMAGES)
+            .permission(Permission.READ_MEDIA_VIDEO)
+            .permission(Permission.READ_MEDIA_AUDIO)
             // 设置权限请求拦截器（局部设置）
             //.interceptor(new PermissionInterceptor())
             // 设置不触发错误检测机制（局部设置）
