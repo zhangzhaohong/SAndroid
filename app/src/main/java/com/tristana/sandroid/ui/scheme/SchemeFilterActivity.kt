@@ -21,9 +21,10 @@ class SchemeFilterActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ActivityUtils.finishToActivity(this@SchemeFilterActivity, false)
         TheRouter.inject(this)
         direct = intent.data?.getQueryParameter("direct")
         RouterUtils.routeWithDirect(MainActivity.ROUTE, direct)
-        ActivityUtils.finishToActivity(this, true)
+        ActivityUtils.finishToActivity(this@SchemeFilterActivity, true)
     }
 }

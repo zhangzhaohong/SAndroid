@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.KeyEvent
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -14,9 +15,11 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
 import com.event.tracker.ws.model.AppInfoDataModel
@@ -58,6 +61,8 @@ class MainActivity : AppCompatActivity() {
 
     @Autowired
     var direct: String? = null
+
+    private var mExitTime: Long = 0
 
     private var mAppBarConfiguration: AppBarConfiguration? = null
     private var menu: Menu? = null
@@ -295,6 +300,28 @@ class MainActivity : AppCompatActivity() {
         MyApplication.eventTrackerInstance?.stopTracker()
         AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
         super.onDestroy()
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
+        val navController: NavController = navHostFragment.navController
+        navController.backQueue.last().destination.label?.let {
+            if (it != this.resources.getString(R.string.menu_space)) {
+                return super.onKeyDown(keyCode, event)
+            }
+        }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                ToastUtils.showShort("再按一次退出APP")
+                //System.currentTimeMillis()系统当前时间
+                mExitTime = System.currentTimeMillis();
+            } else {
+                ActivityUtils.finishAllActivities()
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     private fun <F : Fragment> getFragment(fragmentClass: Class<F>): F? {
