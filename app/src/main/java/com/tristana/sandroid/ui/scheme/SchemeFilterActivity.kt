@@ -1,6 +1,7 @@
 package com.tristana.sandroid.ui.scheme
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.blankj.utilcode.util.ActivityUtils
 import com.therouter.TheRouter
@@ -21,7 +22,6 @@ class SchemeFilterActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ActivityUtils.finishToActivity(this@SchemeFilterActivity, false)
         TheRouter.inject(this)
         direct = intent.data?.getQueryParameter("direct")
         RouterUtils.routeWithDirect(MainActivity.ROUTE, direct)

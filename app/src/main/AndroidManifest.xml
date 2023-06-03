@@ -55,7 +55,8 @@
 
         <activity
             android:name=".ui.scheme.SchemeFilterActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <!-- Scheme -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -97,6 +98,7 @@
             android:name=".MainActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|uiMode"
             android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
