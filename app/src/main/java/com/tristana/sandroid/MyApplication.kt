@@ -39,6 +39,12 @@ class MyApplication : Application() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
+                    TheRouter.isDebug =
+                        SpUtils.get(it, DataModel.ROUTER_DEBUG_STATUS_SP, false) as Boolean
+                }
+            }
+            withContext(Dispatchers.IO) {
+                instance?.let {
                     fetch = Fetch.getInstance(getFetchConfiguration(it))
                 }
             }

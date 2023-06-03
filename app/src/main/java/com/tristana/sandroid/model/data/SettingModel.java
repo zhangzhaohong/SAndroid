@@ -22,4 +22,5 @@ public class SettingModel {
     public static final String DOWNLOAD_AUTO_START = "自动开始下载";
     public static final String DOWNLOAD_LOCAL_SIZE = "本地下载目录占用空间";
     public static final String RESET_SETTINGS = "重置全部设置";
+    public static final String ROUTER_DEBUG_STATUS = "打印 Router debug 信息";
 }
