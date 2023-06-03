@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
-        if (sendDirect(navController)) {
+        if (FragmentDirector.doDirect(navController, direct)) {
             return
         }
         MyApplication.eventTrackerInstance?.sendEvent(
@@ -192,28 +192,6 @@ class MainActivity : AppCompatActivity() {
             EventTrackerDataModel(ROUTE)
         )
         reportInfoEvent()
-    }
-
-    private fun sendDirect(navController: NavController): Boolean {
-        direct?.let {
-            LogUtils.i("found direct: $it")
-            when (direct) {
-                SettingFragment.ROUTE -> {
-                    navController.navigate(R.id.nav_setting)
-                    return true
-                }
-
-                LabFragment.ROUTE -> {
-                    navController.navigate(R.id.nav_setting_lab)
-                    return true
-                }
-
-                else -> {
-                    LogUtils.i("unsupported direct: $direct")
-                }
-            }
-        }
-        return false
     }
 
     /**
