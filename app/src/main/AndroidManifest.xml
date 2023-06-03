@@ -114,6 +114,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.router.RouterWebActivity"
+            android:exported="true"
+            android:launchMode="singleTask" />
+
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"

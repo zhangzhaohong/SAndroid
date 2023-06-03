@@ -21,6 +21,13 @@
     "params": {}
   },
   {
+    "path": "/app/router/web",
+    "className": "com.tristana.sandroid.ui.router.RouterWebActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/app/activity/main",
     "className": "com.tristana.sandroid.MainActivity",
     "action": "",

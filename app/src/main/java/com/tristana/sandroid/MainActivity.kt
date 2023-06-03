@@ -273,11 +273,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        onExit()
-        super.onDestroy()
-    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
         val navController: NavController = navHostFragment.navController

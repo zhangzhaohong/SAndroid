@@ -24,6 +24,9 @@ import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_STATUS_SP
 import com.tristana.sandroid.model.data.SettingModel
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_DEBUG_STATUS
+import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_ACTIVITY
+import com.tristana.sandroid.ui.router.RouterWebActivity
+import utils.router.RouterUtils
 
 /**
  * @author koala
@@ -44,6 +47,9 @@ class LabFragment : Fragment() {
         if (v is QMUICommonListItemView) {
             when (val text = v.text) {
                 ROUTER_DEBUG_STATUS -> {}
+                ROUTER_WEB_VIEW_ACTIVITY -> {
+                    RouterUtils.routeWithDirect(RouterWebActivity.ROUTE, "file:///android_asset/scheme-page.html")
+                }
             }
         }
     }
@@ -62,7 +68,9 @@ class LabFragment : Fragment() {
         mGroupListView = root.findViewById(R.id.groupListView)
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
-        val routerDebugStatus = createSwitchElement(ROUTER_DEBUG_STATUS, height, ROUTER_DEBUG_STATUS_SP)
+        val routerDebugStatus =
+            createSwitchElement(ROUTER_DEBUG_STATUS, height, ROUTER_DEBUG_STATUS_SP)
+        val routerWebActivity = createElement(ROUTER_WEB_VIEW_ACTIVITY, height, false)
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(context)
             .setTitle("组件设置")
@@ -75,6 +83,7 @@ class LabFragment : Fragment() {
             .setDescription("")
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
             .addItemView(routerDebugStatus, onClickListener)
+            .addItemView(routerWebActivity, onClickListener)
             .setShowSeparator(true)
             .addTo(mGroupListView)
         return root
