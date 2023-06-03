@@ -37,7 +37,7 @@ class RouterWebActivity : Activity() {
         direct?.let {
             routerWebView.loadUrl(it)
         } ?: kotlin.run {
-            routerWebView.loadUrl("http://192.168.2.250/error/404")
+            routerWebView.loadUrl("about:blank")
         }
     }
 
