@@ -182,7 +182,7 @@ public class WebSocketThread extends Thread {
         webSocketHandler.removeCallbacksAndMessages(null);
         reconnectWebSocketManager.destroy();
         Looper looper = Looper.myLooper();
-        if (looper != null) looper.quit();
+        if (looper != null) looper.quitSafely();
     }
 
     public WebSocket getWebSocket() {

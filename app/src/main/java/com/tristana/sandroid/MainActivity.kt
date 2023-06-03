@@ -42,8 +42,6 @@ import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 import com.tristana.sandroid.model.data.DataModel
-import com.tristana.sandroid.ui.setting.LabFragment
-import com.tristana.sandroid.ui.setting.SettingFragment
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -276,9 +274,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        MyApplication.fetch?.close()
-        MyApplication.eventTrackerInstance?.stopTracker()
-        AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
+        onExit()
         super.onDestroy()
     }
 
@@ -294,14 +290,21 @@ class MainActivity : AppCompatActivity() {
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
                 ToastUtils.showShort("再按一次退出APP")
                 //System.currentTimeMillis()系统当前时间
-                mExitTime = System.currentTimeMillis();
+                mExitTime = System.currentTimeMillis()
             } else {
+                onExit()
                 ActivityUtils.finishAllActivities(true)
-                finish();
+                finish()
             }
-            return true;
+            return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun onExit() {
+        MyApplication.fetch?.close()
+        MyApplication.eventTrackerInstance?.stopTracker()
+        AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
     }
 
     private fun <F : Fragment> getFragment(fragmentClass: Class<F>): F? {
