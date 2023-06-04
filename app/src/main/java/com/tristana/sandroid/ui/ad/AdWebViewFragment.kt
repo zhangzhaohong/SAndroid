@@ -7,13 +7,20 @@ import android.view.ViewGroup
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.therouter.router.Route
 import com.tristana.library.customizeInterface.IOnPageFinishedInterface
 import com.tristana.library.view.webView.X5WebView
 import com.tristana.sandroid.MainActivity
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 
+@Route(path = AdWebViewFragment.ROUTE)
 class AdWebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedInterface {
+
+    companion object {
+        const val ROUTE = "/app/browser/ad"
+    }
+
     private var url: String? = null
     private lateinit var x5WebView: X5WebView
     private var adViewModel: AdViewModel? = null
@@ -32,7 +39,7 @@ class AdWebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
             url = bundle.getString("url").toString()
         }
         if (url == null || url!!.trim().isEmpty()) {
-             url = "http://about:blank"
+            url = "http://about:blank"
         }
         x5WebView = root.findViewById(R.id.ad_web_viewer)
         x5WebView.init(requireActivity())

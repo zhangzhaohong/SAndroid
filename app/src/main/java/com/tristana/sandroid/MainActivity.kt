@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
-        if (FragmentDirector.doDirect(navController, direct)) {
+        if (FragmentDirector.doDirect(navController, direct, extra)) {
             return
         }
         MyApplication.eventTrackerInstance?.sendEvent(
