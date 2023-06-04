@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.setting.LabFragment
 import com.tristana.sandroid.ui.setting.SettingFragment
+import com.tristana.sandroid.ui.webview.X5WebViewFragment
 
 /**
  * @author koala
@@ -39,6 +40,19 @@ class FragmentDirector {
                             }
                         )
                         navController.navigate(R.id.nav_ad_browser, bundle)
+                        return true
+                    }
+
+                    X5WebViewFragment.ROUTE -> {
+                        val bundle = Bundle()
+                        bundle.putString(
+                            "url", if (extra.isNullOrEmpty()) {
+                                "about:blank"
+                            } else {
+                                extra
+                            }
+                        )
+                        navController.navigate(R.id.nav_browser, bundle)
                         return true
                     }
 

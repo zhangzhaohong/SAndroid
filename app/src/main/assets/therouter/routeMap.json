@@ -1,5 +1,12 @@
 [
   {
+    "path": "/app/browser",
+    "className": "com.tristana.sandroid.ui.webview.X5WebViewFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/app/settings",
     "className": "com.tristana.sandroid.ui.setting.SettingFragment",
     "action": "",

@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.therouter.router.Route
 import com.tristana.library.customizeInterface.IOnPageFinishedInterface
 import com.tristana.library.view.editTextView.CustomEditTextView
 import com.tristana.library.view.webView.X5WebView
@@ -18,7 +19,13 @@ import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
+@Route(path = X5WebViewFragment.ROUTE)
 class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedInterface {
+
+    companion object {
+        const val ROUTE = "/app/browser"
+    }
+
     private lateinit var webViewBack: AppCompatImageView
     private lateinit var webViewForward: AppCompatImageView
     private lateinit var webViewHome: AppCompatImageView
@@ -30,9 +37,13 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
     private lateinit var x5WebView: X5WebView
     private lateinit var inputUrl: CustomEditTextView
     private lateinit var webViewEnter: AppCompatImageView
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (x5ViewModel == null) x5ViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(X5ViewModel::class.java)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        if (x5ViewModel == null) x5ViewModel =
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+                .create(X5ViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_web_viewer, container, false)
         val bundle = arguments
         if (bundle != null) {
@@ -52,16 +63,16 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         x5WebView.init(requireActivity())
         x5WebView.loadUrl(url)
         inputUrl.initParameter(
-                R.drawable.ic_browser_default,
-                InputType.TYPE_CLASS_TEXT,
-                0,
-                1,
-                "",
-                0,
-                0,
-                false,
-                R.drawable.ic_clear,
-                true
+            R.drawable.ic_browser_default,
+            InputType.TYPE_CLASS_TEXT,
+            0,
+            1,
+            "",
+            0,
+            0,
+            false,
+            R.drawable.ic_clear,
+            true
         )
         webViewEnter.setOnClickListener {
             inputUrl.clearFocus()
