@@ -329,7 +329,7 @@ class SettingFragment : Fragment() {
         TheRouter.inject(this)
         MyApplication.eventTrackerInstance?.sendEvent(
             Constants.EVENT_ON_OPENED_FRAGMENT,
-            EventTrackerDataModel(LabFragment.ROUTE)
+            EventTrackerDataModel(ROUTE)
         )
     }
 
