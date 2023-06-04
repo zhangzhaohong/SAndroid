@@ -16,12 +16,14 @@ class SchemeFilterActivity : Activity() {
     }
 
     var direct: String? = null
+    var extra: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TheRouter.inject(this)
         direct = intent.data?.getQueryParameter("direct")
-        RouterUtils.routeWithDirect(MainActivity.ROUTE, direct)
+        extra = intent.data?.getQueryParameter("extra")
+        RouterUtils.routeWithDirect(MainActivity.ROUTE, direct, extra)
         ActivityUtils.finishActivity(this@SchemeFilterActivity)
     }
 }

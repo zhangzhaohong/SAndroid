@@ -61,6 +61,10 @@ class MainActivity : AppCompatActivity() {
     @JvmField
     var direct: String? = null
 
+    @Autowired
+    @JvmField
+    var extra: String? = null
+
     private var mExitTime: Long = 0
 
     private var mAppBarConfiguration: AppBarConfiguration? = null
