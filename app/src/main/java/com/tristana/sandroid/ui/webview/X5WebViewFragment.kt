@@ -9,11 +9,14 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.event.tracker.ws.Constants
+import com.event.tracker.ws.model.EventTrackerDataModel
 import com.therouter.router.Route
 import com.tristana.library.customizeInterface.IOnPageFinishedInterface
 import com.tristana.library.view.editTextView.CustomEditTextView
 import com.tristana.library.view.webView.X5WebView
 import com.tristana.sandroid.MainActivity
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 
@@ -100,6 +103,10 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         }
         x5WebView.onLoadFinishListener = this
         hideActionBar()
+        MyApplication.eventTrackerInstance?.sendEvent(
+            Constants.EVENT_ON_OPENED_FRAGMENT,
+            EventTrackerDataModel(X5WebViewFragment.ROUTE)
+        )
         return root
     }
 

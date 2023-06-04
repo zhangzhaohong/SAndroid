@@ -4,11 +4,15 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.LogUtils
+import com.event.tracker.ws.Constants
+import com.event.tracker.ws.model.EventTrackerDataModel
 import com.tencent.smtt.sdk.WebView
 import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
+import com.tristana.sandroid.ui.webview.X5WebViewFragment
 
 /**
  * @author koala
@@ -40,6 +44,10 @@ class RouterWebActivity : Activity() {
         } ?: kotlin.run {
             routerWebView.loadUrl("about:blank")
         }
+        MyApplication.eventTrackerInstance?.sendEvent(
+            Constants.EVENT_ON_OPENED_ACTIVITY,
+            EventTrackerDataModel(ROUTE)
+        )
     }
 
     override fun onDestroy() {

@@ -10,5 +10,6 @@ public class Constants {
     public static final String EVENT_HEART_BREAK = "EVENT_HEART_BREAK";
     public static final String EVENT_ON_OPENED = "EVENT_ON_OPENED";
     public static final String EVENT_ON_OPENED_ACTIVITY = "EVENT_ON_OPENED_ACTIVITY";
+    public static final String EVENT_ON_OPENED_FRAGMENT = "EVENT_ON_OPENED_FRAGMENT";
     public static final String EVENT_APPLICATION_INFO = "EVENT_APPLICATION_INFO";
 }

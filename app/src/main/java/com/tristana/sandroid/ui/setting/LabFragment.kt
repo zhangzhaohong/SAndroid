@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.AppUtils
+import com.event.tracker.ws.Constants
+import com.event.tracker.ws.model.EventTrackerDataModel
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.therouter.router.Route
 import com.therouter.TheRouter
@@ -21,6 +23,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.library.tools.sharedPreferences.SpUtils
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_PATH_SP
@@ -30,6 +33,7 @@ import com.tristana.sandroid.model.data.SettingModel.ROUTER_CUSTOM_PATH
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_CUSTOM_PATH
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_DEBUG_STATUS
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_ACTIVITY
+import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.router.RouterWebActivity
 import utils.router.RouterUtils
 
@@ -132,6 +136,10 @@ class LabFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TheRouter.inject(this)
+        MyApplication.eventTrackerInstance?.sendEvent(
+            Constants.EVENT_ON_OPENED_FRAGMENT,
+            EventTrackerDataModel(LabFragment.ROUTE)
+        )
     }
 
     override fun onCreateView(

@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment
 import com.therouter.router.Route
 import com.therouter.TheRouter
 import com.blankj.utilcode.util.*
+import com.event.tracker.ws.Constants
+import com.event.tracker.ws.model.EventTrackerDataModel
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
@@ -23,6 +25,7 @@ import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tencent.smtt.sdk.TbsVideo
 import com.tristana.library.tools.sharedPreferences.SpUtils
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel.*
 import com.tristana.sandroid.model.data.SettingModel.*
@@ -56,9 +59,11 @@ class SettingFragment : Fragment() {
                 X5_DEBUG -> {
                     jumpToBrowser("http://debugx5.qq.com")
                 }
+
                 X5_TBS_DEBUG -> {
                     jumpToBrowser("http://debugtbs.qq.com")
                 }
+
                 X5_VIDEO_DEBUG -> {
                     val builder = EditTextDialogBuilder(activity)
                     builder
@@ -79,7 +84,8 @@ class SettingFragment : Fragment() {
                             val input: CharSequence? = builder.editText.text
                             if (input.isNullOrEmpty()) {
                                 dialog.dismiss()
-                                Toast.makeText(activity, "非法的视频链接", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(activity, "非法的视频链接", Toast.LENGTH_SHORT)
+                                    .show()
                             } else {
                                 SpUtils.put(context, X5_VIDEO_DEBUG_SP, input)
                                 dialog.dismiss()
@@ -91,6 +97,7 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+
                 LOGGER -> {}
                 LOG_FILE_PREFIX -> {
                     run {
@@ -125,6 +132,7 @@ class SettingFragment : Fragment() {
                             .show()
                     }
                 }
+
                 LOG_2_LOCAL -> {}
                 LOG_SAVE_DAY -> {
                     val builder = EditTextDialogBuilder(activity)
@@ -157,6 +165,7 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+
                 LOG_LOCAL_SIZE -> {
                     MessageDialogBuilder(activity)
                         .setTitle("提示")
@@ -176,6 +185,7 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+
                 MAX_DOWNLOAD_CONCURRENT_LIMIT -> {
                     val builder = EditTextDialogBuilder(activity)
                     builder
@@ -199,7 +209,11 @@ class SettingFragment : Fragment() {
                             if (input.isNullOrEmpty()) {
                                 SpUtils.put(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, (3))
                             } else {
-                                SpUtils.put(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, input.toString().toInt())
+                                SpUtils.put(
+                                    context,
+                                    MAX_DOWNLOAD_CONCURRENT_LIMIT_SP,
+                                    input.toString().toInt()
+                                )
                             }
                             v.detailText = "$input 个"
                             dialog.dismiss()
@@ -207,6 +221,7 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+
                 DOWNLOAD_PROGRESS_REPORTING_INTERVAL -> {
                     val builder = EditTextDialogBuilder(activity)
                     builder
@@ -228,9 +243,17 @@ class SettingFragment : Fragment() {
                         .addAction("保存修改") { dialog, _ ->
                             val input: CharSequence? = builder.editText.text
                             if (input.isNullOrEmpty()) {
-                                SpUtils.put(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, (1000L))
+                                SpUtils.put(
+                                    context,
+                                    DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP,
+                                    (1000L)
+                                )
                             } else {
-                                SpUtils.put(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, input.toString().toLong())
+                                SpUtils.put(
+                                    context,
+                                    DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP,
+                                    input.toString().toLong()
+                                )
                             }
                             v.detailText = "$input ms"
                             dialog.dismiss()
@@ -238,6 +261,7 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+
                 DOWNLOAD_AUTO_START -> {}
                 DOWNLOAD_LOCAL_SIZE -> {
                     MessageDialogBuilder(activity)
@@ -258,6 +282,7 @@ class SettingFragment : Fragment() {
                         }
                         .show()
                 }
+
                 RESET_SETTINGS -> {
                     MessageDialogBuilder(activity)
                         .setTitle("提示")
@@ -277,6 +302,7 @@ class SettingFragment : Fragment() {
                         .show()
 
                 }
+
                 else -> {
                     Toast.makeText(activity, "$text is Clicked", Toast.LENGTH_SHORT).show()
                 }
@@ -301,6 +327,10 @@ class SettingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TheRouter.inject(this)
+        MyApplication.eventTrackerInstance?.sendEvent(
+            Constants.EVENT_ON_OPENED_FRAGMENT,
+            EventTrackerDataModel(LabFragment.ROUTE)
+        )
     }
 
     override fun onCreateView(
@@ -323,17 +353,29 @@ class SettingFragment : Fragment() {
         val logger = createSwitchElement(LOGGER, height, LOGGER_SP, true, needRestart = true)
         val logFilePrefix: QMUICommonListItemView = createTextElement(LOG_FILE_PREFIX, height)
         logFilePrefix.detailText = SpUtils.get(context, LOG_FILE_PREFIX_SP, "AppLog") as String
-        val log2Local = createSwitchElement(LOG_2_LOCAL, height, LOG_SAVE_2_LOCAL_SP, needRestart = true)
+        val log2Local =
+            createSwitchElement(LOG_2_LOCAL, height, LOG_SAVE_2_LOCAL_SP, needRestart = true)
         val logSaveDay: QMUICommonListItemView = createTextElement(LOG_SAVE_DAY, height)
         logSaveDay.detailText = "${SpUtils.get(context, LOG_SAVE_DAY_SP, 3) as Int} 天"
         val logLocalSize: QMUICommonListItemView = createTextElement(LOG_LOCAL_SIZE, height)
         val resetSettings: QMUICommonListItemView = createElement(RESET_SETTINGS, height, true)
-        val maxDownloadConcurrent: QMUICommonListItemView = createTextElement(MAX_DOWNLOAD_CONCURRENT_LIMIT, height)
-        maxDownloadConcurrent.detailText = "${SpUtils.get(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, 3) as Int} 个"
-        val downloadProgressReportingInterval: QMUICommonListItemView = createTextElement(DOWNLOAD_PROGRESS_REPORTING_INTERVAL, height)
-        downloadProgressReportingInterval.detailText = "${SpUtils.get(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, 1000L) as Long} ms"
-        val downloadLocalSize: QMUICommonListItemView = createTextElement(DOWNLOAD_LOCAL_SIZE, height)
-        val downloadAutoStart = createSwitchElement(DOWNLOAD_AUTO_START, height, DOWNLOAD_AUTO_START_SP, true, needRestart = true)
+        val maxDownloadConcurrent: QMUICommonListItemView =
+            createTextElement(MAX_DOWNLOAD_CONCURRENT_LIMIT, height)
+        maxDownloadConcurrent.detailText =
+            "${SpUtils.get(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, 3) as Int} 个"
+        val downloadProgressReportingInterval: QMUICommonListItemView =
+            createTextElement(DOWNLOAD_PROGRESS_REPORTING_INTERVAL, height)
+        downloadProgressReportingInterval.detailText =
+            "${SpUtils.get(context, DOWNLOAD_PROGRESS_REPORTING_INTERVAL_SP, 1000L) as Long} ms"
+        val downloadLocalSize: QMUICommonListItemView =
+            createTextElement(DOWNLOAD_LOCAL_SIZE, height)
+        val downloadAutoStart = createSwitchElement(
+            DOWNLOAD_AUTO_START,
+            height,
+            DOWNLOAD_AUTO_START_SP,
+            true,
+            needRestart = true
+        )
         refreshLogLocalSize(logLocalSize)
         refreshDownloadLocalSize(downloadLocalSize)
 
@@ -499,7 +541,8 @@ class SettingFragment : Fragment() {
         MainScope().launch {
             var folderSize: String?
             withContext(Dispatchers.IO) {
-                folderSize = FileUtils.getSize(requireActivity().getExternalFilesDir("download")?.absolutePath)
+                folderSize =
+                    FileUtils.getSize(requireActivity().getExternalFilesDir("download")?.absolutePath)
             }
             withContext(Dispatchers.Main) {
                 item.detailText = folderSize
