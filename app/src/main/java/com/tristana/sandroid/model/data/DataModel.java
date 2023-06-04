@@ -17,4 +17,6 @@ public class DataModel {
     public static final String X5_ALLOW_THIRD_PART_APP_SP = "X5_ALLOW_THIRD_PART_APP";
     public static final String ENABLE_SHOW_LAB_SP = "ENABLE_SHOW_LAB_SP";
     public static final String ROUTER_DEBUG_STATUS_SP = "ROUTER_DEBUG_STATUS_SP";
+    public static final String ROUTER_WEB_VIEW_DEBUG_PATH_SP = "ROUTER_WEB_VIEW_DEBUG_PATH_SP";
+    public static final String ROUTER_DEBUG_PATH_SP = "ROUTER_DEBUG_PATH_SP";
 }

@@ -3,11 +3,13 @@ package com.tristana.sandroid.ui.setting
 import android.graphics.text.LineBreaker
 import android.os.Build
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.AppUtils
@@ -21,8 +23,11 @@ import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.model.data.DataModel
+import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_PATH_SP
 import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_STATUS_SP
-import com.tristana.sandroid.model.data.SettingModel
+import com.tristana.sandroid.model.data.DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP
+import com.tristana.sandroid.model.data.SettingModel.ROUTER_CUSTOM_PATH
+import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_CUSTOM_PATH
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_DEBUG_STATUS
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_ACTIVITY
 import com.tristana.sandroid.ui.router.RouterWebActivity
@@ -48,7 +53,77 @@ class LabFragment : Fragment() {
             when (val text = v.text) {
                 ROUTER_DEBUG_STATUS -> {}
                 ROUTER_WEB_VIEW_ACTIVITY -> {
-                    RouterUtils.routeWithDirect(RouterWebActivity.ROUTE, "file:///android_asset/scheme-page.html")
+                    RouterUtils.routeWithDirect(
+                        RouterWebActivity.ROUTE,
+                        "file:///android_asset/scheme-page.html"
+                    )
+                }
+
+                ROUTER_WEB_VIEW_CUSTOM_PATH -> {
+                    val builder = QMUIDialog.EditTextDialogBuilder(activity)
+                    builder
+                        .setTitle("设置Router路径")
+                        .setPlaceholder("设置Router路径")
+                        .setInputType(InputType.TYPE_CLASS_TEXT)
+                        .setDefaultText(
+                            SpUtils.get(
+                                context,
+                                DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP,
+                                ""
+                            ) as String
+                        )
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction("确定") { dialog, _ ->
+                            val input: CharSequence? = builder.editText.text
+                            if (input.isNullOrEmpty()) {
+                                dialog.dismiss()
+                                Toast.makeText(activity, "非法的Router路径", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                SpUtils.put(context, DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP, input)
+                                dialog.dismiss()
+                                RouterUtils.routeWithDirect(
+                                    RouterWebActivity.ROUTE,
+                                    input.toString()
+                                )
+                            }
+                            v.detailText = input
+                        }
+                        .show()
+                }
+
+                ROUTER_CUSTOM_PATH -> {
+                    val builder = QMUIDialog.EditTextDialogBuilder(activity)
+                    builder
+                        .setTitle("设置Router路径")
+                        .setPlaceholder("设置Router路径")
+                        .setInputType(InputType.TYPE_CLASS_TEXT)
+                        .setDefaultText(
+                            SpUtils.get(
+                                context,
+                                DataModel.ROUTER_DEBUG_PATH_SP,
+                                ""
+                            ) as String
+                        )
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction("确定") { dialog, _ ->
+                            val input: CharSequence? = builder.editText.text
+                            if (input.isNullOrEmpty()) {
+                                dialog.dismiss()
+                                Toast.makeText(activity, "非法的Router路径", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                SpUtils.put(context, DataModel.ROUTER_DEBUG_PATH_SP, input)
+                                dialog.dismiss()
+                                RouterUtils.route(input.toString())
+                            }
+                            v.detailText = input
+                        }
+                        .show()
                 }
             }
         }
@@ -71,6 +146,11 @@ class LabFragment : Fragment() {
         val routerDebugStatus =
             createSwitchElement(ROUTER_DEBUG_STATUS, height, ROUTER_DEBUG_STATUS_SP)
         val routerWebActivity = createElement(ROUTER_WEB_VIEW_ACTIVITY, height, false)
+        val routerWebViewCustomPath = createTextElement(ROUTER_WEB_VIEW_CUSTOM_PATH, height, false)
+        routerWebViewCustomPath.detailText =
+            SpUtils.get(context, ROUTER_WEB_VIEW_DEBUG_PATH_SP, "") as String
+        val routerCustomPath = createTextElement(ROUTER_CUSTOM_PATH, height, false)
+        routerCustomPath.detailText = SpUtils.get(context, ROUTER_DEBUG_PATH_SP, "") as String
         val size = QMUIDisplayHelper.dp2px(context, 20)
         QMUIGroupListView.newSection(context)
             .setTitle("组件设置")
@@ -84,6 +164,8 @@ class LabFragment : Fragment() {
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
             .addItemView(routerDebugStatus, onClickListener)
             .addItemView(routerWebActivity, onClickListener)
+            .addItemView(routerWebViewCustomPath, onClickListener)
+            .addItemView(routerCustomPath, onClickListener)
             .setShowSeparator(true)
             .addTo(mGroupListView)
         return root
