@@ -16,7 +16,7 @@ import com.tristana.sandroid.R
  * @date 2023/6/3 19:42
  * @description
  */
-@Route(path = RouterWebActivity.ROUTE, params = ["direct"])
+@Route(path = RouterWebActivity.ROUTE)
 class RouterWebActivity : Activity() {
 
     companion object {
@@ -24,6 +24,7 @@ class RouterWebActivity : Activity() {
     }
 
     @Autowired
+    @JvmField
     var direct: String? = null
 
     lateinit var routerWebView: WebView

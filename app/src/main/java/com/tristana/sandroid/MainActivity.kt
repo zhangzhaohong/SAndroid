@@ -50,7 +50,7 @@ import kotlinx.coroutines.withContext
 import java.lang.reflect.Field
 import java.util.*
 
-@Route(path = MainActivity.ROUTE, params = ["direct"])
+@Route(path = MainActivity.ROUTE)
 class MainActivity : AppCompatActivity() {
 
     companion object {
@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Autowired
+    @JvmField
     var direct: String? = null
 
     private var mExitTime: Long = 0

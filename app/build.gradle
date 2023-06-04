@@ -1,9 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'therouter'
 apply plugin: "com.google.devtools.ksp"
+
+kapt {
+    useBuildCache = false
+}
 
 android {
     signingConfigs {
@@ -116,7 +121,7 @@ dependencies {
     implementation 'com.airbnb.android:lottie:6.0.0'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     // therouter
-    ksp "cn.therouter:apt:$therouter_version"
+    kapt "cn.therouter:apt:$therouter_version"
     implementation "cn.therouter:router:$therouter_version"
     // video
     def dkplayer_version = '3.3.7'

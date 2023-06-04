@@ -8,7 +8,7 @@ import com.therouter.router.Route
 import com.tristana.sandroid.MainActivity
 import utils.router.RouterUtils
 
-@Route(path = SchemeFilterActivity.ROUTE, params = ["direct"])
+@Route(path = SchemeFilterActivity.ROUTE)
 class SchemeFilterActivity : Activity() {
 
     companion object {
