@@ -46,18 +46,17 @@ public class LoginFragment extends Fragment {
         @Override
         public boolean handleMessage(@NonNull Message message) {
             switch (message.what) {
-                case HandlerType.TYPE_TOAST_SUCCESS:
+                case HandlerType.TYPE_TOAST_SUCCESS -> {
                     password.dismissError();
                     ToastUtils.showToast(requireActivity(), message.obj.toString());
-                    break;
-                case HandlerType.TYPE_TOAST:
-                    password.showError(R.drawable.ic_warning, message.obj.toString(), true);
-                    break;
-                case HandlerType.TYPE_LOGIN_STATUS:
+                }
+                case HandlerType.TYPE_TOAST ->
+                        password.showError(R.drawable.ic_warning, message.obj.toString(), true);
+                case HandlerType.TYPE_LOGIN_STATUS -> {
                     LogUtils.d("LOGIN STATUS!" + message.obj);
 //                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 //                    navController.navigate(R.id.nav_home);
-                    break;
+                }
             }
             return false;
         }
