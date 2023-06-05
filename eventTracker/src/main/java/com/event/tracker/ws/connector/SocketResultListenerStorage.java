@@ -19,7 +19,7 @@ public class SocketResultListenerStorage {
     }
 
     public ArrayList<WebSocketResultListener> getCallBacks() {
-        return new ArrayList(idToCallBack.values());
+        return new ArrayList<>(idToCallBack.values());
     }
 
 }

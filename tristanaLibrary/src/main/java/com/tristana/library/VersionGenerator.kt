@@ -16,7 +16,7 @@ object VersionGenerator {
     fun main(args: Array<String>) {
         val s = Scanner(System.`in`)
         println("请输入VersionName：")
-        var line = ""
+        var line: String
         var versionCodeData = ""
         while (true) {
             line = s.nextLine()

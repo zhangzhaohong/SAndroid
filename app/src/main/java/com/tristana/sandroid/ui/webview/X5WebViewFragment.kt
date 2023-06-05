@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.model.EventTrackerDataModel
 import com.therouter.router.Route
@@ -21,7 +22,6 @@ import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 
 
-@Suppress("CAST_NEVER_SUCCEEDS")
 @Route(path = X5WebViewFragment.ROUTE)
 class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedInterface {
 
@@ -99,13 +99,13 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         }
         webViewExit.setOnClickListener {
             x5WebView.destroy()
-            requireActivity().onBackPressed()
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).popBackStack()
         }
         x5WebView.onLoadFinishListener = this
         hideActionBar()
         MyApplication.eventTrackerInstance?.sendEvent(
             Constants.EVENT_ON_OPENED_FRAGMENT,
-            EventTrackerDataModel(X5WebViewFragment.ROUTE)
+            EventTrackerDataModel(ROUTE)
         )
         return root
     }
