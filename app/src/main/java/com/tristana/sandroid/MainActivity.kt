@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.KeyEvent
 import android.view.Menu
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -101,6 +102,19 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration!!)
         NavigationUI.setupWithNavController(navigationView, navController)
         initNavigationOnChangeListener(navController)
+        onBackPressedDispatcher.addCallback(this@MainActivity, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val fragment = getFragment(X5WebViewFragment::class.java)
+                if (fragment == null) {
+                    navController.popBackStack()
+                } else {
+                    if ((fragment as IOnBackPressedInterface?)!!.onBackPressed()) {
+                        navController.popBackStack()
+                        supportActionBar?.show()
+                    }
+                }
+            }
+        })
         XXPermissions.with(this)
             .permission(Permission.READ_PHONE_STATE)
             .permission(Permission.WRITE_EXTERNAL_STORAGE)
@@ -125,7 +139,6 @@ class MainActivity : AppCompatActivity() {
                                 TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE to true
                             )
                             QbSdk.initTbsSettings(map)
-                            LogUtils.i("VERSION: " + Build.VERSION.SDK_INT);
                             // TbsDownloader.startDownload(MyApplication.instance);//手动开始下载，此时需要先判定网络是否符合
                             val callback: QbSdk.PreInitCallback = object : QbSdk.PreInitCallback {
                                 override fun onViewInitFinished(arg0: Boolean) {
@@ -263,19 +276,6 @@ class MainActivity : AppCompatActivity() {
         val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         return (NavigationUI.navigateUp(navController, mAppBarConfiguration!!)
                 || super.onSupportNavigateUp())
-    }
-
-    override fun onBackPressed() {
-        // super.onBackPressed()
-        val fragment = getFragment(X5WebViewFragment::class.java)
-        if (fragment == null) {
-            super.onBackPressed()
-        } else {
-            if ((fragment as IOnBackPressedInterface?)!!.onBackPressed()) {
-                super.onBackPressed()
-                this.supportActionBar?.show()
-            }
-        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
