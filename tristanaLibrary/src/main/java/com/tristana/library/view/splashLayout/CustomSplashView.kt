@@ -23,7 +23,8 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs) {
+class CustomSplashView(context: Context, attrs: AttributeSet?) :
+    LinearLayoutCompat(context, attrs) {
     private var splashClickable: Boolean = false
     private var enterTextSplashOnClick: String = ""
     private var splashUrl: String = ""
@@ -38,8 +39,11 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
     private lateinit var destination: () -> Unit
     private var enterStatus: Boolean = false
     private var enterText: String = ""
+    private var canNotEnterText: String = ""
     private var needTimer: Boolean = false
     private var durationTime: Long = 0
+    private var canNotEnterTime: Long = 0
+    private var enterBtnDisabled = false
     private lateinit var splashIcon: AppCompatImageView
     private lateinit var splashAppName: AppCompatTextView
     private lateinit var splashPic: AppCompatImageView
@@ -69,18 +73,33 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
      * needTimber是否需要及时器
      * durationTime即总时长
      * */
-    private fun enableEnter(enterStatus: Boolean = false, enterText: String = "", enterTextSplashOnClick: String = "", needTimer: Boolean = false, durationTime: Long = 0, destination: () -> Unit = {}) {
+    private fun enableEnter(
+        enterStatus: Boolean = false,
+        enterText: String = "",
+        canNotEnterText: String = "",
+        enterTextSplashOnClick: String = "",
+        needTimer: Boolean = false,
+        durationTime: Long = 0,
+        canNotEnterTime: Long = 0,
+        destination: () -> Unit = {}
+    ) {
         this.enterStatus = enterStatus
         this.enterText = enterText
+        this.canNotEnterText = canNotEnterText
         this.enterTextSplashOnClick = enterTextSplashOnClick
         this.needTimer = needTimer
         this.durationTime = durationTime
+        this.canNotEnterTime = canNotEnterTime
         this.destination = destination
         mTimer = object : CountDownTimer(durationTime * 1000, 1 * 1000) {
             @SuppressLint("SetTextI18n")
             override fun onTick(p0: Long) {
-                enterText.let {
+                if (p0 / 1000 > durationTime - canNotEnterTime) {
+                    splashEnter.text = canNotEnterText + " ${(p0 / 1000)}秒"
+                    enterBtnDisabled = true
+                } else {
                     splashEnter.text = enterText + " ${(p0 / 1000)}秒"
+                    enterBtnDisabled = false
                 }
             }
 
@@ -117,7 +136,11 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
         this.iconResId = resId
     }
 
-    private fun setSplashResIdWithUnit(resId: Int = 0, splashClickable: Boolean = false, operation: () -> Unit = {}) {
+    private fun setSplashResIdWithUnit(
+        resId: Int = 0,
+        splashClickable: Boolean = false,
+        operation: () -> Unit = {}
+    ) {
         this.splashResId = resId
         this.splashClickable = splashClickable
         this.operation = operation
@@ -127,7 +150,11 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
         val bitmap: Bitmap
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             val drawable = ContextCompat.getDrawable(context, resId) ?: return null
-            bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
             val canvas = Canvas(bitmap)
             drawable.setBounds(0, 0, canvas.width, canvas.height)
             drawable.draw(canvas)
@@ -142,15 +169,18 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
             this.splashEnter.visibility = View.VISIBLE
             this.splashEnter.text = this.enterText
             this.splashEnter.setOnClickListener {
-                mTimer.cancel()
-                this.splashEnter.visibility = View.GONE
-                this.destination.invoke()
+                if (!enterBtnDisabled) {
+                    mTimer.cancel()
+                    this.splashEnter.visibility = View.GONE
+                    this.destination.invoke()
+                }
             }
         } else {
             this.splashEnter.visibility = View.GONE
         }
         if (this.iconResId != 0) {
-            this.splashIcon.background = BitmapDrawable(context.resources, getBitmap(this.iconResId))
+            this.splashIcon.background =
+                BitmapDrawable(context.resources, getBitmap(this.iconResId))
         }
         this.appName.let {
             this.splashAppName.text = it
@@ -196,9 +226,11 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> {    //API 19
                 bitmap.allocationByteCount.toLong()
             }
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 -> { //API 12
                 bitmap.byteCount.toLong()
             }
+
             else -> {
                 // 在低版本中用一行的字节x高度
                 bitmap.rowBytes * bitmap.height.toLong() //earlier version
@@ -207,14 +239,15 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
         return result.toInt() / 1024 / 1024
     }
 
-    private fun compressBitmap(bitmap: Bitmap): Bitmap? {
+    private fun compressBitmap(bitmap: Bitmap): Bitmap {
         var option = 1.0f
         var newBitmap = bitmap
         while (getBitmapSize(newBitmap) > 100 && option.toInt() * 10 > 0) {
             option = (option * 10 - 1) / 10
             val matrix = Matrix()
             matrix.postScale(option, option)
-            newBitmap = Bitmap.createBitmap(newBitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            newBitmap =
+                Bitmap.createBitmap(newBitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         }
         return newBitmap
     }
@@ -236,45 +269,49 @@ class CustomSplashView(context: Context, attrs: AttributeSet?) : LinearLayoutCom
      * init初始化view
      * */
     fun initParameter(
-            enterStatus: Boolean = false,//是否允许跳过，默认为false
-            enterText: String = "",//跳过splash相关文案设定
-            enterTextSplashOnClick: String = "",//点击splash内容后跳过splash相关文案设定
-            needTimer: Boolean = false,//是否需要倒计时计时器
-            durationTime: Long = 0,//splash持续显示时间
-            destination: () -> Unit = {},//倒计时/跳过完成后代码操作
-            iconResId: Int = 0,//splash底部resId
-            appName: String = "",//splash底部app名称
-            appNameTextSize: Long = 20,//splash底部app名称字体大小
-            appVer: String = "",//splash底部所显示版本号
-            splashResId: Int = 0,//splash广告位本地图片
-            splashClickable: Boolean = false,//splash是否允许点击跳转
-            operation: () -> Unit = {},//点击广告位相关操作
-            splashUrl: String = "",//splash广告位图片Url地址
-            loadFromNetWorkStatus: Boolean = false//splash从网络加载内容
+        enterStatus: Boolean = false,//是否允许跳过，默认为false
+        enterText: String = "",//跳过splash相关文案设定
+        canNotEnterText: String = "",//禁用跳过先关文案设定
+        enterTextSplashOnClick: String = "",//点击splash内容后跳过splash相关文案设定
+        needTimer: Boolean = false,//是否需要倒计时计时器
+        durationTime: Long = 0,//splash持续显示时间
+        canNotEnterTime: Long = 0,//禁用跳过时长
+        destination: () -> Unit = {},//倒计时/跳过完成后代码操作
+        iconResId: Int = 0,//splash底部resId
+        appName: String = "",//splash底部app名称
+        appNameTextSize: Long = 20,//splash底部app名称字体大小
+        appVer: String = "",//splash底部所显示版本号
+        splashResId: Int = 0,//splash广告位本地图片
+        splashClickable: Boolean = false,//splash是否允许点击跳转
+        operation: () -> Unit = {},//点击广告位相关操作
+        splashUrl: String = "",//splash广告位图片Url地址
+        loadFromNetWorkStatus: Boolean = false//splash从网络加载内容
     ) {
         //init view parameter
         enableEnter(
-                enterStatus,
-                enterText,
-                enterTextSplashOnClick,
-                needTimer,
-                durationTime,
-                destination
+            enterStatus,
+            enterText,
+            canNotEnterText,
+            enterTextSplashOnClick,
+            needTimer,
+            durationTime,
+            canNotEnterTime,
+            destination
         )
         setIconResId(iconResId)
         setSplashAppName(
-                appName,
-                appNameTextSize
+            appName,
+            appNameTextSize
         )
         setSplashAppVer(appVer)
         setSplashResIdWithUnit(
-                splashResId,
-                splashClickable,
-                operation
+            splashResId,
+            splashClickable,
+            operation
         )
         loadFromNetwork(
-                splashUrl,
-                loadFromNetWorkStatus
+            splashUrl,
+            loadFromNetWorkStatus
         )
         initView()
     }

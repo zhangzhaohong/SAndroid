@@ -9,7 +9,9 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.BarUtils
+import com.google.common.base.Splitter
 import com.tristana.library.view.splashLayout.CustomSplashView
 import utils.router.RouterUtils
 
@@ -31,29 +33,36 @@ class SplashActivity : AppCompatActivity() {
         // Set up the user interaction to manually show or hide the system UI.
         fullscreenCustomSplash = findViewById(R.id.full_screen_splash)
         fullscreenCustomSplash.initParameter(
-                true,
-                "立即跳过",
-                "进入体验",
-                true,
-                10,
-                object : () -> Unit {
-                    override fun invoke() {
-                        jumpToMainActivity()
-                    }
-                },
-                R.mipmap.ic_launcher,
-                getString(R.string.app_name),
-                20,
-                "v1.0",
-                R.drawable.splash,
-                false,
-                object : () -> Unit() {
-                    override fun invoke() {
-                        //on click splash, do nothing
-                    }
-                },
-                "https://storage.tracup.com/o_1end7rie71g391kuel4r13j33opa.jpg",
-                false
+            true,
+            "立即跳过",
+            "广告剩余",
+            "进入体验",
+            true,
+            10,
+            3,
+            object : () -> Unit {
+                override fun invoke() {
+                    jumpToMainActivity()
+                }
+            },
+            R.mipmap.ic_launcher,
+            getString(R.string.app_name),
+            20,
+            "v1.0",
+            R.drawable.splash,
+            true,
+            object : () -> Unit {
+                override fun invoke() {
+                    val directionPath =
+                        "router://m.sandroid.com/app/activity/scheme?direct=/app/browser/ad&extra=https://www.douyin.com/"
+                    val direct = getParam(directionPath, "direct")
+                    val extra = getParam(directionPath, "extra")
+                    RouterUtils.routeWithDirect(MainActivity.ROUTE, direct, extra)
+                    ActivityUtils.finishActivity(this@SplashActivity)
+                }
+            },
+            "https://storage.tracup.com/o_1end7rie71g391kuel4r13j33opa.jpg",
+            false
         )
         fullscreenCustomSplash.setOnClickListener { hideSystemUI() }
     }
@@ -109,6 +118,12 @@ class SplashActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         }
+    }
+
+    private fun getParam(url: String, name: String): String? {
+        val params = url.substring(url.indexOf("?") + 1)
+        val split = Splitter.on("&").withKeyValueSeparator("=").split(params)
+        return split[name]
     }
 
 }

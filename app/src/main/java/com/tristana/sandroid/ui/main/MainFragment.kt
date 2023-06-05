@@ -113,7 +113,7 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         }
     }
 
-    fun getParam(url: String, name: String): String? {
+    private fun getParam(url: String, name: String): String? {
         val params = url.substring(url.indexOf("?") + 1)
         val split = Splitter.on("&").withKeyValueSeparator("=").split(params)
         return split[name]
