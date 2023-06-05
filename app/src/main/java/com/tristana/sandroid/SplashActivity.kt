@@ -11,7 +11,10 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.BarUtils
+import com.event.tracker.ws.Constants
+import com.event.tracker.ws.model.EventTrackerDataModel
 import com.google.common.base.Splitter
+import com.therouter.router.Route
 import com.tristana.library.view.splashLayout.CustomSplashView
 import utils.router.RouterUtils
 
@@ -20,7 +23,12 @@ import utils.router.RouterUtils
  * status bar and navigation/system bar) with user interaction.
  */
 @SuppressLint("CustomSplashScreen")
+@Route(path = SplashActivity.ROUTE)
 class SplashActivity : AppCompatActivity() {
+
+    companion object {
+        const val ROUTE = "/app/splash"
+    }
 
     private lateinit var fullscreenCustomSplash: CustomSplashView
 
@@ -65,6 +73,10 @@ class SplashActivity : AppCompatActivity() {
             false
         )
         fullscreenCustomSplash.setOnClickListener { hideSystemUI() }
+        MyApplication.eventTrackerInstance?.sendEvent(
+            Constants.EVENT_ON_OPENED_ACTIVITY,
+            EventTrackerDataModel(ROUTE)
+        )
     }
 
     private fun jumpToMainActivity() {
