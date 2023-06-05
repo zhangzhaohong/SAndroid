@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
+import com.tristana.sandroid.ui.downloader.DownloadManagerFragment
 import com.tristana.sandroid.ui.setting.LabFragment
 import com.tristana.sandroid.ui.setting.SettingFragment
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
@@ -53,6 +54,11 @@ class FragmentDirector {
                             }
                         )
                         navController.navigate(R.id.nav_browser, bundle)
+                        return true
+                    }
+
+                    DownloadManagerFragment.ROUTE -> {
+                        navController.navigate(R.id.nav_download_manager)
                         return true
                     }
 

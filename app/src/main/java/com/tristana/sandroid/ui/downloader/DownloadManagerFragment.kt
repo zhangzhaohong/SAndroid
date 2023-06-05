@@ -11,12 +11,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
+import com.event.tracker.ws.Constants
+import com.event.tracker.ws.model.EventTrackerDataModel
+import com.therouter.TheRouter
+import com.therouter.router.Route
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
 import com.tristana.library.tools.http.HttpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils
+import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
 import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
 import kotlinx.coroutines.*
@@ -24,15 +29,30 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 
+@Route(path = DownloadManagerFragment.ROUTE)
 open class DownloadManagerFragment : Fragment() {
+
+    companion object {
+        const val ROUTE = "/app/downloader"
+    }
+
     private val groupId = "public".hashCode()
     private val mutex = Mutex()
     private var fetch: Fetch? = null
     private var fetchListener: FetchListener = getFetchListener()
     private var onScrollListener: RecyclerView.OnScrollListener = getOnScrollLister()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        TheRouter.inject(this)
+        MyApplication.eventTrackerInstance?.sendEvent(
+            Constants.EVENT_ON_OPENED_FRAGMENT,
+            EventTrackerDataModel(ROUTE)
+        )
+    }
+
     private fun getOnScrollLister(): RecyclerView.OnScrollListener {
-        return object: RecyclerView.OnScrollListener() {
+        return object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(
                 recyclerView: RecyclerView,
                 newState: Int

@@ -35,6 +35,13 @@
     "params": {}
   },
   {
+    "path": "/app/downloader",
+    "className": "com.tristana.sandroid.ui.downloader.DownloadManagerFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/app/browser/ad",
     "className": "com.tristana.sandroid.ui.ad.AdWebViewFragment",
     "action": "",

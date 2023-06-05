@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.model.EventTrackerDataModel
+import com.therouter.TheRouter
 import com.therouter.router.Route
 import com.tristana.library.customizeInterface.IOnPageFinishedInterface
 import com.tristana.library.view.editTextView.CustomEditTextView
@@ -40,6 +41,16 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
     private lateinit var x5WebView: X5WebView
     private lateinit var inputUrl: CustomEditTextView
     private lateinit var webViewEnter: AppCompatImageView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        TheRouter.inject(this)
+        MyApplication.eventTrackerInstance?.sendEvent(
+            Constants.EVENT_ON_OPENED_FRAGMENT,
+            EventTrackerDataModel(ROUTE)
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -103,10 +114,6 @@ class X5WebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedIn
         }
         x5WebView.onLoadFinishListener = this
         hideActionBar()
-        MyApplication.eventTrackerInstance?.sendEvent(
-            Constants.EVENT_ON_OPENED_FRAGMENT,
-            EventTrackerDataModel(ROUTE)
-        )
         return root
     }
 
