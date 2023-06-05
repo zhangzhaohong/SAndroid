@@ -445,7 +445,7 @@ class SettingFragment : Fragment() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+            )
         element?.minHeight = minHeight
         element?.detailTextView?.gravity = GravityCompat.END
         element?.detailTextView?.setPadding(0, 12, 0, 12)
@@ -472,7 +472,7 @@ class SettingFragment : Fragment() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+            )
         element?.minHeight = minHeight
         element?.detailTextView?.gravity = GravityCompat.END
         element?.detailTextView?.setPadding(0, 12, 0, 12)
@@ -500,7 +500,7 @@ class SettingFragment : Fragment() {
             QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
         )
         element.switch.isChecked =
-            SpUtils.get(context, spName, defaultValue) as Boolean;
+            SpUtils.get(context, spName, defaultValue) as Boolean
         element.switch.setOnCheckedChangeListener { _, isChecked ->
             SpUtils.put(
                 context,
@@ -515,7 +515,7 @@ class SettingFragment : Fragment() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+            )
         element?.minHeight = minHeight
         element?.detailTextView?.gravity = GravityCompat.END
         element?.detailTextView?.setPadding(0, 12, 0, 12)

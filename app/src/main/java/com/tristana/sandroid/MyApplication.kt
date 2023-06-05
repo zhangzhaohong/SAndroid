@@ -3,19 +3,13 @@ package com.tristana.sandroid
 import android.app.Activity
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.therouter.TheRouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
-import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
 import com.event.tracker.TrackerInstance
-import com.event.tracker.ws.Constants.EVENT_APPLICATION_INFO
-import com.event.tracker.ws.model.AppInfoDataModel
-import com.event.tracker.ws.model.DeviceInfoDataModel
-import com.event.tracker.ws.model.EventTrackerDataModel
-import com.event.tracker.ws.model.InfoEventDataModel
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
+import com.therouter.TheRouter
 import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2core.Downloader
@@ -27,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.reflect.Field
 
 class MyApplication : Application() {
 

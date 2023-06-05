@@ -72,7 +72,7 @@ class LabFragment : Fragment() {
                         .setDefaultText(
                             SpUtils.get(
                                 context,
-                                DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP,
+                                ROUTER_WEB_VIEW_DEBUG_PATH_SP,
                                 ""
                             ) as String
                         )
@@ -86,7 +86,7 @@ class LabFragment : Fragment() {
                                 Toast.makeText(activity, "非法的Router路径", Toast.LENGTH_SHORT)
                                     .show()
                             } else {
-                                SpUtils.put(context, DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP, input)
+                                SpUtils.put(context, ROUTER_WEB_VIEW_DEBUG_PATH_SP, input)
                                 dialog.dismiss()
                                 RouterUtils.routeWithDirect(
                                     RouterWebActivity.ROUTE,
@@ -107,7 +107,7 @@ class LabFragment : Fragment() {
                         .setDefaultText(
                             SpUtils.get(
                                 context,
-                                DataModel.ROUTER_DEBUG_PATH_SP,
+                                ROUTER_DEBUG_PATH_SP,
                                 ""
                             ) as String
                         )
@@ -121,13 +121,17 @@ class LabFragment : Fragment() {
                                 Toast.makeText(activity, "非法的Router路径", Toast.LENGTH_SHORT)
                                     .show()
                             } else {
-                                SpUtils.put(context, DataModel.ROUTER_DEBUG_PATH_SP, input)
+                                SpUtils.put(context, ROUTER_DEBUG_PATH_SP, input)
                                 dialog.dismiss()
                                 RouterUtils.route(input.toString())
                             }
                             v.detailText = input
                         }
                         .show()
+                }
+
+                else -> {
+                    Toast.makeText(activity, "$text is Clicked", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -138,7 +142,7 @@ class LabFragment : Fragment() {
         TheRouter.inject(this)
         MyApplication.eventTrackerInstance?.sendEvent(
             Constants.EVENT_ON_OPENED_FRAGMENT,
-            EventTrackerDataModel(LabFragment.ROUTE)
+            EventTrackerDataModel(ROUTE)
         )
     }
 
@@ -196,7 +200,7 @@ class LabFragment : Fragment() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+            )
         element?.minHeight = minHeight
         element?.detailTextView?.gravity = GravityCompat.END
         element?.detailTextView?.setPadding(0, 12, 0, 12)
@@ -223,7 +227,7 @@ class LabFragment : Fragment() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+            )
         element?.minHeight = minHeight
         element?.detailTextView?.gravity = GravityCompat.END
         element?.detailTextView?.setPadding(0, 12, 0, 12)
@@ -251,7 +255,7 @@ class LabFragment : Fragment() {
             QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
         )
         element.switch.isChecked =
-            SpUtils.get(context, spName, defaultValue) as Boolean;
+            SpUtils.get(context, spName, defaultValue) as Boolean
         element.switch.setOnCheckedChangeListener { _, isChecked ->
             SpUtils.put(
                 context,
@@ -266,7 +270,7 @@ class LabFragment : Fragment() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+            )
         element?.minHeight = minHeight
         element?.detailTextView?.gravity = GravityCompat.END
         element?.detailTextView?.setPadding(0, 12, 0, 12)
