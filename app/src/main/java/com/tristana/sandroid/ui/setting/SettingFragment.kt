@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.therouter.router.Route
@@ -19,6 +20,7 @@ import com.event.tracker.ws.Constants
 import com.event.tracker.ws.model.EventTrackerDataModel
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.MessageDialogBuilder
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
@@ -81,7 +83,7 @@ class SettingFragment : Fragment() {
                             "取消"
                         ) { dialog, _ -> dialog.dismiss() }
                         .addAction("确定") { dialog, _ ->
-                            val input: CharSequence? = builder.editText.text
+                            val input: CharSequence? = getText(dialog)
                             if (input.isNullOrEmpty()) {
                                 dialog.dismiss()
                                 Toast.makeText(activity, "非法的视频链接", Toast.LENGTH_SHORT)
@@ -117,8 +119,7 @@ class SettingFragment : Fragment() {
                                 "取消"
                             ) { dialog, _ -> dialog.dismiss() }
                             .addAction("保存修改") { dialog, _ ->
-                                // val input: CharSequence? = builder.editText.text
-                                val input: CharSequence? = builder.editText.text
+                                val input: CharSequence? = getText(dialog)
                                 if (input.isNullOrEmpty()) {
                                     dialog.dismiss()
                                     Toast.makeText(activity, "保存失败", Toast.LENGTH_SHORT).show()
@@ -153,7 +154,7 @@ class SettingFragment : Fragment() {
                             "取消"
                         ) { dialog, _ -> dialog.dismiss() }
                         .addAction("保存修改") { dialog, _ ->
-                            val input: CharSequence? = builder.editText.text
+                            val input: CharSequence? = getText(dialog)
                             if (input.isNullOrEmpty()) {
                                 SpUtils.put(context, LOG_SAVE_DAY_SP, (-1))
                             } else {
@@ -205,7 +206,7 @@ class SettingFragment : Fragment() {
                             "取消"
                         ) { dialog, _ -> dialog.dismiss() }
                         .addAction("保存修改") { dialog, _ ->
-                            val input: CharSequence? = builder.editText.text
+                            val input: CharSequence? = getText(dialog)
                             if (input.isNullOrEmpty()) {
                                 SpUtils.put(context, MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, (3))
                             } else {
@@ -241,7 +242,7 @@ class SettingFragment : Fragment() {
                             "取消"
                         ) { dialog, _ -> dialog.dismiss() }
                         .addAction("保存修改") { dialog, _ ->
-                            val input: CharSequence? = builder.editText.text
+                            val input: CharSequence? = getText(dialog)
                             if (input.isNullOrEmpty()) {
                                 SpUtils.put(
                                     context,
@@ -311,6 +312,13 @@ class SettingFragment : Fragment() {
                 v.switch.toggle()
             }
         }
+    }
+
+    private fun getText(dialog: QMUIDialog): String? {
+        dialog.findViewById<AppCompatEditText>(R.id.qmui_dialog_edit_input)?.let { editText ->
+            return editText.text.toString()
+        }
+        return null
     }
 
     private fun jumpToBrowser(url: String) {

@@ -10,30 +10,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.AppUtils
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.model.EventTrackerDataModel
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
-import com.therouter.router.Route
-import com.therouter.TheRouter
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
+import com.therouter.TheRouter
+import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
-import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_PATH_SP
 import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_STATUS_SP
 import com.tristana.sandroid.model.data.DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_CUSTOM_PATH
-import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_CUSTOM_PATH
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_DEBUG_STATUS
 import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_ACTIVITY
-import com.tristana.sandroid.ui.ad.AdWebViewFragment
+import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_CUSTOM_PATH
 import com.tristana.sandroid.ui.router.RouterWebActivity
 import utils.router.RouterUtils
 
@@ -80,7 +79,7 @@ class LabFragment : Fragment() {
                             "取消"
                         ) { dialog, _ -> dialog.dismiss() }
                         .addAction("确定") { dialog, _ ->
-                            val input: CharSequence? = builder.editText.text
+                            val input: CharSequence? = getText(dialog)
                             if (input.isNullOrEmpty()) {
                                 dialog.dismiss()
                                 Toast.makeText(activity, "非法的Router路径", Toast.LENGTH_SHORT)
@@ -115,7 +114,7 @@ class LabFragment : Fragment() {
                             "取消"
                         ) { dialog, _ -> dialog.dismiss() }
                         .addAction("确定") { dialog, _ ->
-                            val input: CharSequence? = builder.editText.text
+                            val input: CharSequence? = getText(dialog)
                             if (input.isNullOrEmpty()) {
                                 dialog.dismiss()
                                 Toast.makeText(activity, "非法的Router路径", Toast.LENGTH_SHORT)
@@ -135,6 +134,13 @@ class LabFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun getText(dialog: QMUIDialog): String? {
+        dialog.findViewById<AppCompatEditText>(R.id.qmui_dialog_edit_input)?.let { editText ->
+            return editText.text.toString()
+        }
+        return null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
