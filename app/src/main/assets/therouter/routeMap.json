@@ -49,6 +49,13 @@
     "params": {}
   },
   {
+    "path": "/app/splash",
+    "className": "com.tristana.sandroid.SplashActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/app/activity/main",
     "className": "com.tristana.sandroid.MainActivity",
     "action": "",
