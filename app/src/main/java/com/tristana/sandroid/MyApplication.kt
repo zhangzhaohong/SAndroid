@@ -2,19 +2,19 @@ package com.tristana.sandroid
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.alibaba.android.arouter.launcher.ARouter
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
+import com.event.tracker.TrackerInstance
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
+import com.therouter.TheRouter
 import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
-import com.tristana.customViewWithToolsLibrary.tools.sharedPreferences.SpUtils
+import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.model.data.SettingModel
 import kotlinx.coroutines.Dispatchers
@@ -27,11 +27,13 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        eventTrackerInstance = getEventTrackerInstance()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 instance?.let {
-                    ARouter.init(it);
+                    TheRouter.isDebug =
+                        SpUtils.get(it, DataModel.ROUTER_DEBUG_STATUS_SP, false) as Boolean
                 }
             }
             withContext(Dispatchers.IO) {
@@ -64,31 +66,20 @@ class MyApplication : Application() {
     }
 
     private fun getFetchConfiguration(application: Application): FetchConfiguration {
-        return FetchConfiguration.Builder(application)
-            .setDownloadConcurrentLimit(
+        return FetchConfiguration.Builder(application).setDownloadConcurrentLimit(
+            SpUtils.get(
+                application, DataModel.MAX_DOWNLOAD_CONCURRENT_LIMIT_SP, 3
+            ) as Int
+        ).setProgressReportingInterval(
+            SpUtils.get(
+                application, SettingModel.DOWNLOAD_PROGRESS_REPORTING_INTERVAL, 1000L
+            ) as Long
+        ).setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
+            .setNamespace("SAndroidApplication").enableAutoStart(
                 SpUtils.get(
-                    application,
-                    DataModel.MAX_DOWNLOAD_CONCURRENT_LIMIT_SP,
-                    3
-                ) as Int
-            )
-            .setProgressReportingInterval(
-                SpUtils.get(
-                    application,
-                    SettingModel.DOWNLOAD_PROGRESS_REPORTING_INTERVAL,
-                    1000L
-                ) as Long
-            )
-            .setHttpDownloader(OkHttpDownloader(Downloader.FileDownloaderType.PARALLEL))
-            .setNamespace("SAndroidApplication")
-            .enableAutoStart(
-                SpUtils.get(
-                    application,
-                    SettingModel.DOWNLOAD_AUTO_START,
-                    true
+                    application, SettingModel.DOWNLOAD_AUTO_START, true
                 ) as Boolean
-            )
-            .build()
+            ).build()
     }
 
     fun getFetchInstance(application: Application): Fetch? {
@@ -96,6 +87,14 @@ class MyApplication : Application() {
             fetch = Fetch.getInstance(getFetchConfiguration(application))
         }
         return fetch
+    }
+
+    private fun getEventTrackerInstance(): TrackerInstance? {
+        if (eventTrackerInstance == null) {
+            eventTrackerInstance = TrackerInstance.get()
+            eventTrackerInstance?.initContext(this)
+        }
+        return eventTrackerInstance
     }
 
     companion object {
@@ -112,5 +111,6 @@ class MyApplication : Application() {
         }
             private set
         var fetch: Fetch? = null
+        var eventTrackerInstance: TrackerInstance? = null
     }
 }

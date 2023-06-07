@@ -6,9 +6,7 @@ import com.tonyodev.fetch2.Download
 import com.tonyodev.fetch2.Fetch
 import com.tristana.sandroid.ui.downloader.common.CommonFooter
 import com.tristana.sandroid.ui.downloader.common.CommonFooter_
-import com.tristana.sandroid.ui.downloader.common.commonFooter
 import com.tristana.sandroid.ui.downloader.holder.DownloadTaskHolder_
-import com.tristana.sandroid.ui.downloader.holder.downloadTaskHolder
 
 /**
  * @author koala
@@ -35,18 +33,26 @@ class DownloadTaskListController(
         }
 
     override fun buildModels() {
-        fileInfoList?.forEach { item ->
-            DownloadTaskHolder_()
-                .context(context)
-                .taskInfo(item)
-                .fetch(fetch)
-                .id(item.id)
-                .addTo(this)
+        fetch?.let {
+            fileInfoList?.forEach { item ->
+                DownloadTaskHolder_()
+                    .context(context)
+                    .taskInfo(item)
+                    .fetch(it)
+                    .id(item.id)
+                    .addTo(this)
+            }
         }
         CommonFooter_()
             .hasMore(hasMore)
             .bottomPadding(bottomPadding)
-            .id("footer")
+            .id(
+                "footer-" + if (hasMore) {
+                    "more"
+                } else {
+                    "none"
+                }
+            )
             .addTo(this)
     }
 

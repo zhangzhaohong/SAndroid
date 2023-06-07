@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/no_more_data"
-        android:textColor="#ffffff"
+        android:textColor="@color/gray_555555"
         android:textSize="14sp" />
 
     <com.airbnb.lottie.LottieAnimationView

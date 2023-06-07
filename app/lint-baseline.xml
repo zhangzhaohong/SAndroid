@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="false" name="AGP (7.2.1)" variant="fatal" version="7.2.1">
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                deviceRootMode.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="54"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                deviceAdbMode.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                      ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="57"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                sdkVersionName.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="60"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                sdkVersionCode.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="63"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                systemVersionName.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                          ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="66"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                androidId.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                  ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="69"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                macAddress.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                   ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="72"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                manuFacturer.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                     ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="75"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                model.value = withContext(Dispatchers.IO) {"
+        errorLine2="                              ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="78"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                abis.value = withContext(Dispatchers.IO) {"
+        errorLine2="                             ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="81"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                isTablet.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                 ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="84"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                isEmulator.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                   ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="87"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                uniqueDeviceId.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="90"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appName.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="101"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appPackageName.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="104"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appVersionName.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="107"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appVersionCode.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                       ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="110"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appPathName.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                    ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="113"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appRootMode.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                    ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="116"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appDebugMode.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                     ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="119"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                systemAppMode.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                      ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="122"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appSignatureNameSHA1.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                             ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="125"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appSignatureNameSHA256.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                               ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="128"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="NullSafeMutableLiveData"
+        message="Expected non-nullable value"
+        errorLine1="                appSignatureNameMD5.value = withContext(Dispatchers.IO) {"
+        errorLine2="                                            ^">
+        <location
+            file="src/main/java/com/tristana/sandroid/ui/about/AboutViewModel.kt"
+            line="131"
+            column="45"/>
+    </issue>
+
+</issues>

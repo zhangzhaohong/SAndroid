@@ -1,3 +1,4 @@
-include ':tristanaViewWithToolsLibrary'
+include ':eventTracker'
+include ':tristanaLibrary'
 include ':app'
 rootProject.name = "SAndroid"

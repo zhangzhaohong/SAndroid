@@ -1,0 +1,65 @@
+[
+  {
+    "path": "/app/browser",
+    "className": "com.tristana.sandroid.ui.webview.X5WebViewFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/settings",
+    "className": "com.tristana.sandroid.ui.setting.SettingFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/settings/lab",
+    "className": "com.tristana.sandroid.ui.setting.LabFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/activity/scheme",
+    "className": "com.tristana.sandroid.ui.scheme.SchemeFilterActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/router/web",
+    "className": "com.tristana.sandroid.ui.router.RouterWebActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/downloader",
+    "className": "com.tristana.sandroid.ui.downloader.DownloadManagerFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/browser/ad",
+    "className": "com.tristana.sandroid.ui.ad.AdWebViewFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/splash",
+    "className": "com.tristana.sandroid.SplashActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
+    "path": "/app/activity/main",
+    "className": "com.tristana.sandroid.MainActivity",
+    "action": "",
+    "description": "",
+    "params": {}
+  }
+]

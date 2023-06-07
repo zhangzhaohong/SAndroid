@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.KeyEvent
 import android.view.Menu
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -14,10 +16,17 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.event.tracker.ws.Constants
+import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
+import com.event.tracker.ws.model.AppInfoDataModel
+import com.event.tracker.ws.model.DeviceInfoDataModel
+import com.event.tracker.ws.model.EventTrackerDataModel
+import com.event.tracker.ws.model.InfoEventDataModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -28,15 +37,18 @@ import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
-import com.tristana.customViewWithToolsLibrary.tools.array.ArrayUtils
-import com.tristana.customViewWithToolsLibrary.tools.file.FileUtils
-import com.tristana.customViewWithToolsLibrary.tools.toast.ToastUtils
-import com.tristana.sandroid.customInterface.IOnBackPressedInterface
+import com.therouter.TheRouter
+import com.therouter.router.Autowired
+import com.therouter.router.Route
+import com.tristana.library.tools.sharedPreferences.SpUtils
+import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
+import com.tristana.sandroid.model.data.DataModel
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.reflect.Field
 import java.util.*
 
 @Route(path = MainActivity.ROUTE)
@@ -46,11 +58,21 @@ class MainActivity : AppCompatActivity() {
         const val ROUTE = "/app/activity/main"
     }
 
+    @Autowired
+    @JvmField
+    var direct: String? = null
+
+    @Autowired
+    @JvmField
+    var extra: String? = null
+
+    private var mExitTime: Long = 0
+
     private var mAppBarConfiguration: AppBarConfiguration? = null
     private var menu: Menu? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ARouter.getInstance().inject(this)
+        TheRouter.inject(this)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -80,10 +102,25 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration!!)
         NavigationUI.setupWithNavController(navigationView, navController)
         initNavigationOnChangeListener(navController)
+        onBackPressedDispatcher.addCallback(this@MainActivity, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val fragment = getFragment(X5WebViewFragment::class.java)
+                if (fragment == null) {
+                    navController.popBackStack()
+                } else {
+                    if ((fragment as IOnBackPressedInterface?)!!.onBackPressed()) {
+                        navController.popBackStack()
+                        supportActionBar?.show()
+                    }
+                }
+            }
+        })
         XXPermissions.with(this)
             .permission(Permission.READ_PHONE_STATE)
             .permission(Permission.WRITE_EXTERNAL_STORAGE)
-            .permission(Permission.READ_EXTERNAL_STORAGE)
+            .permission(Permission.READ_MEDIA_IMAGES)
+            .permission(Permission.READ_MEDIA_VIDEO)
+            .permission(Permission.READ_MEDIA_AUDIO)
             // 设置权限请求拦截器（局部设置）
             //.interceptor(new PermissionInterceptor())
             // 设置不触发错误检测机制（局部设置）
@@ -102,7 +139,6 @@ class MainActivity : AppCompatActivity() {
                                 TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE to true
                             )
                             QbSdk.initTbsSettings(map)
-                            LogUtils.i("VERSION: " + Build.VERSION.SDK_INT);
                             // TbsDownloader.startDownload(MyApplication.instance);//手动开始下载，此时需要先判定网络是否符合
                             val callback: QbSdk.PreInitCallback = object : QbSdk.PreInitCallback {
                                 override fun onViewInitFinished(arg0: Boolean) {
@@ -164,6 +200,14 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
+        if (FragmentDirector.doDirect(navController, direct, extra)) {
+            return
+        }
+        MyApplication.eventTrackerInstance?.sendEvent(
+            EVENT_ON_OPENED_ACTIVITY,
+            EventTrackerDataModel(ROUTE)
+        )
+        reportInfoEvent()
     }
 
     /**
@@ -203,6 +247,16 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.nav_setting)
             true
         }
+        val actionLab = menu.findItem(R.id.action_settings_lab)
+        if (SpUtils.get(applicationContext, DataModel.ENABLE_SHOW_LAB_SP, false) as Boolean) {
+            actionLab.isVisible = true
+            actionLab.setOnMenuItemClickListener {
+                navController.navigate(R.id.nav_setting_lab)
+                true
+            }
+        } else {
+            actionLab.isVisible = false
+        }
         val actionDownloadManager = menu.findItem(R.id.action_download_manager)
         actionDownloadManager.setOnMenuItemClickListener {
             navController.navigate(R.id.nav_download_manager)
@@ -212,54 +266,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initTestProject() {
-        val menuRead = menu!!.findItem(R.id.action_read)
-        val menuWrite = menu!!.findItem(R.id.action_write)
-        val menuTextToArray = menu!!.findItem(R.id.action_textToArray)
-        val menuArrayToText = menu!!.findItem(R.id.action_arrayToText)
-        val menuDelFile = menu!!.findItem(R.id.action_delFile)
-        menuRead.setOnMenuItemClickListener {
-            val data = FileUtils().readLine(this@MainActivity, "data_TEST")
-            for (i in data.indices) {
-                LogUtils.d("Data_read[" + i + "] " + data[i])
-            }
-            true
-        }
-        menuWrite.setOnMenuItemClickListener {
-            FileUtils().writeData(
-                this@MainActivity,
-                "data_TEST",
-                "This is the data!" + System.currentTimeMillis()
-            )
-            true
-        }
-        menuTextToArray.setOnMenuItemClickListener {
-            val data = "111,222,333,444,555"
-            val result = ArrayUtils().textToArrayList(data)
-            for (i in result.indices) {
-                LogUtils.d("Data_textToArray[" + i + "] " + result[i])
-            }
-            true
-        }
-        menuArrayToText.setOnMenuItemClickListener {
-            val data = ArrayList<String>()
-            data.add("111")
-            data.add("222")
-            data.add("333")
-            data.add("444")
-            data.add("555")
-            data.add("666")
-            val result = ArrayUtils().arrayListToString(data)
-            LogUtils.d("Data_arrayToText: $result")
-            true
-        }
-        menuDelFile.setOnMenuItemClickListener {
-            if (FileUtils().deleteFile(this@MainActivity, "data_TEST")) {
-                ToastUtils.showToast(this@MainActivity, "删除成功！")
-            } else {
-                ToastUtils.showToast(this@MainActivity, "删除失败！")
-            }
-            true
-        }
+//        val menuRead = menu!!.findItem(R.id.action_read)
+//        menuRead.setOnMenuItemClickListener {
+//            true
+//        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -268,23 +278,33 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp())
     }
 
-    override fun onBackPressed() {
-        // super.onBackPressed()
-        val fragment = getFragment(X5WebViewFragment::class.java)
-        if (fragment == null) {
-            super.onBackPressed()
-        } else {
-            if ((fragment as IOnBackPressedInterface?)!!.onBackPressed()) {
-                super.onBackPressed()
-                this.supportActionBar?.show()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
+        val navController: NavController = navHostFragment.navController
+        navController.backQueue.last().destination.label?.let {
+            if (it != this.resources.getString(R.string.menu_space)) {
+                return super.onKeyDown(keyCode, event)
             }
         }
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                ToastUtils.showShort("再按一次退出APP")
+                //System.currentTimeMillis()系统当前时间
+                mExitTime = System.currentTimeMillis()
+            } else {
+                onExit()
+                ActivityUtils.finishAllActivities(true)
+                finish()
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
-    override fun onDestroy() {
+    private fun onExit() {
         MyApplication.fetch?.close()
+        MyApplication.eventTrackerInstance?.stopTracker()
         AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)
-        super.onDestroy()
     }
 
     private fun <F : Fragment> getFragment(fragmentClass: Class<F>): F? {
@@ -298,6 +318,71 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+        return null
+    }
+
+    private fun reportInfoEvent() {
+        MainScope().launch {
+            withContext(Dispatchers.IO) {
+                MyApplication.eventTrackerInstance?.sendEvent(
+                    Constants.EVENT_APPLICATION_INFO, EventTrackerDataModel(
+                        null, EventTrackerDataModel(
+                            null,
+                            InfoEventDataModel(
+                                AppInfoDataModel(
+                                    AppUtils.getAppName(),
+                                    AppUtils.getAppPackageName(),
+                                    AppUtils.getAppVersionName(),
+                                    AppUtils.getAppVersionCode(),
+                                    getBuildConfigValue("MAIN_VERSION_NAME"),
+                                    getBuildConfigValue("MAIN_VERSION_CODE"),
+                                    getBuildConfigValue("EXPAND_VERSION_NAME"),
+                                    getBuildConfigValue("EXPAND_VERSION_CODE"),
+                                    getBuildConfigValue("APP_VERSION_CODE"),
+                                    getBuildConfigValue("GIT_COMMIT_ID"),
+                                    getBuildConfigValue("BUILD_TIME"),
+                                    AppUtils.isAppRoot(),
+                                    AppUtils.isAppDebug(),
+                                    AppUtils.isAppSystem()
+
+                                ), DeviceInfoDataModel(
+                                    DeviceUtils.isDeviceRooted(),
+                                    DeviceUtils.isAdbEnabled(),
+                                    DeviceUtils.getSDKVersionName(),
+                                    DeviceUtils.getSDKVersionCode(),
+                                    Build.DISPLAY,
+                                    DeviceUtils.getAndroidID(),
+                                    DeviceUtils.getMacAddress().toString(),
+                                    DeviceUtils.getManufacturer(),
+                                    DeviceUtils.getModel(),
+                                    DeviceUtils.getABIs().toString(),
+                                    DeviceUtils.isTablet(),
+                                    DeviceUtils.isEmulator(),
+                                    DeviceUtils.getUniqueDeviceId().toString()
+                                )
+                            )
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    private fun getBuildConfigValue(fieldName: String?): String? {
+        fieldName?.let {
+            try {
+                val packageName = AppUtils.getAppPackageName()
+                val clazz = Class.forName("$packageName.BuildConfig")
+                val field: Field = clazz.getField(it)
+                return field.get(null)?.toString()
+            } catch (e: ClassNotFoundException) {
+                e.printStackTrace()
+            } catch (e: NoSuchFieldException) {
+                e.printStackTrace()
+            } catch (e: IllegalAccessException) {
+                e.printStackTrace()
+            }
         }
         return null
     }

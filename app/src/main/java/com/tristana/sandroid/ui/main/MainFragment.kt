@@ -1,25 +1,28 @@
 package com.tristana.sandroid.ui.main
 
 import android.graphics.Color
-import com.tristana.sandroid.customInterface.IOnClickBannerInterface
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
-import com.tristana.sandroid.R
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.to.aboomy.pager2banner.Banner
-import com.to.aboomy.pager2banner.IndicatorView
-import com.tristana.sandroid.model.bannerModel.BannerDataModel
-import com.tristana.sandroid.ui.main.adapter.ImageAdapter
-import net.lucode.hackware.magicindicator.buildins.UIUtil
-import com.to.aboomy.pager2banner.ScaleInTransformer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.StringUtils
+import com.google.common.base.Splitter
+import com.to.aboomy.pager2banner.Banner
+import com.to.aboomy.pager2banner.IndicatorView
+import com.to.aboomy.pager2banner.ScaleInTransformer
+import com.tristana.sandroid.FragmentDirector
+import com.tristana.sandroid.R
+import com.tristana.sandroid.customizeInterface.IOnClickBannerInterface
+import com.tristana.sandroid.model.bannerModel.BannerDataModel
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
-import java.util.ArrayList
+import com.tristana.sandroid.ui.main.adapter.ImageAdapter
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+
 
 class MainFragment : Fragment(), IOnClickBannerInterface {
     private var mainViewModel: MainViewModel? = null
@@ -71,7 +74,7 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         bannerData.add(
             BannerDataModel(
                 "https://img1.baidu.com/it/u=2780823041,991952778&fm=253&fmt=auto&app=138&f=JPG?w=1280&h=453",
-                "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0300fg10000c9c3nmbc77ubd837of2g&ratio=720p&isDownload=0"
+                "router://m.sandroid.com/app/activity/scheme?direct=/app/browser/ad&extra=https://www.douyin.com/"
             )
         )
         val adapter = ImageAdapter(requireContext(), bannerData)
@@ -89,15 +92,30 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
 
     override fun onClick(view: View?, directionPath: String) {
         LogUtils.i("onClick: $directionPath")
-        if (!StringUtils.isTrimEmpty(directionPath)) {
-            val bundle = Bundle()
-            bundle.putString("url", directionPath)
-            val fragment = AdWebViewFragment()
-            fragment.arguments = bundle
-            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
-            fragmentTransaction.addToBackStack(fragment.tag)
-            fragmentTransaction.commit()
+        if (directionPath.isNotEmpty()) {
+            if (directionPath.startsWith("router://")) {
+                val direct = getParam(directionPath, "direct")
+                val extra = getParam(directionPath, "extra")
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                FragmentDirector.doDirect(navController, direct, extra)
+            } else {
+                val bundle = Bundle()
+                bundle.putString("url", directionPath)
+                val fragment = AdWebViewFragment()
+                fragment.arguments = bundle
+                val fragmentTransaction =
+                    requireActivity().supportFragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
+                fragmentTransaction.addToBackStack(fragment.tag)
+                fragmentTransaction.commit()
+            }
         }
+    }
+
+    private fun getParam(url: String, name: String): String? {
+        val params = url.substring(url.indexOf("?") + 1)
+        val split = Splitter.on("&").withKeyValueSeparator("=").split(params)
+        return split[name]
     }
 }

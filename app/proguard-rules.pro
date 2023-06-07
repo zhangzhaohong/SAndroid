@@ -54,3 +54,26 @@
 
 # 如果使用了 单类注入，即不定义接口实现 IProvider，需添加下面规则，保护实现
 # -keep class * implements com.alibaba.android.arouter.facade.template.IProvider
+
+# need add for Fragment page route
+-keep public class * extends android.app.Fragment
+-keep public class * extends androidx.fragment.app.Fragment
+# -keep public class * extends android.support.v4.app.Fragment
+
+-keep class androidx.annotation.Keep
+-keep @androidx.annotation.Keep class * {*;}
+-keepclassmembers class * {
+    @androidx.annotation.Keep *;
+}
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <methods>;
+}
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <fields>;
+}
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <init>(...);
+}
+-keepclasseswithmembers class * {
+    @com.therouter.router.Autowired <fields>;
+}

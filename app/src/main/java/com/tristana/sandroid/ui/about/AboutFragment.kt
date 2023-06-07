@@ -2,22 +2,53 @@ package com.tristana.sandroid.ui.about
 
 import android.graphics.text.LineBreaker
 import android.os.Build
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProvider
-import com.tristana.sandroid.R
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.ClickUtils.OnMultiClickListener
+import com.blankj.utilcode.util.ToastUtils
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
-import com.tristana.sandroid.model.data.AboutModel.*
+import com.tristana.library.tools.sharedPreferences.SpUtils
+import com.tristana.sandroid.R
+import com.tristana.sandroid.model.data.AboutModel.ABIS
+import com.tristana.sandroid.model.data.AboutModel.ANDROID_ID
+import com.tristana.sandroid.model.data.AboutModel.APP_BUILD_INFO
+import com.tristana.sandroid.model.data.AboutModel.APP_DEBUG_MODE
+import com.tristana.sandroid.model.data.AboutModel.APP_NAME
+import com.tristana.sandroid.model.data.AboutModel.APP_PACKAGE_NAME
+import com.tristana.sandroid.model.data.AboutModel.APP_PATH_NAME
+import com.tristana.sandroid.model.data.AboutModel.APP_ROOT_MODE
+import com.tristana.sandroid.model.data.AboutModel.APP_SIGNATURE_NAME_MD5
+import com.tristana.sandroid.model.data.AboutModel.APP_SIGNATURE_NAME_SHA1
+import com.tristana.sandroid.model.data.AboutModel.APP_SIGNATURE_NAME_SHA256
+import com.tristana.sandroid.model.data.AboutModel.APP_VERSION_CODE
+import com.tristana.sandroid.model.data.AboutModel.APP_VERSION_NAME
+import com.tristana.sandroid.model.data.AboutModel.DEVICE_ADB_MODE
+import com.tristana.sandroid.model.data.AboutModel.DEVICE_ROOT_MODE
+import com.tristana.sandroid.model.data.AboutModel.IS_EMULATOR
+import com.tristana.sandroid.model.data.AboutModel.IS_TABLET
+import com.tristana.sandroid.model.data.AboutModel.MAC_ADDRESS
+import com.tristana.sandroid.model.data.AboutModel.MANU_FACTURER
+import com.tristana.sandroid.model.data.AboutModel.MODEL
+import com.tristana.sandroid.model.data.AboutModel.SDK_VERSION_CODE
+import com.tristana.sandroid.model.data.AboutModel.SDK_VERSION_NAME
+import com.tristana.sandroid.model.data.AboutModel.SYSTEM_APP_MODE
+import com.tristana.sandroid.model.data.AboutModel.SYSTEM_VERSION_NAME
+import com.tristana.sandroid.model.data.AboutModel.UNIQUE_DEVICE_ID
+import com.tristana.sandroid.model.data.DataModel.ENABLE_SHOW_LAB_SP
+import java.util.Optional
 
 class AboutFragment : Fragment() {
 
@@ -26,6 +57,56 @@ class AboutFragment : Fragment() {
     private var na: String = "N/A"
 
     private var onClickListener = View.OnClickListener { }
+
+    private fun onMultiClickListener(count: Int = 10): OnMultiClickListener {
+        return object : OnMultiClickListener(count) {
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onTriggerClick(v: View) {
+                if (v is QMUICommonListItemView) {
+                    if (APP_VERSION_NAME == v.text) {
+                        SpUtils.put(requireContext(), ENABLE_SHOW_LAB_SP, true)
+                        needRestart(false, "您已成功进入开发者模式")
+                        ToastUtils.showShort("您已成功进入开发者模式")
+                    }
+                }
+            }
+
+            override fun onBeforeTriggerClick(v: View, current: Int) {
+                if (v is QMUICommonListItemView) {
+                    if (APP_VERSION_NAME == v.text) {
+                        val times = count - current
+                        if (times <= count / 2) {
+                            ToastUtils.showShort("再按${times}即可进入开发者模式")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun needRestart(later: Boolean = true, text: String?) {
+        val builder = QMUIDialog.MessageDialogBuilder(activity)
+        builder
+            .setTitle("提示")
+            .setMessage(Optional.ofNullable(text).orElse("设置已保存，重启App生效"))
+            .setCancelable(later)
+            .setCanceledOnTouchOutside(later)
+        if (later) {
+            builder.addAction(
+                "稍后重启"
+            ) { dialog, _ -> dialog.dismiss() }
+        }
+        builder.addAction(
+            "立即重启"
+        ) { dialog, _ ->
+            run {
+                dialog.dismiss()
+                AppUtils.relaunchApp(true)
+            }
+        }
+        builder.show()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -130,6 +211,7 @@ class AboutFragment : Fragment() {
         val appPackageName = createElement(APP_PACKAGE_NAME, height)
         val appVersionName = createElement(APP_VERSION_NAME, height)
         val appVersionCode = createElement(APP_VERSION_CODE, height)
+        val appBuildInfo = createElement(APP_BUILD_INFO, height)
         val appPathName = createElement(APP_PATH_NAME, height)
         val appRootMode = createElement(APP_ROOT_MODE, height)
         val appDebugMode = createElement(APP_DEBUG_MODE, height)
@@ -145,8 +227,16 @@ class AboutFragment : Fragment() {
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
             .addItemView(appName, onClickListener)
             .addItemView(appPackageName, onClickListener)
-            .addItemView(appVersionName, onClickListener)
+            .addItemView(
+                appVersionName,
+                if (SpUtils.get(context, ENABLE_SHOW_LAB_SP, false) as Boolean) {
+                    onClickListener
+                } else {
+                    onMultiClickListener()
+                }
+            )
             .addItemView(appVersionCode, onClickListener)
+            .addItemView(appBuildInfo, onClickListener)
             .addItemView(appPathName, onClickListener)
             .addItemView(appRootMode, onClickListener)
             .addItemView(appDebugMode, onClickListener)
@@ -168,6 +258,9 @@ class AboutFragment : Fragment() {
         }
         aboutViewModel.appVersionCode.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appVersionCode, text)
+        }
+        aboutViewModel.appBuildInfo.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(appBuildInfo, text)
         }
         aboutViewModel.appPathName.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appPathName, text)

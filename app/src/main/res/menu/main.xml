@@ -6,46 +6,20 @@
         android:orderInCategory="90"
         android:title="@string/network_setting"
         app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/action_settings_lab"
+        android:orderInCategory="100"
+        android:title="@string/action_settings_lab"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_download_manager"
         android:orderInCategory="100"
         android:title="@string/action_download_manager"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_read"
-        android:orderInCategory="100"
-        android:title="@string/action_readFile"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_write"
-        android:orderInCategory="100"
-        android:title="@string/action_writeFile"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_textToArray"
-        android:orderInCategory="100"
-        android:title="@string/action_textToArray"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_arrayToText"
-        android:orderInCategory="100"
-        android:title="@string/action_arrayToText"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_delFile"
-        android:orderInCategory="100"
-        android:title="@string/action_delFile"
-        app:showAsAction="never" />
 </menu>

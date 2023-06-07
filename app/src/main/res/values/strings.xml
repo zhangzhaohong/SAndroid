@@ -68,4 +68,6 @@
     <string name="unknown_file_type">N/A</string>
     <string name="test_3">下载器测试3</string>
     <string name="no_more_data">暂无更多内容</string>
+    <string name="menu_setting_lab">开发人员选项</string>
+    <string name="action_settings_lab">开发人员选项</string>
 </resources>
