@@ -3,10 +3,9 @@ package com.tristana.sandroid.ui.downloader.controller
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import com.tonyodev.fetch2.Download
-import com.tonyodev.fetch2.Fetch
 import com.tristana.sandroid.common.CommonFooter
 import com.tristana.sandroid.common.CommonFooter_
-import com.tristana.sandroid.ui.downloader.holder.DownloadTaskHolder_
+import com.tristana.sandroid.ui.video.recommend.holder.VideoRecommendHolder_
 
 /**
  * @author koala
@@ -16,7 +15,6 @@ import com.tristana.sandroid.ui.downloader.holder.DownloadTaskHolder_
  */
 class VideoRecommendController(
     private val context: Context,
-    private val fetch: Fetch?,
     private val bottomPadding: Float = CommonFooter.NORMAL_PADDING
 ) : EpoxyController() {
 
@@ -33,15 +31,11 @@ class VideoRecommendController(
         }
 
     override fun buildModels() {
-        fetch?.let {
-            fileInfoList?.forEach { item ->
-                DownloadTaskHolder_()
-                    .context(context)
-                    .taskInfo(item)
-                    .fetch(it)
-                    .id(item.id)
-                    .addTo(this)
-            }
+        fileInfoList?.forEach { item ->
+            VideoRecommendHolder_()
+                .context(context)
+                .id(item.id)
+                .addTo(this)
         }
         CommonFooter_()
             .hasMore(hasMore)

@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.tristana.sandroid.R
-import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
 import com.tristana.sandroid.ui.downloader.controller.VideoRecommendController
 import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
 
@@ -36,6 +35,8 @@ class VideoRecommendFragment : Fragment() {
             false
         )
         videoRecommendView.layoutManager = layoutManager
+        videoRecommendController = VideoRecommendController(requireContext())
+        videoRecommendView.setController(videoRecommendController)
         return root
     }
 }

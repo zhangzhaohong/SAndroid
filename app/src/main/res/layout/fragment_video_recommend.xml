@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.video.recommend.VideoRecommendFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:overScrollMode="never" />
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
