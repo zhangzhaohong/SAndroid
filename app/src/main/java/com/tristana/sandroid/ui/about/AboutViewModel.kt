@@ -4,6 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
+import com.blankj.utilcode.util.GsonUtils
+import com.google.gson.Gson
+import com.tristana.library.tools.http.HttpUtils
+import com.tristana.library.tools.http.OkHttpRequestGenerator
+import com.tristana.library.tools.http.OkHttpUtils
+import com.tristana.sandroid.MyApplication
+import com.tristana.sandroid.http.PathCollection.SERVER_INFO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -41,9 +48,16 @@ class AboutViewModel : ViewModel() {
     val isEmulator: MutableLiveData<String?> = MutableLiveData()
     val uniqueDeviceId: MutableLiveData<String?> = MutableLiveData()
 
+    // serverInfo
+    val serverHost: MutableLiveData<String?> = MutableLiveData()
+    val serverEnv: MutableLiveData<String?> = MutableLiveData()
+    val serverVersion: MutableLiveData<String?> = MutableLiveData()
+    val serverBuildTime: MutableLiveData<String?> = MutableLiveData()
+
     init {
         initAppInfo()
         initDeviceInfo()
+        initServerInfo()
     }
 
     private fun initDeviceInfo() {
@@ -134,6 +148,35 @@ class AboutViewModel : ViewModel() {
                 }
                 appSignatureNameMD5.value = withContext(Dispatchers.IO) {
                     AppUtils.getAppSignaturesMD5().toString()
+                }
+            }
+        }
+    }
+
+    private fun initServerInfo() {
+        MainScope().launch {
+            withContext(Dispatchers.Main) {
+                serverHost.value = withContext(Dispatchers.IO) {
+                    MyApplication.host
+                }
+                withContext(Dispatchers.IO) {
+                    try {
+                        val serverInfoResponse =
+                            OkHttpRequestGenerator.create(MyApplication.host + SERVER_INFO).get()
+                                .sync()
+                        val serverInfo = GsonUtils.fromJson(serverInfoResponse, Map::class.java)
+                        val serverInfoData = GsonUtils.fromJson(
+                            GsonUtils.toJson(serverInfo["data"]),
+                            Map::class.java
+                        )
+                        withContext(Dispatchers.Main) {
+                            serverEnv.value = serverInfoData["env"].toString()
+                            serverVersion.value = serverInfoData["version"].toString()
+                            serverBuildTime.value = serverInfoData["buildTime"].toString()
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
         }

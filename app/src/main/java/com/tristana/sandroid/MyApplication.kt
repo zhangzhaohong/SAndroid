@@ -98,6 +98,8 @@ class MyApplication : Application() {
     }
 
     companion object {
+        var host: String = "http://89gquu.natappfree.cc/"
+            private set
         var instance: Application? = null
             private set
         var appStatusChangeListener = object : OnAppStatusChangedListener {

@@ -32,6 +32,10 @@ public class AboutModel {
     public static final String IS_TABLET = "是否平板";
     public static final String IS_EMULATOR = "是否模拟器";
     public static final String UNIQUE_DEVICE_ID = "设备ID";
+    public static final String SERVER_HOST = "HOST";
+    public static final String SERVER_ENV = "环境";
+    public static final String SERVER_VERSION = "版本";
+    public static final String SERVER_BUILD_TIME = "编译日期";
 
 
 }

@@ -44,6 +44,10 @@ import com.tristana.sandroid.model.data.AboutModel.MANU_FACTURER
 import com.tristana.sandroid.model.data.AboutModel.MODEL
 import com.tristana.sandroid.model.data.AboutModel.SDK_VERSION_CODE
 import com.tristana.sandroid.model.data.AboutModel.SDK_VERSION_NAME
+import com.tristana.sandroid.model.data.AboutModel.SERVER_BUILD_TIME
+import com.tristana.sandroid.model.data.AboutModel.SERVER_ENV
+import com.tristana.sandroid.model.data.AboutModel.SERVER_HOST
+import com.tristana.sandroid.model.data.AboutModel.SERVER_VERSION
 import com.tristana.sandroid.model.data.AboutModel.SYSTEM_APP_MODE
 import com.tristana.sandroid.model.data.AboutModel.SYSTEM_VERSION_NAME
 import com.tristana.sandroid.model.data.AboutModel.UNIQUE_DEVICE_ID
@@ -125,6 +129,7 @@ class AboutFragment : Fragment() {
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
         initAppInfoSection(aboutViewModel!!, height)
         initDeviceInfoSection(aboutViewModel!!, height)
+        initServerInfo(aboutViewModel!!, height)
         return root
     }
 
@@ -282,6 +287,41 @@ class AboutFragment : Fragment() {
         }
         aboutViewModel.appSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameMD5, text)
+        }
+    }
+
+    private fun initServerInfo(aboutViewModel: AboutViewModel, height: Int) {
+        val serverHost = createElement(SERVER_HOST, height)
+        val serverEnv = createElement(SERVER_ENV, height)
+        val serverVersion = createElement(SERVER_VERSION, height)
+        val serverBuildTime = createElement(SERVER_BUILD_TIME, height)
+
+        val size = QMUIDisplayHelper.dp2px(context, 20)
+        QMUIGroupListView.newSection(requireContext())
+            .setTitle("Server信息")
+            .setDescription("")
+            .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(serverHost, onClickListener)
+            .addItemView(serverEnv, onClickListener)
+            .addItemView(serverVersion, onClickListener)
+            .addItemView(serverBuildTime, onClickListener)
+            .setShowSeparator(true)
+            .addTo(mGroupListView)
+
+        aboutViewModel.serverHost.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverHost, text)
+        }
+
+        aboutViewModel.serverEnv.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverEnv, text)
+        }
+
+        aboutViewModel.serverVersion.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverVersion, text)
+        }
+
+        aboutViewModel.serverBuildTime.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverBuildTime, text)
         }
     }
 
