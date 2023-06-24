@@ -9,24 +9,36 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.tristana.sandroid.R
-import com.tristana.sandroid.ui.downloader.controller.VideoRecommendController
+import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
 import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
 
 class VideoRecommendFragment : Fragment() {
 
     private lateinit var videoRecommendController: VideoRecommendController
     private lateinit var layoutManager: QuickScrollLinearLayoutManager
+    private var onScrollListener: RecyclerView.OnScrollListener = getOnScrollLister()
+    private var videoRecommendViewModel: VideoRecommendViewModel? = null
 
-    private var galleryViewModel: VideoRecommendViewModel? = null
+    private fun getOnScrollLister(): RecyclerView.OnScrollListener {
+        return object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(
+                recyclerView: RecyclerView,
+                newState: Int
+            ) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    videoRecommendViewModel?.loadMore()
+                }
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        if (galleryViewModel == null) galleryViewModel =
+        if (videoRecommendViewModel == null) videoRecommendViewModel =
             AndroidViewModelFactory.getInstance(requireActivity().application)
-                .create<VideoRecommendViewModel>(
-                    VideoRecommendViewModel::class.java
-                )
+                .create(VideoRecommendViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_video_recommend, container, false)
         val videoRecommendView = root.findViewById<EpoxyRecyclerView>(R.id.video_recommend_view)
         layoutManager = QuickScrollLinearLayoutManager(
@@ -37,6 +49,17 @@ class VideoRecommendFragment : Fragment() {
         videoRecommendView.layoutManager = layoutManager
         videoRecommendController = VideoRecommendController(requireContext())
         videoRecommendView.setController(videoRecommendController)
+        videoRecommendView.addOnScrollListener(onScrollListener)
+        initObserver()
         return root
+    }
+
+    private fun initObserver() {
+        videoRecommendViewModel!!.videoRecommendDataList.observe(viewLifecycleOwner) {
+            videoRecommendController.videoRecommendDataList = it
+        }
+        videoRecommendViewModel!!.hasMore.observe(viewLifecycleOwner) {
+            videoRecommendController.hasMore = it
+        }
     }
 }

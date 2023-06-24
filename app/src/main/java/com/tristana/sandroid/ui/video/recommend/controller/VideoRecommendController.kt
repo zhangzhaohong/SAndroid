@@ -1,10 +1,11 @@
-package com.tristana.sandroid.ui.downloader.controller
+package com.tristana.sandroid.ui.video.recommend.controller
 
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import com.tonyodev.fetch2.Download
 import com.tristana.sandroid.common.CommonFooter
 import com.tristana.sandroid.common.CommonFooter_
+import com.tristana.sandroid.models.video.recommend.AwemeDataModel
 import com.tristana.sandroid.ui.video.recommend.holder.VideoRecommendHolder_
 
 /**
@@ -18,7 +19,7 @@ class VideoRecommendController(
     private val bottomPadding: Float = CommonFooter.NORMAL_PADDING
 ) : EpoxyController() {
 
-    var fileInfoList: MutableList<Download>? = null
+    var videoRecommendDataList: MutableList<AwemeDataModel>? = null
         set(value) {
             field = value
             requestModelBuild()
@@ -31,10 +32,11 @@ class VideoRecommendController(
         }
 
     override fun buildModels() {
-        fileInfoList?.forEach { item ->
+        videoRecommendDataList?.forEach { item ->
             VideoRecommendHolder_()
                 .context(context)
-                .id(item.id)
+                .id(item.awemeId)
+                .item(item)
                 .addTo(this)
         }
         CommonFooter_()

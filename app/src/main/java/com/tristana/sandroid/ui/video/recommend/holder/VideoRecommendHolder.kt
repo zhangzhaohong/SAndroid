@@ -16,6 +16,7 @@ import com.tonyodev.fetch2.Download
 import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.Status
 import com.tristana.sandroid.R
+import com.tristana.sandroid.models.video.recommend.AwemeDataModel
 import com.tristana.sandroid.ui.downloader.DownloadStateEnums
 
 
@@ -30,6 +31,9 @@ abstract class VideoRecommendHolder : EpoxyModelWithHolder<VideoRecommendHolder.
 
     @EpoxyAttribute
     lateinit var context: Context
+
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var item: AwemeDataModel
 
     override fun getViewType(): Int {
         return 0
