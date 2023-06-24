@@ -1,4 +1,4 @@
-package com.tristana.sandroid.common
+package com.tristana.sandroid.epoxy.common
 
 import android.annotation.SuppressLint
 import android.view.View

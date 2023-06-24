@@ -4,8 +4,8 @@ import android.content.Context
 import com.airbnb.epoxy.EpoxyController
 import com.tonyodev.fetch2.Download
 import com.tonyodev.fetch2.Fetch
-import com.tristana.sandroid.common.CommonFooter
-import com.tristana.sandroid.common.CommonFooter_
+import com.tristana.sandroid.epoxy.common.CommonFooter_
+import com.tristana.sandroid.epoxy.common.CommonFooter
 import com.tristana.sandroid.ui.downloader.holder.DownloadTaskHolder_
 
 /**

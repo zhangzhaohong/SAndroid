@@ -26,7 +26,7 @@ import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils
 import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
-import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
+import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
-import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
+import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
 
 class VideoRecommendFragment : Fragment() {
 
