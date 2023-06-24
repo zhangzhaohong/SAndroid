@@ -118,7 +118,7 @@ dependencies {
     ksp "com.airbnb.android:epoxy-processor:$epoxy_version"
     implementation "com.airbnb.android:epoxy-databinding:$epoxy_version"
     // lottie
-    implementation 'com.airbnb.android:lottie:6.0.0'
+    implementation 'com.airbnb.android:lottie:6.0.1'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     // therouter
     kapt "cn.therouter:apt:$therouter_version"
