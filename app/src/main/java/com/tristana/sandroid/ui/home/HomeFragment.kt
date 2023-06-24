@@ -1,27 +1,20 @@
 package com.tristana.sandroid.ui.home
 
 import android.os.Build
-import com.tristana.sandroid.ui.home.HomeViewModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.blankj.utilcode.util.LogUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.about.AboutFragment
 import com.tristana.sandroid.ui.main.MainFragment
+import com.tristana.sandroid.ui.video.recommend.VideoRecommendFragment
 
 class HomeFragment : Fragment() {
     private var homeViewModel: HomeViewModel? = null
@@ -46,13 +39,14 @@ class HomeFragment : Fragment() {
         val viewpager: ViewPager2 = root.findViewById(R.id.bottom_nav_host_fragment_viewpager)
         viewpager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
-                return 2
+                return 3
             }
 
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
                     0 -> MainFragment()
-                    1 -> AboutFragment()
+                    1 -> VideoRecommendFragment()
+                    2 -> AboutFragment()
                     else -> MainFragment()
                 }
             }
@@ -64,6 +58,12 @@ class HomeFragment : Fragment() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     toolbar?.title = navigationView.menu.getItem(position).title
                 }
+                when (position) {
+                    0 -> toolbar?.visibility = View.VISIBLE
+                    1 -> toolbar?.visibility = View.GONE
+                    2 -> toolbar?.visibility = View.VISIBLE
+                    else -> toolbar?.visibility = View.VISIBLE
+                }
             }
         })
         navigationView.setOnItemSelectedListener {
@@ -71,9 +71,15 @@ class HomeFragment : Fragment() {
                 R.id.bottom_navigation_main -> {
                     viewpager.setCurrentItem(0, true)
                 }
-                R.id.bottom_navigation_about -> {
+
+                R.id.bottom_navigation_video_recommend -> {
                     viewpager.setCurrentItem(1, true)
                 }
+
+                R.id.bottom_navigation_about -> {
+                    viewpager.setCurrentItem(2, true)
+                }
+
                 else -> {
                     viewpager.setCurrentItem(0, true)
                 }

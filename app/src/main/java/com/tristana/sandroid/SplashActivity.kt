@@ -47,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
             "进入体验",
             true,
             10,
-            5,
+            3,
             object : () -> Unit {
                 override fun invoke() {
                     jumpToMainActivity()
