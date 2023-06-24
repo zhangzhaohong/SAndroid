@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
+import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
@@ -16,21 +17,17 @@ class VideoRecommendFragment : Fragment() {
 
     private lateinit var videoRecommendController: VideoRecommendController
     private lateinit var layoutManager: QuickScrollLinearLayoutManager
-    private var onScrollListener: RecyclerView.OnScrollListener = getOnScrollLister()
-    private var videoRecommendViewModel: VideoRecommendViewModel? = null
-
-    private fun getOnScrollLister(): RecyclerView.OnScrollListener {
-        return object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(
-                recyclerView: RecyclerView,
-                newState: Int
-            ) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    videoRecommendViewModel?.loadMore()
-                }
+    private var onScrollListener: RecyclerView.OnScrollListener =  object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(
+            recyclerView: RecyclerView,
+            newState: Int
+        ) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                videoRecommendViewModel?.loadMore()
             }
         }
     }
+    private var videoRecommendViewModel: VideoRecommendViewModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +44,7 @@ class VideoRecommendFragment : Fragment() {
             false
         )
         videoRecommendView.layoutManager = layoutManager
+        videoRecommendView.setHasFixedSize(true)
         layoutManager.stackFromEnd = false
         videoRecommendController = VideoRecommendController(requireContext())
         videoRecommendView.setController(videoRecommendController)
