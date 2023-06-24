@@ -47,6 +47,7 @@ class VideoRecommendFragment : Fragment() {
             false
         )
         videoRecommendView.layoutManager = layoutManager
+        layoutManager.stackFromEnd = false
         videoRecommendController = VideoRecommendController(requireContext())
         videoRecommendView.setController(videoRecommendController)
         videoRecommendView.addOnScrollListener(onScrollListener)

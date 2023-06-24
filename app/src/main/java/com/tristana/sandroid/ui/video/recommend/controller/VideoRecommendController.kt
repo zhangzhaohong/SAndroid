@@ -31,7 +31,7 @@ class VideoRecommendController(
         }
 
     override fun buildModels() {
-        videoRecommendDataList?.forEach { item ->
+        videoRecommendDataList?.forEachIndexed { _, item ->
             VideoRecommendHolder_()
                 .context(context)
                 .id(item.awemeId)
