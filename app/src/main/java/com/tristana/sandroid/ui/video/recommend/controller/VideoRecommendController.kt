@@ -14,7 +14,7 @@ import com.tristana.sandroid.ui.downloader.holder.DownloadTaskHolder_
  * @date 2022/4/19 11:08
  * @description
  */
-class DownloadTaskListController(
+class VideoRecommendController(
     private val context: Context,
     private val fetch: Fetch?,
     private val bottomPadding: Float = CommonFooter.NORMAL_PADDING

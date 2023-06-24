@@ -15,18 +15,25 @@ import com.event.tracker.ws.Constants
 import com.event.tracker.ws.model.EventTrackerDataModel
 import com.therouter.TheRouter
 import com.therouter.router.Route
-import com.tonyodev.fetch2.*
+import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.Error
+import com.tonyodev.fetch2.Fetch
+import com.tonyodev.fetch2.FetchListener
+import com.tonyodev.fetch2.Priority
 import com.tonyodev.fetch2core.DownloadBlock
 import com.tristana.library.tools.http.HttpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.downloader.utils.RequestObjectUtils
-import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.downloader.controller.DownloadTaskListController
 import com.tristana.sandroid.ui.downloader.manager.QuickScrollLinearLayoutManager
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 
 @Route(path = DownloadManagerFragment.ROUTE)

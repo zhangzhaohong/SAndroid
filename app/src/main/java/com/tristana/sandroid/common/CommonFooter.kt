@@ -1,5 +1,6 @@
-package com.tristana.sandroid.ui.downloader.common
+package com.tristana.sandroid.common
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
@@ -20,6 +21,7 @@ import com.tristana.sandroid.R
  * @version 1.0
  * @description
  */
+@SuppressLint("NonConstantResourceId")
 @EpoxyModelClass(layout = R.layout.holder_common_footer)
 abstract class CommonFooter : EpoxyModelWithHolder<CommonFooter.Holder>() {
 
