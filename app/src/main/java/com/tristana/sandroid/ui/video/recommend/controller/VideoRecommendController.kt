@@ -30,7 +30,7 @@ class VideoRecommendController(
             requestModelBuild()
         }
 
-    private var isFirstLoad = true
+    var isFirstLoad: Boolean = true
 
     override fun buildModels() {
         videoRecommendDataList?.let {dataList ->
@@ -53,8 +53,6 @@ class VideoRecommendController(
                         }
                     )
                     .addTo(this)
-            } else if (isFirstLoad) {
-                isFirstLoad = false
             }
         }
     }

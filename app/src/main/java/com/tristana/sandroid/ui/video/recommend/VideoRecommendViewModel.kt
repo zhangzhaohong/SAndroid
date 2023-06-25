@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 
 class VideoRecommendViewModel : ViewModel() {
 
+    var isFirstLoad = MutableLiveData(true)
     var hasMore = MutableLiveData(true)
     var videoRecommendDataList = MutableLiveData<MutableList<AwemeDataModel>?>(ArrayList())
     private var tmpVideoRecommendDataList: ArrayList<AwemeDataModel> = ArrayList()
@@ -26,11 +27,16 @@ class VideoRecommendViewModel : ViewModel() {
         loadNext(true)
     }
 
-    suspend fun requestData() {
+    private suspend fun requestData() {
         return withContext(Dispatchers.IO) {
             OkHttpRequestGenerator.create(MyApplication.host + PathCollection.VIDEO_RECOMMEND)
                 .get().sync()?.let { response ->
                     run {
+                        if (isFirstLoad.value == true) {
+                            withContext(Dispatchers.Main) {
+                                isFirstLoad.value = false
+                            }
+                        }
                         GsonUtils.fromJson(
                             response,
                             HttpResponsePublicModel::class.java
@@ -63,7 +69,8 @@ class VideoRecommendViewModel : ViewModel() {
             videoRecommendDataList.value?.add(tmpVideoRecommendDataList[0])
             tmpVideoRecommendDataList.removeAt(0)
         }
-        hasMore.value = (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
+        hasMore.value =
+            (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
     }
 
     private fun loadMore() {

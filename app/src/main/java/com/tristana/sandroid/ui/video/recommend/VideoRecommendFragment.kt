@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
+import com.tristana.sandroid.ui.components.LoadingDialog
 import com.tristana.sandroid.ui.video.recommend.listener.EndlessRecyclerOnScrollListener
 
 class VideoRecommendFragment : Fragment() {
@@ -26,10 +27,15 @@ class VideoRecommendFragment : Fragment() {
         }
     private var videoRecommendViewModel: VideoRecommendViewModel? = null
 
+    private val loadingDialog by lazy {
+        LoadingDialog(requireContext(), getString(R.string.is_loading), false)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+        loadingDialog.show()
         if (videoRecommendViewModel == null) videoRecommendViewModel =
             AndroidViewModelFactory.getInstance(requireActivity().application)
                 .create(VideoRecommendViewModel::class.java)
@@ -56,6 +62,12 @@ class VideoRecommendFragment : Fragment() {
         }
         videoRecommendViewModel!!.hasMore.observe(viewLifecycleOwner) {
             videoRecommendController.hasMore = it
+        }
+        videoRecommendViewModel!!.isFirstLoad.observe(viewLifecycleOwner) {
+            videoRecommendController.isFirstLoad = it
+            if (!it) {
+                loadingDialog.dismiss()
+            }
         }
     }
 }

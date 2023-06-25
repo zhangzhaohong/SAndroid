@@ -281,7 +281,7 @@ class MainActivity : AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
         val navController: NavController = navHostFragment.navController
-        navController.backQueue.last().destination.label?.let {
+        navController.currentBackStackEntry?.destination?.label?.let {
             if (it != this.resources.getString(R.string.menu_space)) {
                 return super.onKeyDown(keyCode, event)
             }

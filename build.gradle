@@ -9,6 +9,8 @@ buildscript {
     ext.kotlin_version = '1.8.21'
     ext.therouter_version='1.1.4-rc2'
     repositories {
+        gradlePluginPortal()
+        google()
         mavenCentral()
         maven { url 'https://maven.aliyun.com/repository/central' }
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
@@ -37,6 +39,8 @@ allprojects {
     apply plugin: "com.google.devtools.ksp"
     apply from: "${project.getRootDir()}/therouter.gradle"
     repositories {
+        gradlePluginPortal()
+        google()
         mavenCentral()
         maven { url 'https://maven.aliyun.com/repository/central' }
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
@@ -44,6 +48,7 @@ allprojects {
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
         maven { url "https://jitpack.io" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 }
 
