@@ -27,7 +27,7 @@ class VideoRecommendViewModel : ViewModel() {
         loadNext(true)
     }
 
-    private suspend fun requestData() {
+    private suspend fun requestData(isManual: Boolean) {
         return withContext(Dispatchers.IO) {
             OkHttpRequestGenerator.create(MyApplication.host + PathCollection.VIDEO_RECOMMEND)
                 .get().sync()?.let { response ->
@@ -48,9 +48,11 @@ class VideoRecommendViewModel : ViewModel() {
                                 withContext(Dispatchers.Main) {
                                     tmpHasMore = videoData.hasMore == 1
                                     videoData.awemeList?.let { vidList ->
-                                        tmpVideoRecommendDataList = vidList
+                                        tmpVideoRecommendDataList.addAll(vidList)
                                     }
-                                    loadNext(false)
+                                    if (!isManual) {
+                                        loadNext(false)
+                                    }
                                 }
                             }
                         }
@@ -73,11 +75,15 @@ class VideoRecommendViewModel : ViewModel() {
             (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
     }
 
-    private fun loadMore() {
+    fun loadMore(isManual: Boolean = false) {
         MainScope().launch {
             withContext(Dispatchers.IO) {
-                requestData()
+                requestData(isManual)
             }
         }
+    }
+
+    fun getTmpDataListSize(): Int {
+        return tmpVideoRecommendDataList.size
     }
 }

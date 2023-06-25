@@ -40,6 +40,8 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener()
      */
     abstract fun onLoadMore()
 
+    abstract fun onRequestMore()
+
     fun getSlidingDirection(): Boolean {
         return isSlidingUpward
     }

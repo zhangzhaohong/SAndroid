@@ -98,7 +98,7 @@ class MyApplication : Application() {
     }
 
     companion object {
-        var host: String = "http://q2bigg.natappfree.cc/"
+        var host: String = "http://fyj7my.natappfree.cc/"
             private set
         var instance: Application? = null
             private set

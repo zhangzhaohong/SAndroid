@@ -34,10 +34,10 @@ class VideoRecommendController(
 
     override fun buildModels() {
         videoRecommendDataList?.let {dataList ->
-            dataList.forEachIndexed { _, item ->
+            dataList.forEachIndexed { index, item ->
                 VideoRecommendHolder_()
                     .context(context)
-                    .id(item.awemeId)
+                    .id(item.awemeId + "-" + index)
                     .item(item)
                     .addTo(this)
             }
