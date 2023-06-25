@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.downloader.listener;
+package com.tristana.sandroid.ui.video.recommend.listener;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

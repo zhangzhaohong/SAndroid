@@ -18,10 +18,12 @@ class VideoRecommendViewModel : ViewModel() {
 
     var hasMore = MutableLiveData(true)
     var videoRecommendDataList = MutableLiveData<MutableList<AwemeDataModel>?>(ArrayList())
+    var tmpVideoRecommendDataList: ArrayList<AwemeDataModel> = ArrayList()
+    var tmpHasMore: Boolean = true
 
     init {
         videoRecommendDataList.value = ArrayList()
-        loadMore()
+        loadNext(true)
     }
 
     suspend fun requestData() {
@@ -38,10 +40,11 @@ class VideoRecommendViewModel : ViewModel() {
                                 VideoRespDataModel::class.java
                             )?.let { videoData ->
                                 withContext(Dispatchers.Main) {
-                                    hasMore.value = videoData.hasMore == 1
+                                    tmpHasMore = videoData.hasMore == 1
                                     videoData.awemeList?.let { vidList ->
-                                        videoRecommendDataList.value?.addAll(vidList)
+                                        tmpVideoRecommendDataList = vidList
                                     }
+                                    loadNext(false)
                                 }
                             }
                         }
@@ -51,7 +54,20 @@ class VideoRecommendViewModel : ViewModel() {
         }
     }
 
-    fun loadMore() {
+    fun loadNext(canLoadMore: Boolean) {
+        if (tmpVideoRecommendDataList.isEmpty()) {
+            if (canLoadMore) {
+                loadMore()
+            }
+        } else {
+            videoRecommendDataList.value?.add(tmpVideoRecommendDataList[0])
+            tmpVideoRecommendDataList.removeAt(0)
+        }
+        hasMore.value =
+            (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
+    }
+
+    private fun loadMore() {
         MainScope().launch {
             withContext(Dispatchers.IO) {
                 requestData()

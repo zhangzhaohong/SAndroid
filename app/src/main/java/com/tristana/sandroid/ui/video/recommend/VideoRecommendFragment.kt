@@ -12,21 +12,18 @@ import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
+import com.tristana.sandroid.ui.video.recommend.listener.EndlessRecyclerOnScrollListener
 
 class VideoRecommendFragment : Fragment() {
 
     private lateinit var videoRecommendController: VideoRecommendController
     private lateinit var layoutManager: QuickScrollLinearLayoutManager
-    private var onScrollListener: RecyclerView.OnScrollListener =  object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(
-            recyclerView: RecyclerView,
-            newState: Int
-        ) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                videoRecommendViewModel?.loadMore()
+    private var onScrollListener: RecyclerView.OnScrollListener =
+        object : EndlessRecyclerOnScrollListener() {
+            override fun onLoadMore() {
+                videoRecommendViewModel?.loadNext(true)
             }
         }
-    }
     private var videoRecommendViewModel: VideoRecommendViewModel? = null
 
     override fun onCreateView(
