@@ -18,8 +18,8 @@ class VideoRecommendViewModel : ViewModel() {
 
     var hasMore = MutableLiveData(true)
     var videoRecommendDataList = MutableLiveData<MutableList<AwemeDataModel>?>(ArrayList())
-    var tmpVideoRecommendDataList: ArrayList<AwemeDataModel> = ArrayList()
-    var tmpHasMore: Boolean = true
+    private var tmpVideoRecommendDataList: ArrayList<AwemeDataModel> = ArrayList()
+    private var tmpHasMore: Boolean = true
 
     init {
         videoRecommendDataList.value = ArrayList()
@@ -63,8 +63,7 @@ class VideoRecommendViewModel : ViewModel() {
             videoRecommendDataList.value?.add(tmpVideoRecommendDataList[0])
             tmpVideoRecommendDataList.removeAt(0)
         }
-        hasMore.value =
-            (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
+        hasMore.value = (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
     }
 
     private fun loadMore() {

@@ -30,25 +30,33 @@ class VideoRecommendController(
             requestModelBuild()
         }
 
+    private var isFirstLoad = true
+
     override fun buildModels() {
-        videoRecommendDataList?.forEachIndexed { _, item ->
-            VideoRecommendHolder_()
-                .context(context)
-                .id(item.awemeId)
-                .item(item)
-                .addTo(this)
+        videoRecommendDataList?.let {dataList ->
+            dataList.forEachIndexed { _, item ->
+                VideoRecommendHolder_()
+                    .context(context)
+                    .id(item.awemeId)
+                    .item(item)
+                    .addTo(this)
+            }
+            if (!isFirstLoad && dataList.isNotEmpty()) {
+                CommonFooter_()
+                    .hasMore(hasMore)
+                    .bottomPadding(bottomPadding)
+                    .id(
+                        "footer-" + if (hasMore) {
+                            "more"
+                        } else {
+                            "none"
+                        }
+                    )
+                    .addTo(this)
+            } else if (isFirstLoad) {
+                isFirstLoad = false
+            }
         }
-        CommonFooter_()
-            .hasMore(hasMore)
-            .bottomPadding(bottomPadding)
-            .id(
-                "footer-" + if (hasMore) {
-                    "more"
-                } else {
-                    "none"
-                }
-            )
-            .addTo(this)
     }
 
 }
