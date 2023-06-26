@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <xyz.doikki.videoplayer.player.VideoView
-            android:id="@+id/player"
+            android:id="@+id/video_recommend_player"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

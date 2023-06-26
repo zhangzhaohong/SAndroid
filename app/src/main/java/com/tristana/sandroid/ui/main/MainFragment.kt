@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.StringUtils
 import com.google.common.base.Splitter
 import com.to.aboomy.pager2banner.Banner
 import com.to.aboomy.pager2banner.IndicatorView
@@ -18,7 +17,7 @@ import com.to.aboomy.pager2banner.ScaleInTransformer
 import com.tristana.sandroid.FragmentDirector
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnClickBannerInterface
-import com.tristana.sandroid.model.bannerModel.BannerDataModel
+import com.tristana.sandroid.dataModel.bannerModel.BannerDataModel
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.main.adapter.ImageAdapter
 import net.lucode.hackware.magicindicator.buildins.UIUtil

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.tristana.library.tools.http.HttpUtils;
 import com.tristana.library.tools.http.RequestInfo;
 import com.tristana.library.tools.text.TextUtils;
-import com.tristana.sandroid.model.login.LoginRespModel;
+import com.tristana.sandroid.dataModel.login.LoginRespModel;
 
 import java.util.HashMap;
 import java.util.Map;

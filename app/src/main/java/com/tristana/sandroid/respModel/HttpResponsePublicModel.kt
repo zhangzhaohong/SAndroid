@@ -1,4 +1,4 @@
-package com.tristana.sandroid.models
+package com.tristana.sandroid.respModel
 
 import java.io.Serializable
 

@@ -1,4 +1,4 @@
-package com.tristana.sandroid.model.data;
+package com.tristana.sandroid.dataModel.data;
 
 /**
  * @author koala

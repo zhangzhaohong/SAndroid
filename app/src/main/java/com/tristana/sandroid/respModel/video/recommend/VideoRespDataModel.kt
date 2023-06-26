@@ -1,4 +1,4 @@
-package com.tristana.sandroid.models.video.recommend
+package com.tristana.sandroid.respModel.video.recommend
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable

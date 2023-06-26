@@ -1,4 +1,4 @@
-package com.tristana.sandroid.model.bannerModel
+package com.tristana.sandroid.dataModel.bannerModel
 
 import java.io.Serializable
 

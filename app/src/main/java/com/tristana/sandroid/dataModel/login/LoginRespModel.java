@@ -1,4 +1,4 @@
-package com.tristana.sandroid.model.login;
+package com.tristana.sandroid.dataModel.login;
 
 public class LoginRespModel {
     /**

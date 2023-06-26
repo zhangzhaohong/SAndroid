@@ -1,4 +1,4 @@
-package com.tristana.sandroid.model;
+package com.tristana.sandroid.dataModel;
 
 import java.io.Serializable;
 import java.util.Map;

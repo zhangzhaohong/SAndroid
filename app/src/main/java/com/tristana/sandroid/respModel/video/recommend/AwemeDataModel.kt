@@ -1,4 +1,4 @@
-package com.tristana.sandroid.models.video.recommend
+package com.tristana.sandroid.respModel.video.recommend
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -11,5 +11,7 @@ import java.io.Serializable
  */
 data class AwemeDataModel(
     @SerializedName("aweme_id")
-    val awemeId: String?
+    val awemeId: String?,
+    @SerializedName("share_url")
+    val shareUrl: String?
 ) : Serializable

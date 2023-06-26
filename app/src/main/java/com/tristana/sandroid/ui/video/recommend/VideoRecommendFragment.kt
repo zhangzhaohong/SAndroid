@@ -28,7 +28,7 @@ class VideoRecommendFragment : Fragment() {
     private var onScrollListener: RecyclerView.OnScrollListener =
         object : EndlessRecyclerOnScrollListener() {
             override fun onLoadMore() {
-                videoRecommendViewModel?.loadNext(true)
+                videoRecommendViewModel?.loadNext(canLoadMore = true, resolveVidPath = true)
             }
 
             override fun onRequestMore() {

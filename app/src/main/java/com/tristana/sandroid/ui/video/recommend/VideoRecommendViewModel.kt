@@ -6,9 +6,9 @@ import com.blankj.utilcode.util.GsonUtils
 import com.tristana.library.tools.http.OkHttpRequestGenerator
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.http.PathCollection
-import com.tristana.sandroid.models.HttpResponsePublicModel
-import com.tristana.sandroid.models.video.recommend.AwemeDataModel
-import com.tristana.sandroid.models.video.recommend.VideoRespDataModel
+import com.tristana.sandroid.respModel.HttpResponsePublicModel
+import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
+import com.tristana.sandroid.respModel.video.recommend.VideoRespDataModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class VideoRecommendViewModel : ViewModel() {
 
     init {
         videoRecommendDataList.value = ArrayList()
-        loadNext(true)
+        loadNext(canLoadMore = true, resolveVidPath = true)
     }
 
     private suspend fun requestData(isManual: Boolean) {
@@ -51,7 +51,7 @@ class VideoRecommendViewModel : ViewModel() {
                                         tmpVideoRecommendDataList.addAll(vidList)
                                     }
                                     if (!isManual) {
-                                        loadNext(false)
+                                        loadNext(canLoadMore = false, resolveVidPath = false)
                                     }
                                 }
                             }
@@ -62,12 +62,17 @@ class VideoRecommendViewModel : ViewModel() {
         }
     }
 
-    fun loadNext(canLoadMore: Boolean) {
+    private suspend fun requestInfoData(awemeData: AwemeDataModel): String? {
+        return null
+    }
+
+    fun loadNext(canLoadMore: Boolean, resolveVidPath: Boolean) {
         if (tmpVideoRecommendDataList.isEmpty()) {
             if (canLoadMore) {
                 loadMore()
             }
         } else {
+            // to do get vid path
             videoRecommendDataList.value?.add(tmpVideoRecommendDataList[0])
             tmpVideoRecommendDataList.removeAt(0)
         }

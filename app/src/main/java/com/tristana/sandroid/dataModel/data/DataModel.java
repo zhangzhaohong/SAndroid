@@ -1,4 +1,4 @@
-package com.tristana.sandroid.model.data;
+package com.tristana.sandroid.dataModel.data;
 
 public class DataModel {
     public static final String REMEMBER_PASSWORD = "REMEMBER_PASSWORD";

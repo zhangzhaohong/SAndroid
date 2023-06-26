@@ -1,4 +1,4 @@
-package com.tristana.sandroid.model;
+package com.tristana.sandroid.dataModel;
 
 public class HandlerType {
     public static final int TYPE_TOAST = 0;

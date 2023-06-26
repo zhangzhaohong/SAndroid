@@ -29,8 +29,8 @@ import com.tencent.smtt.sdk.TbsVideo
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
-import com.tristana.sandroid.model.data.DataModel.*
-import com.tristana.sandroid.model.data.SettingModel.*
+import com.tristana.sandroid.dataModel.data.DataModel.*
+import com.tristana.sandroid.dataModel.data.SettingModel.*
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope

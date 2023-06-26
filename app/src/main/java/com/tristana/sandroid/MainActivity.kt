@@ -42,7 +42,7 @@ import com.therouter.router.Autowired
 import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
-import com.tristana.sandroid.model.data.DataModel
+import com.tristana.sandroid.dataModel.data.DataModel
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
