@@ -162,7 +162,7 @@ class AboutViewModel : ViewModel() {
                 withContext(Dispatchers.IO) {
                     try {
                         val serverInfoResponse =
-                            OkHttpRequestGenerator.create(MyApplication.host + SERVER_INFO).get()
+                            OkHttpRequestGenerator.create(MyApplication.host, SERVER_INFO).get()
                                 .sync()
                         val serverInfo = GsonUtils.fromJson(serverInfoResponse, Map::class.java)
                         val serverInfoData = GsonUtils.fromJson(

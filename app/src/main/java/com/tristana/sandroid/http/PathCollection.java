@@ -7,7 +7,7 @@ package com.tristana.sandroid.http;
  * @description
  */
 public class PathCollection {
-    public static final String SERVER_INFO = "backend/info";
-    public static final String VIDEO_RECOMMEND = "tools/DouYin/api/feed";
-    public static final String VIDEO_TIKTOK_API = "tools/DouYin/api";
+    public static final String SERVER_INFO = "/backend/info";
+    public static final String VIDEO_RECOMMEND = "/tools/DouYin/api/feed";
+    public static final String VIDEO_TIKTOK_API = "/tools/DouYin/api";
 }

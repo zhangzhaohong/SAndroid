@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.StringUtils
+import com.google.gson.Gson
 import com.tristana.library.tools.http.OkHttpRequestGenerator
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.http.PathCollection
@@ -34,14 +36,9 @@ class VideoRecommendViewModel : ViewModel() {
 
     private suspend fun requestData(isManual: Boolean) {
         return withContext(Dispatchers.IO) {
-            OkHttpRequestGenerator.create(MyApplication.host + PathCollection.VIDEO_RECOMMEND)
+            OkHttpRequestGenerator.create(MyApplication.host, PathCollection.VIDEO_RECOMMEND)
                 .get().sync()?.let { response ->
                     run {
-                        if (isFirstLoad.value == true) {
-                            withContext(Dispatchers.Main) {
-                                isFirstLoad.value = false
-                            }
-                        }
                         GsonUtils.fromJson(
                             response,
                             HttpResponsePublicModel::class.java
@@ -56,7 +53,7 @@ class VideoRecommendViewModel : ViewModel() {
                                         tmpVideoRecommendDataList.addAll(vidList)
                                     }
                                     if (!isManual) {
-                                        loadNext(canLoadMore = false, resolveVidPath = false)
+                                        loadNext(canLoadMore = false, resolveVidPath = true)
                                     }
                                 }
                             }
@@ -67,11 +64,19 @@ class VideoRecommendViewModel : ViewModel() {
         }
     }
 
-    private suspend fun requestVidInfoData(awemeData: AwemeDataModel): String {
+    private suspend fun requestVidInfoData(awemeData: AwemeDataModel): String? {
         return suspendCoroutine {
-            OkHttpRequestGenerator.create(MyApplication.host + PathCollection.VIDEO_TIKTOK_API)
+            OkHttpRequestGenerator.create(MyApplication.host, PathCollection.VIDEO_TIKTOK_API)
                 .addParam("link", awemeData.shareUrl).get().sync()?.let { response ->
-                    it.resume(response)
+                    if (StringUtils.isEmpty(response)) it.resume(null)
+                    val respData = GsonUtils.fromJson(response, HttpResponsePublicModel::class.java)
+                    val videoData =
+                        GsonUtils.fromJson(GsonUtils.toJson(respData), Map::class.java)["video"]
+                    val videoPath = GsonUtils.fromJson(
+                        GsonUtils.toJson(videoData),
+                        Map::class.java
+                    )["real_path"].toString()
+                    it.resume(videoPath)
                 }
         }
     }
@@ -84,14 +89,22 @@ class VideoRecommendViewModel : ViewModel() {
                 }
             } else {
                 val awemeData = tmpVideoRecommendDataList[0];
-                val vidData = withContext(Dispatchers.IO) {
-                    requestVidInfoData(awemeData)
+                if (resolveVidPath) {
+                    val videoPath = withContext(Dispatchers.IO) {
+                        requestVidInfoData(awemeData)
+                    }
+                    awemeData.videoPath = videoPath
                 }
                 videoRecommendDataList.value?.add(awemeData)
                 tmpVideoRecommendDataList.removeAt(0)
             }
             hasMore.value =
                 (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
+            if (videoRecommendDataList.value?.isNotEmpty() == true && isFirstLoad.value == true) {
+                withContext(Dispatchers.Main) {
+                    isFirstLoad.value = false
+                }
+            }
         }
     }
 
