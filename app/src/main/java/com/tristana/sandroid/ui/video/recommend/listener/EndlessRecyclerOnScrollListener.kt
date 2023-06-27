@@ -24,7 +24,7 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener()
             // 判断是否滑动到了最后一个item，并且是向上滑动
             if (lastItemPosition == itemCount - 1 && isSlidingUpward) {
                 //加载更多
-                onLoadMore()
+                onLoadMore(false)
             }
         }
     }
@@ -38,7 +38,7 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener()
     /**
      * 加载更多回调
      */
-    abstract fun onLoadMore()
+    abstract fun onLoadMore(isSingle: Boolean)
 
     abstract fun onRequestMore()
 

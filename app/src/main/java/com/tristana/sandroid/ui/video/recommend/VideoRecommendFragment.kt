@@ -27,8 +27,12 @@ class VideoRecommendFragment : Fragment() {
     private var revertSpace = 6F
     private var onScrollListener: RecyclerView.OnScrollListener =
         object : EndlessRecyclerOnScrollListener() {
-            override fun onLoadMore() {
-                videoRecommendViewModel?.loadNext(canLoadMore = true, resolveVidPath = true)
+            override fun onLoadMore(isSingle: Boolean) {
+                videoRecommendViewModel?.loadNext(
+                    canLoadMore = true,
+                    resolveVidPath = true,
+                    continueLoadNext = !isSingle
+                )
             }
 
             override fun onRequestMore() {
@@ -44,8 +48,16 @@ class VideoRecommendFragment : Fragment() {
                 val firstVisibleView = manager.findViewByPosition(firstPosition)
                 val dataSize = videoRecommendViewModel?.videoRecommendDataList?.value?.size ?: 0
                 if (newState == SCROLL_STATE_DRAGGING) {
-                    if (lastPosition >= dataSize - 1) {
-                        onLoadMore()
+                    if (lastPosition >= dataSize - 3 && lastPosition < dataSize - 2) {
+                        onLoadMore(true)
+                        videoRecommendViewModel?.let {
+                            // 预加载后一批的接口 由于正常情况是从tmp中 拿数据 但是接口速度慢 提前请求
+                            if (it.getTmpDataListSize() == 2) {
+                                onRequestMore()
+                            }
+                        }
+                    } else if (lastPosition >= dataSize - 2) {
+                        onLoadMore(false)
                         videoRecommendViewModel?.let {
                             // 预加载后一批的接口 由于正常情况是从tmp中 拿数据 但是接口速度慢 提前请求
                             if (it.getTmpDataListSize() == 2) {

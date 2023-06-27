@@ -3,6 +3,7 @@ package com.tristana.sandroid.ui.video.recommend
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.ObjectUtils
 import com.blankj.utilcode.util.StringUtils
 import com.tristana.library.tools.http.OkHttpRequestGenerator
 import com.tristana.sandroid.MyApplication
@@ -12,7 +13,6 @@ import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.respModel.video.recommend.VideoRespDataModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
@@ -28,7 +28,7 @@ class VideoRecommendViewModel : ViewModel() {
 
     init {
         videoRecommendDataList.value = ArrayList()
-        loadNext(canLoadMore = true, resolveVidPath = true)
+        loadNext(canLoadMore = true, resolveVidPath = true, continueLoadNext = true)
     }
 
     private suspend fun requestData(isManual: Boolean) {
@@ -50,7 +50,11 @@ class VideoRecommendViewModel : ViewModel() {
                                         tmpVideoRecommendDataList.addAll(vidList)
                                     }
                                     if (!isManual) {
-                                        loadNext(canLoadMore = false, resolveVidPath = true)
+                                        loadNext(
+                                            canLoadMore = false,
+                                            resolveVidPath = true,
+                                            continueLoadNext = true
+                                        )
                                     }
                                 }
                             }
@@ -88,15 +92,23 @@ class VideoRecommendViewModel : ViewModel() {
         }
     }
 
-    fun loadNext(canLoadMore: Boolean, resolveVidPath: Boolean) {
-        MainScope().launch {
+    fun loadNext(canLoadMore: Boolean, resolveVidPath: Boolean, continueLoadNext: Boolean = false) {
+        CoroutineScope(Dispatchers.Main).launch {
             if (tmpVideoRecommendDataList.isEmpty()) {
                 if (canLoadMore) {
                     loadMore()
                 }
             } else {
                 val awemeData = tmpVideoRecommendDataList[0];
-                if (resolveVidPath) {
+                if (ObjectUtils.isNotEmpty(awemeData.cellRoom)) {
+                    loadNext(
+                        canLoadMore = canLoadMore,
+                        resolveVidPath = resolveVidPath,
+                        continueLoadNext = continueLoadNext
+                    )
+                    return@launch
+                }
+                if (resolveVidPath && StringUtils.isEmpty(awemeData.videoPath)) {
                     val videoPath = withContext(Dispatchers.IO) {
                         requestVidInfoData(awemeData)
                     }
@@ -104,13 +116,14 @@ class VideoRecommendViewModel : ViewModel() {
                 }
                 videoRecommendDataList.value?.add(awemeData)
                 tmpVideoRecommendDataList.removeAt(0)
+                if (continueLoadNext) {
+                    loadNext(canLoadMore = true, resolveVidPath = true, continueLoadNext = false)
+                }
             }
             hasMore.value =
                 (tmpHasMore && tmpVideoRecommendDataList.isEmpty()) || tmpVideoRecommendDataList.isNotEmpty()
             if (videoRecommendDataList.value?.isNotEmpty() == true && isFirstLoad.value == true) {
-                withContext(Dispatchers.Main) {
-                    isFirstLoad.value = false
-                }
+                isFirstLoad.value = false
             }
         }
     }
