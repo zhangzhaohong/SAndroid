@@ -14,6 +14,7 @@ data class AwemeDataModel(
     val awemeId: String?,
     @SerializedName("cell_room")
     val cellRoom: Any?,
+    val video: VideoItemDataModel?,
     @SerializedName("share_url")
     val shareUrl: String?,
     @SerializedName("video_path")

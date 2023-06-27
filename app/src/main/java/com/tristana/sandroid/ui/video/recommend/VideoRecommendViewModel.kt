@@ -109,10 +109,22 @@ class VideoRecommendViewModel : ViewModel() {
                     return@launch
                 }
                 if (resolveVidPath && StringUtils.isEmpty(awemeData.videoPath)) {
-                    val videoPath = withContext(Dispatchers.IO) {
-                        requestVidInfoData(awemeData)
+                    try {
+                        var videoPath: String? = null
+                        awemeData.video?.let {
+                            if (it.playAddr?.urlList?.isNotEmpty() == true) {
+                                videoPath = it.playAddr.urlList[0]
+                            }
+                        }
+                        if (videoPath.isNullOrEmpty()) {
+                            videoPath = withContext(Dispatchers.IO) {
+                                requestVidInfoData(awemeData)
+                            }
+                        }
+                        awemeData.videoPath = videoPath
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                    awemeData.videoPath = videoPath
                 }
                 videoRecommendDataList.value?.add(awemeData)
                 tmpVideoRecommendDataList.removeAt(0)
