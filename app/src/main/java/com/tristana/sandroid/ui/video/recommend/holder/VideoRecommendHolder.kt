@@ -25,7 +25,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     @EpoxyAttribute
     lateinit var context: Context
 
-    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    @EpoxyAttribute
     lateinit var item: AwemeDataModel
 
     override fun getViewType(): Int {
@@ -42,6 +42,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
             holder.videoPlayer?.start()
         } else {
             holder.videoPlayer?.pause()
+            holder.videoPlayer?.release()
         }
     }
 
