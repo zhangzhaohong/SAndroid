@@ -1,12 +1,9 @@
 package com.tristana.sandroid.ui.video.recommend
 
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.GsonUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.StringUtils
-import com.google.gson.Gson
 import com.tristana.library.tools.http.OkHttpRequestGenerator
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.http.PathCollection
@@ -70,8 +67,18 @@ class VideoRecommendViewModel : ViewModel() {
                 .addParam("link", awemeData.shareUrl).get().sync()?.let { response ->
                     if (StringUtils.isEmpty(response)) it.resume(null)
                     val respData = GsonUtils.fromJson(response, HttpResponsePublicModel::class.java)
-                    val videoData =
-                        GsonUtils.fromJson(GsonUtils.toJson(respData), Map::class.java)["video"]
+                    val itemInfoData = GsonUtils.fromJson(
+                        GsonUtils.toJson(respData.data),
+                        Map::class.java
+                    )["item_info_data"]
+                    val awemeDetailData = GsonUtils.fromJson(
+                        GsonUtils.toJson(itemInfoData),
+                        Map::class.java
+                    )["aweme_detail"]
+                    val videoData = GsonUtils.fromJson(
+                        GsonUtils.toJson(awemeDetailData),
+                        Map::class.java
+                    )["video"]
                     val videoPath = GsonUtils.fromJson(
                         GsonUtils.toJson(videoData),
                         Map::class.java
