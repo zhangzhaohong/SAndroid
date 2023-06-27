@@ -10,6 +10,7 @@ import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
+import xyz.doikki.videoplayer.player.BaseVideoView.SCREEN_SCALE_CENTER_CROP
 import xyz.doikki.videoplayer.player.VideoView
 
 
@@ -41,7 +42,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
             holder.videoPlayer?.start()
         } else {
-            holder.videoPlayer?.pause()
             holder.videoPlayer?.release()
         }
     }
@@ -52,6 +52,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         val controller = StandardVideoController(context)
         controller.addDefaultControlComponent("标题", false)
         holder.videoPlayer?.setVideoController(controller) //设置控制器
+        holder.videoPlayer?.setScreenScaleType(SCREEN_SCALE_CENTER_CROP)
         holder.videoPlayer?.setUrl(item.videoPath)
     }
 
