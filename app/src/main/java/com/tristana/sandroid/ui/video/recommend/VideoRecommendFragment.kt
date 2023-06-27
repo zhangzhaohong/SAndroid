@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING
 import com.airbnb.epoxy.EpoxyRecyclerView
+import com.airbnb.epoxy.EpoxyVisibilityTracker
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
 import com.tristana.sandroid.ui.components.LoadingDialog
@@ -24,6 +25,7 @@ class VideoRecommendFragment : Fragment() {
     private lateinit var videoRecommendView: EpoxyRecyclerView
     private lateinit var videoRecommendController: VideoRecommendController
     private lateinit var layoutManager: QuickScrollLinearLayoutManager
+    private lateinit var epoxyVisibilityTracker: EpoxyVisibilityTracker
     private var revertSpace = 6F
     private var onScrollListener: RecyclerView.OnScrollListener =
         object : EndlessRecyclerOnScrollListener() {
@@ -118,7 +120,9 @@ class VideoRecommendFragment : Fragment() {
             AndroidViewModelFactory.getInstance(requireActivity().application)
                 .create(VideoRecommendViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_video_recommend, container, false)
+        epoxyVisibilityTracker = EpoxyVisibilityTracker()
         videoRecommendView = root.findViewById(R.id.video_recommend_view)
+        epoxyVisibilityTracker.attach(videoRecommendView)
         videoRecommendView.isNestedScrollingEnabled = true
         layoutManager = QuickScrollLinearLayoutManager(
             requireContext(),

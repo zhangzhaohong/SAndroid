@@ -3,10 +3,13 @@ package com.tristana.sandroid.ui.video.recommend.holder
 import android.content.Context
 import butterknife.BindView
 import com.airbnb.epoxy.*
+import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.holder.BaseEpoxyHolder
 import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
+import xyz.doikki.videocontroller.StandardVideoController
+import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
 import xyz.doikki.videoplayer.player.VideoView
 
 
@@ -33,8 +36,22 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         return false
     }
 
+    override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
+        super.onVisibilityStateChanged(visibilityState, holder)
+        if (visibilityState == FULL_IMPRESSION_VISIBLE) {
+            holder.videoPlayer?.start()
+        } else {
+            holder.videoPlayer?.pause()
+        }
+    }
+
     override fun bind(holder: Holder) {
         super.bind(holder)
+        holder.videoPlayer?.setPlayerFactory(IjkPlayerFactory.create())
+        val controller = StandardVideoController(context)
+        controller.addDefaultControlComponent("标题", false)
+        holder.videoPlayer?.setVideoController(controller) //设置控制器
+        holder.videoPlayer?.setUrl(item.videoPath)
     }
 
     override fun hashCode(): Int {
@@ -44,6 +61,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     }
 
     class Holder : BaseEpoxyHolder() {
+        @JvmField
         @BindView(R.id.video_recommend_player)
         var videoPlayer: VideoView? = null
     }
