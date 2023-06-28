@@ -48,6 +48,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
     override fun bind(holder: Holder) {
         super.bind(holder)
+        holder.videoPlayer?.setLooping(true)
         holder.videoPlayer?.setPlayerFactory(IjkPlayerFactory.create())
         val controller = StandardVideoController(context)
         controller.addDefaultControlComponent("标题", false)
