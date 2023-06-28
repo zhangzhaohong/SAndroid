@@ -22,6 +22,7 @@ import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
 import com.tristana.sandroid.ui.components.LoadingDialog
 import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
 import com.tristana.sandroid.ui.video.recommend.listener.EndlessRecyclerOnScrollListener
+import xyz.doikki.videoplayer.player.BaseVideoView.STATE_PAUSED
 import xyz.doikki.videoplayer.player.VideoView
 
 
@@ -112,31 +113,37 @@ class VideoRecommendFragment : Fragment() {
                 }
             }
         }
-    private var videoRecommendViewModel: VideoRecommendViewModel? = null
-    private var videoRecommendFragmentAppStatusChangeListener = object : Utils.OnAppStatusChangedListener {
-        override fun onForeground(activity: Activity?) {
-            lastPosition = layoutManager.findLastVisibleItemPosition()
-            if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
-                val itemView = videoRecommendView.getChildAt(lastPosition)
-                if (ObjectUtils.isEmpty(itemView)) return
-                val videoView = itemView.findViewById<VideoView>(R.id.video_recommend_player)
-                videoView.resume()
-            }
-        }
 
-        override fun onBackground(activity: Activity?) {
-            for (index in 0 until videoRecommendView.childCount) {
-                val itemView = videoRecommendView.getChildAt(index)
-                if (ObjectUtils.isEmpty(itemView)) continue
-                val videoView = itemView.findViewById<VideoView>(R.id.video_recommend_player)
-                if (videoView.isPlaying) {
-                    lastPosition = index
-                    videoView.pause()
+    private var videoRecommendViewModel: VideoRecommendViewModel? = null
+    private var videoRecommendFragmentAppStatusChangeListener =
+        object : Utils.OnAppStatusChangedListener {
+            override fun onForeground(activity: Activity?) {
+                lastPosition = layoutManager.findLastVisibleItemPosition()
+                if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
+                    val itemView = videoRecommendView.getChildAt(lastPosition)
+                    if (ObjectUtils.isEmpty(itemView)) return
+                    val videoView = itemView.findViewById<VideoView>(R.id.video_recommend_player)
+                    if (videoView.currentPlayState == STATE_PAUSED) {
+                        videoView.resume()
+                    } else {
+                        videoView.start()
+                    }
                 }
-                return
+            }
+
+            override fun onBackground(activity: Activity?) {
+                for (index in 0 until videoRecommendView.childCount) {
+                    val itemView = videoRecommendView.getChildAt(index)
+                    if (ObjectUtils.isEmpty(itemView)) continue
+                    val videoView = itemView.findViewById<VideoView>(R.id.video_recommend_player)
+                    if (videoView.isPlaying) {
+                        lastPosition = index
+                        videoView.pause()
+                    }
+                    return
+                }
             }
         }
-    }
 
     private val loadingDialog by lazy {
         LoadingDialog(requireContext(), getString(R.string.is_loading), false)
