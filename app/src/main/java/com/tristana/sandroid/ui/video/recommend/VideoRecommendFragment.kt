@@ -116,11 +116,11 @@ class VideoRecommendFragment : Fragment() {
     private var videoRecommendFragmentAppStatusChangeListener = object : Utils.OnAppStatusChangedListener {
         override fun onForeground(activity: Activity?) {
             lastPosition = layoutManager.findLastVisibleItemPosition()
-            if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition > 0) {
+            if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
                 val itemView = videoRecommendView.getChildAt(lastPosition)
                 if (ObjectUtils.isEmpty(itemView)) return
                 val videoView = itemView.findViewById<VideoView>(R.id.video_recommend_player)
-                videoView.start()
+                videoView.resume()
             }
         }
 
