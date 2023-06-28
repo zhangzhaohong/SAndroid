@@ -100,7 +100,10 @@ class VideoRecommendViewModel : ViewModel() {
                 }
             } else {
                 val awemeData = tmpVideoRecommendDataList[0];
-                if (ObjectUtils.isNotEmpty(awemeData.cellRoom)) {
+                if ((videoRecommendDataList.value?.filter { it.awemeId == awemeData.awemeId }?.size
+                        ?: 0) > 0 || ObjectUtils.isNotEmpty(awemeData.cellRoom)
+                ) {
+                    tmpVideoRecommendDataList.removeAt(0)
                     loadNext(
                         canLoadMore = canLoadMore,
                         resolveVidPath = resolveVidPath,

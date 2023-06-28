@@ -50,19 +50,19 @@ class VideoRecommendFragment : Fragment() {
                 val firstVisibleView = manager.findViewByPosition(firstPosition)
                 val dataSize = videoRecommendViewModel?.videoRecommendDataList?.value?.size ?: 0
                 if (newState == SCROLL_STATE_DRAGGING) {
-                    if (lastPosition >= dataSize - 3 && lastPosition < dataSize - 2) {
+                    if (lastPosition >= dataSize - 4 && lastPosition < dataSize - 3) {
                         onLoadMore(true)
                         videoRecommendViewModel?.let {
                             // 预加载后一批的接口 由于正常情况是从tmp中 拿数据 但是接口速度慢 提前请求
-                            if (it.getTmpDataListSize() == 2) {
+                            if (it.getTmpDataListSize() == 3) {
                                 onRequestMore()
                             }
                         }
-                    } else if (lastPosition >= dataSize - 2) {
+                    } else if (lastPosition >= dataSize - 3) {
                         onLoadMore(false)
                         videoRecommendViewModel?.let {
                             // 预加载后一批的接口 由于正常情况是从tmp中 拿数据 但是接口速度慢 提前请求
-                            if (it.getTmpDataListSize() == 2) {
+                            if (it.getTmpDataListSize() == 3) {
                                 onRequestMore()
                             }
                         }
