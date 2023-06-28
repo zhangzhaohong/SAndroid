@@ -82,30 +82,22 @@ class VideoRecommendFragment : Fragment() {
                             // up
                             if (firstBottomOffset >= innerHeight - (innerHeight / revertSpace)) {
                                 layoutManager.smoothScrollToPosition(
-                                    recyclerView,
-                                    null,
-                                    firstPosition
+                                    recyclerView, null, firstPosition
                                 )
                             } else {
                                 layoutManager.smoothScrollToPosition(
-                                    recyclerView,
-                                    null,
-                                    lastPosition
+                                    recyclerView, null, lastPosition
                                 )
                             }
                         } else {
                             // down
                             if (firstBottomOffset < innerHeight / revertSpace) {
                                 layoutManager.smoothScrollToPosition(
-                                    recyclerView,
-                                    null,
-                                    lastPosition
+                                    recyclerView, null, lastPosition
                                 )
                             } else {
                                 layoutManager.smoothScrollToPosition(
-                                    recyclerView,
-                                    null,
-                                    firstPosition
+                                    recyclerView, null, firstPosition
                                 )
                             }
                         }
@@ -150,8 +142,7 @@ class VideoRecommendFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         loadingDialog.show()
         if (videoRecommendViewModel == null) videoRecommendViewModel =
@@ -169,10 +160,7 @@ class VideoRecommendFragment : Fragment() {
         epoxyVisibilityTracker.attach(videoRecommendView)
         videoRecommendView.isNestedScrollingEnabled = true
         layoutManager = QuickScrollLinearLayoutManager(
-            requireContext(),
-            RecyclerView.VERTICAL,
-            false,
-            20f
+            requireContext(), RecyclerView.VERTICAL, false, 20f
         )
         videoRecommendView.layoutManager = layoutManager
         videoRecommendView.setHasFixedSize(true)
