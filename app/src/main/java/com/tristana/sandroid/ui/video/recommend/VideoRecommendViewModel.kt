@@ -1,5 +1,6 @@
 package com.tristana.sandroid.ui.video.recommend
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.GsonUtils
@@ -11,6 +12,7 @@ import com.tristana.sandroid.http.PathCollection
 import com.tristana.sandroid.respModel.HttpResponsePublicModel
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.respModel.video.recommend.VideoRespDataModel
+import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,10 +30,9 @@ class VideoRecommendViewModel : ViewModel() {
 
     init {
         videoRecommendDataList.value = ArrayList()
-        loadNext(canLoadMore = true, resolveVidPath = true, continueLoadNext = true)
     }
 
-    private suspend fun requestData(isManual: Boolean) {
+    private suspend fun requestData(isManual: Boolean, context: Context) {
         return withContext(Dispatchers.IO) {
             OkHttpRequestGenerator.create(MyApplication.host, PathCollection.VIDEO_RECOMMEND)
                 .get().sync()?.let { response ->
@@ -53,7 +54,8 @@ class VideoRecommendViewModel : ViewModel() {
                                         loadNext(
                                             canLoadMore = false,
                                             resolveVidPath = true,
-                                            continueLoadNext = true
+                                            continueLoadNext = true,
+                                            context = context
                                         )
                                     }
                                 }
@@ -92,11 +94,16 @@ class VideoRecommendViewModel : ViewModel() {
         }
     }
 
-    fun loadNext(canLoadMore: Boolean, resolveVidPath: Boolean, continueLoadNext: Boolean = false) {
+    fun loadNext(
+        canLoadMore: Boolean,
+        resolveVidPath: Boolean,
+        continueLoadNext: Boolean = false,
+        context: Context
+    ) {
         CoroutineScope(Dispatchers.Main).launch {
             if (tmpVideoRecommendDataList.isEmpty()) {
                 if (canLoadMore) {
-                    loadMore()
+                    loadMore(context = context)
                 }
             } else {
                 val awemeData = tmpVideoRecommendDataList[0];
@@ -107,7 +114,8 @@ class VideoRecommendViewModel : ViewModel() {
                     loadNext(
                         canLoadMore = canLoadMore,
                         resolveVidPath = resolveVidPath,
-                        continueLoadNext = continueLoadNext
+                        continueLoadNext = continueLoadNext,
+                        context = context
                     )
                     return@launch
                 }
@@ -125,6 +133,10 @@ class VideoRecommendViewModel : ViewModel() {
                             }
                         }
                         awemeData.videoPath = videoPath
+                        PreloadManager.getInstance(context).addPreloadTask(
+                            awemeData.videoPath,
+                            videoRecommendDataList.value?.size ?: 0
+                        );
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -132,7 +144,12 @@ class VideoRecommendViewModel : ViewModel() {
                 videoRecommendDataList.value?.add(awemeData)
                 tmpVideoRecommendDataList.removeAt(0)
                 if (continueLoadNext) {
-                    loadNext(canLoadMore = true, resolveVidPath = true, continueLoadNext = false)
+                    loadNext(
+                        canLoadMore = true,
+                        resolveVidPath = true,
+                        continueLoadNext = false,
+                        context = context
+                    )
                 }
             }
             hasMore.value =
@@ -143,9 +160,9 @@ class VideoRecommendViewModel : ViewModel() {
         }
     }
 
-    fun loadMore(isManual: Boolean = false) {
+    fun loadMore(isManual: Boolean = false, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            requestData(isManual)
+            requestData(isManual, context)
         }
     }
 

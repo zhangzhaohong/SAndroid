@@ -33,12 +33,13 @@ class VideoRecommendFragment : Fragment() {
                 videoRecommendViewModel?.loadNext(
                     canLoadMore = true,
                     resolveVidPath = true,
-                    continueLoadNext = !isSingle
+                    continueLoadNext = !isSingle,
+                    context = requireContext()
                 )
             }
 
             override fun onRequestMore() {
-                videoRecommendViewModel?.loadMore(true)
+                videoRecommendViewModel?.loadMore(true, requireContext())
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -119,6 +120,7 @@ class VideoRecommendFragment : Fragment() {
         if (videoRecommendViewModel == null) videoRecommendViewModel =
             AndroidViewModelFactory.getInstance(requireActivity().application)
                 .create(VideoRecommendViewModel::class.java)
+        videoRecommendViewModel?.loadNext(canLoadMore = true, resolveVidPath = true, continueLoadNext = true, context = requireContext())
         val root = inflater.inflate(R.layout.fragment_video_recommend, container, false)
         epoxyVisibilityTracker = EpoxyVisibilityTracker()
         videoRecommendView = root.findViewById(R.id.video_recommend_view)

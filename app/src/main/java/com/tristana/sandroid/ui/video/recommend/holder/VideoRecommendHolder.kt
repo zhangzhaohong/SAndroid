@@ -4,10 +4,12 @@ import android.content.Context
 import butterknife.BindView
 import com.airbnb.epoxy.*
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
+import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.holder.BaseEpoxyHolder
 import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
+import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
 import xyz.doikki.videoplayer.player.BaseVideoView.SCREEN_SCALE_CENTER_CROP
@@ -54,7 +56,8 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         controller.addDefaultControlComponent("标题", false)
         holder.videoPlayer?.setVideoController(controller) //设置控制器
         holder.videoPlayer?.setScreenScaleType(SCREEN_SCALE_CENTER_CROP)
-        holder.videoPlayer?.setUrl(item.videoPath)
+        val cachePath = PreloadManager.getInstance(context).getPlayUrl(item.videoPath)
+        holder.videoPlayer?.setUrl(cachePath)
     }
 
     override fun hashCode(): Int {
