@@ -112,10 +112,10 @@ class VideoRecommendFragment : Fragment() {
             override fun onForeground(activity: Activity?) {
                 videoRecommendView.post {
                     if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
-                        val itemView = videoRecommendView.getChildAt(lastPosition)
-                        if (ObjectUtils.isEmpty(itemView)) return@post
+                        val itemView = layoutManager.getChildAt(lastPosition) ?: return@post
                         val videoView =
                             itemView.findViewById<VideoView>(R.id.video_recommend_player)
+                                ?: return@post
                         if (videoView.currentPlayState == STATE_PAUSED) {
                             videoView.resume()
                         } else {
@@ -126,10 +126,10 @@ class VideoRecommendFragment : Fragment() {
             }
 
             override fun onBackground(activity: Activity?) {
-                for (index in 0 until videoRecommendView.childCount) {
-                    val itemView = videoRecommendView.getChildAt(index)
-                    if (ObjectUtils.isEmpty(itemView)) continue
-                    val videoView = itemView.findViewById<VideoView>(R.id.video_recommend_player)
+                for (index in 0 until layoutManager.childCount) {
+                    val itemView = layoutManager.getChildAt(index) ?: continue
+                    val videoView =
+                        itemView.findViewById<VideoView>(R.id.video_recommend_player) ?: continue
                     if (videoView.isPlaying) {
                         lastPosition = index
                         videoView.pause()

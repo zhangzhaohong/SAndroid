@@ -40,9 +40,27 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         return false
     }
 
+    override fun id(): Long {
+        return item.viewPosition.toLong()
+    }
+
+    override fun onViewAttachedToWindow(holder: Holder) {
+        super.onViewAttachedToWindow(holder)
+        LogUtils.i("onAttached: ${id()}")
+    }
+
+    override fun onViewDetachedFromWindow(holder: Holder) {
+        super.onViewDetachedFromWindow(holder)
+        LogUtils.i("onDetached: ${id()}")
+        if (holder.videoPlayer?.isPlaying == true) {
+            holder.videoPlayer?.pause()
+        }
+    }
+
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
         super.onVisibilityStateChanged(visibilityState, holder)
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
+            LogUtils.i("onFullyVisible: ${id()}")
             if (holder.videoPlayer?.isPlaying == false) {
                 if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
                     holder.videoPlayer?.resume()
@@ -50,8 +68,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
                     holder.videoPlayer?.start()
                 }
             }
-        } else {
-            holder.videoPlayer?.pause()
         }
     }
 

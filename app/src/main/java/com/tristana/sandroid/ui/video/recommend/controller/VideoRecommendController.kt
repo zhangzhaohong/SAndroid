@@ -35,6 +35,7 @@ class VideoRecommendController(
     override fun buildModels() {
         videoRecommendDataList?.let { dataList ->
             dataList.forEachIndexed { index, item ->
+                item.viewPosition = index
                 VideoRecommendHolder_()
                     .context(context)
                     .id(item.awemeId + "-" + index)

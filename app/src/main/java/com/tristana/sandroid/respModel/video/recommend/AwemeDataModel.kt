@@ -18,5 +18,7 @@ data class AwemeDataModel(
     @SerializedName("share_url")
     val shareUrl: String?,
     @SerializedName("video_path")
-    var videoPath: String?
+    var videoPath: String?,
+    @SerializedName("view_position")
+    var viewPosition: Int
 ) : Serializable
