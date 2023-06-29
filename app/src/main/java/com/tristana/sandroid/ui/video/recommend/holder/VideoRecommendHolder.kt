@@ -43,10 +43,12 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
         super.onVisibilityStateChanged(visibilityState, holder)
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
-            if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
-                holder.videoPlayer?.resume()
-            } else {
-                holder.videoPlayer?.start()
+            if (holder.videoPlayer?.isPlaying == false) {
+                if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
+                    holder.videoPlayer?.resume()
+                } else {
+                    holder.videoPlayer?.start()
+                }
             }
         } else {
             holder.videoPlayer?.pause()

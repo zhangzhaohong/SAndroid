@@ -168,7 +168,7 @@ class VideoRecommendFragment : Fragment() {
         videoRecommendView.setHasFixedSize(true)
         layoutManager.stackFromEnd = false
         videoRecommendController = VideoRecommendController(requireContext())
-        videoRecommendView.setController(videoRecommendController)
+        videoRecommendView.setControllerAndBuildModels(videoRecommendController)
         videoRecommendView.addOnScrollListener(onScrollListener)
         initObserver()
         AppUtils.registerAppStatusChangedListener(videoRecommendFragmentAppStatusChangeListener)

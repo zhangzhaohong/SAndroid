@@ -33,7 +33,7 @@ class VideoRecommendController(
     var isFirstLoad: Boolean = true
 
     override fun buildModels() {
-        videoRecommendDataList?.let {dataList ->
+        videoRecommendDataList?.let { dataList ->
             dataList.forEachIndexed { index, item ->
                 VideoRecommendHolder_()
                     .context(context)
