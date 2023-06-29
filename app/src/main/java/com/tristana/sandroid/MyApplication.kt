@@ -73,7 +73,7 @@ class MyApplication : Application() {
                             VideoViewConfig.newBuilder()
                                 .setPlayerFactory(IjkPlayerFactory.create())
                                 .build()
-                        );
+                        )
                     }
 
                     2 -> {
@@ -81,7 +81,7 @@ class MyApplication : Application() {
                             VideoViewConfig.newBuilder()
                                 .setPlayerFactory(ExoMediaPlayerFactory.create())
                                 .build()
-                        );
+                        )
                     }
 
                     3 -> {
@@ -89,7 +89,7 @@ class MyApplication : Application() {
                             VideoViewConfig.newBuilder()
                                 .setPlayerFactory(AndroidMediaPlayerFactory.create())
                                 .build()
-                        );
+                        )
                     }
                 }
             }
@@ -130,7 +130,7 @@ class MyApplication : Application() {
     }
 
     companion object {
-        var host: String = "http://588kb9.natappfree.cc"
+        var host: String = "http://84xdjq.natappfree.cc"
             private set
         var instance: Application? = null
             private set

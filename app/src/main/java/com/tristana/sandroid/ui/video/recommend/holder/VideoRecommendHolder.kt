@@ -4,7 +4,6 @@ import android.content.Context
 import butterknife.BindView
 import com.airbnb.epoxy.*
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
-import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.holder.BaseEpoxyHolder
 import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
@@ -43,14 +42,8 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         return item.viewPosition.toLong()
     }
 
-    override fun onViewAttachedToWindow(holder: Holder) {
-        super.onViewAttachedToWindow(holder)
-        LogUtils.i("onAttached: ${id()}")
-    }
-
     override fun onViewDetachedFromWindow(holder: Holder) {
         super.onViewDetachedFromWindow(holder)
-        LogUtils.i("onDetached: ${id()}")
         if (holder.videoPlayer?.isPlaying == true) {
             holder.videoPlayer?.pause()
         }
@@ -59,7 +52,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
         super.onVisibilityStateChanged(visibilityState, holder)
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
-            LogUtils.i("onFullyVisible: ${id()}")
             if (holder.videoPlayer?.isPlaying == false) {
                 if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
                     holder.videoPlayer?.resume()
