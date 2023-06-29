@@ -1,6 +1,5 @@
 package com.tristana.sandroid.ui.video.recommend
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ObjectUtils
-import com.blankj.utilcode.util.Utils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
 import com.tristana.sandroid.ui.components.LoadingDialog
@@ -24,7 +21,6 @@ import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendControl
 import com.tristana.sandroid.ui.video.recommend.listener.EndlessRecyclerOnScrollListener
 import xyz.doikki.videoplayer.player.BaseVideoView.STATE_PAUSED
 import xyz.doikki.videoplayer.player.VideoView
-
 
 class VideoRecommendFragment : Fragment() {
 
@@ -107,40 +103,40 @@ class VideoRecommendFragment : Fragment() {
         }
 
     private var videoRecommendViewModel: VideoRecommendViewModel? = null
-    private var videoRecommendFragmentAppStatusChangeListener =
-        object : Utils.OnAppStatusChangedListener {
-            override fun onForeground(activity: Activity?) {
-                videoRecommendView.post {
-                    if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
-                        val itemView = layoutManager.getChildAt(lastPosition) ?: return@post
-                        val videoView =
-                            itemView.findViewById<VideoView>(R.id.video_recommend_player)
-                                ?: return@post
-                        if (videoView.currentPlayState == STATE_PAUSED) {
-                            videoView.resume()
-                        } else {
-                            videoView.start()
-                        }
-                    }
-                }
-            }
-
-            override fun onBackground(activity: Activity?) {
-                for (index in 0 until layoutManager.childCount) {
-                    val itemView = layoutManager.getChildAt(index) ?: continue
-                    val videoView =
-                        itemView.findViewById<VideoView>(R.id.video_recommend_player) ?: continue
-                    if (videoView.isPlaying) {
-                        lastPosition = index
-                        videoView.pause()
-                    }
-                    return
-                }
-            }
-        }
 
     private val loadingDialog by lazy {
         LoadingDialog(requireContext(), getString(R.string.is_loading), false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        videoRecommendView.post {
+            if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
+                val itemView = layoutManager.getChildAt(lastPosition) ?: return@post
+                val videoView =
+                    itemView.findViewById<VideoView>(R.id.video_recommend_player)
+                        ?: return@post
+                if (videoView.currentPlayState == STATE_PAUSED) {
+                    videoView.resume()
+                } else {
+                    videoView.start()
+                }
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        for (index in 0 until layoutManager.childCount) {
+            val itemView = layoutManager.getChildAt(index) ?: continue
+            val videoView =
+                itemView.findViewById<VideoView>(R.id.video_recommend_player) ?: continue
+            if (videoView.isPlaying) {
+                lastPosition = index
+                videoView.pause()
+            }
+            return
+        }
     }
 
     override fun onCreateView(
@@ -171,13 +167,7 @@ class VideoRecommendFragment : Fragment() {
         videoRecommendView.setControllerAndBuildModels(videoRecommendController)
         videoRecommendView.addOnScrollListener(onScrollListener)
         initObserver()
-        AppUtils.registerAppStatusChangedListener(videoRecommendFragmentAppStatusChangeListener)
         return root
-    }
-
-    override fun onDestroyView() {
-        AppUtils.unregisterAppStatusChangedListener(videoRecommendFragmentAppStatusChangeListener)
-        super.onDestroyView()
     }
 
     private fun initObserver() {
