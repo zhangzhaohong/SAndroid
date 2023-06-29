@@ -26,4 +26,5 @@ public class SettingModel {
     public static final String ROUTER_WEB_VIEW_ACTIVITY = "Router web view";
     public static final String ROUTER_WEB_VIEW_CUSTOM_PATH = "自定义 Router web view 跳转";
     public static final String ROUTER_CUSTOM_PATH = "自定义 Router 跳转";
+    public static final String VIDEO_TECH = "视频引擎";
 }

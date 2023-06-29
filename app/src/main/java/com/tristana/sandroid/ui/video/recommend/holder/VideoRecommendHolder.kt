@@ -11,7 +11,6 @@ import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
 import xyz.doikki.videocontroller.StandardVideoController
-import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
 import xyz.doikki.videoplayer.player.BaseVideoView
 import xyz.doikki.videoplayer.player.BaseVideoView.SCREEN_SCALE_CENTER_CROP
 import xyz.doikki.videoplayer.player.VideoView
@@ -74,7 +73,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     override fun bind(holder: Holder) {
         super.bind(holder)
         holder.videoPlayer?.setLooping(true)
-        holder.videoPlayer?.setPlayerFactory(IjkPlayerFactory.create())
         val controller = StandardVideoController(context)
         controller.addDefaultControlComponent("标题", false)
         holder.videoPlayer?.setVideoController(controller) //设置控制器

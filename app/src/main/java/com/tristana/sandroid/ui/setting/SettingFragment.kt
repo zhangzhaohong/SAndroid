@@ -8,24 +8,28 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import com.therouter.router.Route
-import com.therouter.TheRouter
 import com.blankj.utilcode.util.*
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.model.EventTrackerDataModel
+import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog.MenuDialogBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.MessageDialogBuilder
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tencent.smtt.sdk.TbsVideo
+import com.therouter.TheRouter
+import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
@@ -52,10 +56,26 @@ class SettingFragment : Fragment() {
 
     private lateinit var mGroupListView: QMUIGroupListView
     private var na: String = "N/A"
+    private val videoTechItems = arrayOf("Default (Ijk Player)", "Ijk Player", "Exo Player", "Media Player")
 
     private var onClickListener = View.OnClickListener { v ->
         if (v is QMUICommonListItemView) {
             when (val text = v.text) {
+                VIDEO_TECH -> {
+                    val videoTechIndex = SpUtils.get(context, VIDEO_TECH_SP, 0) as Int
+                    val builder = QMUIDialog.CheckableDialogBuilder(activity)
+                    builder.checkedIndex = videoTechIndex
+                    builder
+                        .addItems(videoTechItems) { dialog, index ->
+                            SpUtils.put(context, VIDEO_TECH_SP, index)
+                            dialog.dismiss()
+                            needRestart(true)
+                        }
+                        .setSkinManager(QMUISkinManager.defaultInstance(activity))
+                        .create()
+                        .show()
+                }
+
                 X5_ALLOW_THIRD_PART_APP -> {}
                 X5_PRINT_DEBUG_INFO -> {}
                 X5_DEBUG -> {
@@ -350,7 +370,8 @@ class SettingFragment : Fragment() {
         mGroupListView = root.findViewById(R.id.groupListView)
         val height =
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
-
+        val videoTech: QMUICommonListItemView = createTextElement(VIDEO_TECH, height)
+        videoTech.detailText = videoTechItems[SpUtils.get(context, VIDEO_TECH_SP, 0) as Int]
         val x5AllowThirdPartApp =
             createSwitchElement(X5_ALLOW_THIRD_PART_APP, height, X5_ALLOW_THIRD_PART_APP_SP)
         val x5DebugItem = createSwitchElement(X5_PRINT_DEBUG_INFO, height, X5_DEBUG_MODE_SP)
@@ -393,6 +414,13 @@ class SettingFragment : Fragment() {
             .setDescription("")
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
             .setMiddleSeparatorInset(QMUIDisplayHelper.dp2px(context, 16), 0)
+            .addTo(mGroupListView)
+        QMUIGroupListView.newSection(requireContext())
+            .setTitle("视频引擎设置")
+            .setDescription("")
+            .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(videoTech, onClickListener)
+            .setShowSeparator(true)
             .addTo(mGroupListView)
         QMUIGroupListView.newSection(requireContext())
             .setTitle("X5设置")
