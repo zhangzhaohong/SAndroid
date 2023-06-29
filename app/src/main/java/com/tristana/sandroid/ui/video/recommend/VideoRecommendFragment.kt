@@ -134,8 +134,8 @@ class VideoRecommendFragment : Fragment() {
             if (videoView.isPlaying) {
                 lastPosition = index
                 videoView.pause()
+                return
             }
-            return
         }
     }
 
