@@ -12,6 +12,7 @@ import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
 import xyz.doikki.videocontroller.StandardVideoController
 import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
+import xyz.doikki.videoplayer.player.BaseVideoView
 import xyz.doikki.videoplayer.player.BaseVideoView.SCREEN_SCALE_CENTER_CROP
 import xyz.doikki.videoplayer.player.VideoView
 
@@ -42,9 +43,13 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
         super.onVisibilityStateChanged(visibilityState, holder)
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
-            holder.videoPlayer?.start()
+            if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
+                holder.videoPlayer?.resume()
+            } else {
+                holder.videoPlayer?.start()
+            }
         } else {
-            holder.videoPlayer?.release()
+            holder.videoPlayer?.pause()
         }
     }
 
@@ -58,6 +63,11 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         holder.videoPlayer?.setScreenScaleType(SCREEN_SCALE_CENTER_CROP)
         val cachePath = PreloadManager.getInstance(context).getPlayUrl(item.videoPath)
         holder.videoPlayer?.setUrl(cachePath)
+    }
+
+    override fun unbind(holder: Holder) {
+        holder.videoPlayer?.release()
+        super.unbind(holder)
     }
 
     override fun hashCode(): Int {

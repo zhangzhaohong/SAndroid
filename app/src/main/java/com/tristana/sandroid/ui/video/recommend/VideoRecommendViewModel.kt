@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ObjectUtils
 import com.blankj.utilcode.util.StringUtils
 import com.tristana.library.tools.http.OkHttpRequestGenerator
@@ -47,8 +48,13 @@ class VideoRecommendViewModel : ViewModel() {
                             )?.let { videoData ->
                                 withContext(Dispatchers.Main) {
                                     tmpHasMore = videoData.hasMore == 1
-                                    videoData.awemeList?.let { vidList ->
-                                        tmpVideoRecommendDataList.addAll(vidList)
+                                    videoData.awemeList?.forEach { awemeData ->
+                                        if ((videoRecommendDataList.value?.filter { item -> item.awemeId == awemeData.awemeId }?.size
+                                                ?: 0) > 0 || ObjectUtils.isNotEmpty(awemeData.cellRoom)
+                                        ) {
+                                            return@forEach
+                                        }
+                                        tmpVideoRecommendDataList.add(awemeData)
                                     }
                                     if (!isManual) {
                                         loadNext(
@@ -61,7 +67,6 @@ class VideoRecommendViewModel : ViewModel() {
                                 }
                             }
                         }
-
                     }
                 }
         }
@@ -107,18 +112,6 @@ class VideoRecommendViewModel : ViewModel() {
                 }
             } else {
                 val awemeData = tmpVideoRecommendDataList[0];
-                if ((videoRecommendDataList.value?.filter { it.awemeId == awemeData.awemeId }?.size
-                        ?: 0) > 0 || ObjectUtils.isNotEmpty(awemeData.cellRoom)
-                ) {
-                    tmpVideoRecommendDataList.removeAt(0)
-                    loadNext(
-                        canLoadMore = canLoadMore,
-                        resolveVidPath = resolveVidPath,
-                        continueLoadNext = continueLoadNext,
-                        context = context
-                    )
-                    return@launch
-                }
                 if (resolveVidPath && StringUtils.isEmpty(awemeData.videoPath)) {
                     try {
                         var videoPath: String? = null
