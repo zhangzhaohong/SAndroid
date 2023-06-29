@@ -111,7 +111,6 @@ class VideoRecommendFragment : Fragment() {
         object : Utils.OnAppStatusChangedListener {
             override fun onForeground(activity: Activity?) {
                 videoRecommendView.post {
-                    lastPosition = layoutManager.findLastVisibleItemPosition()
                     if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
                         val itemView = videoRecommendView.getChildAt(lastPosition)
                         if (ObjectUtils.isEmpty(itemView)) return@post
