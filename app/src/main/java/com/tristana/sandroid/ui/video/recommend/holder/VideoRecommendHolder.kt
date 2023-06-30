@@ -2,12 +2,18 @@ package com.tristana.sandroid.ui.video.recommend.holder
 
 import android.content.Context
 import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.widget.AppCompatImageView
 import butterknife.BindView
 import com.airbnb.epoxy.*
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.dataModel.data.DataModel
@@ -17,9 +23,10 @@ import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
 import com.tristana.sandroid.video.view.DebugInfoView
 import xyz.doikki.videocontroller.StandardVideoController
-import xyz.doikki.videoplayer.controller.ControlWrapper
 import xyz.doikki.videoplayer.player.BaseVideoView
+import xyz.doikki.videoplayer.player.BaseVideoView.OnStateChangeListener
 import xyz.doikki.videoplayer.player.BaseVideoView.SCREEN_SCALE_CENTER_CROP
+import xyz.doikki.videoplayer.player.BaseVideoView.STATE_PREPARED
 import xyz.doikki.videoplayer.player.VideoView
 
 
@@ -44,19 +51,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
     private var debugInfoStatus: Boolean = false
 
-    private var onStateChangeListener = object : BaseVideoView.OnStateChangeListener {
-        override fun onPlayerStateChanged(playerState: Int) {
-            debugInfoView?.onPlayerStateChanged(playerState)
-        }
-
-        override fun onPlayStateChanged(playState: Int) {
-            debugInfoView?.onPlayStateChanged(
-                playState,
-                item.video?.playAddr?.width,
-                item.video?.playAddr?.height
-            )
-        }
-    }
+    private var onStateChangeListener: OnStateChangeListener? = null
 
     override fun getViewType(): Int {
         return 0
@@ -78,7 +73,9 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         if (holder.videoPlayer?.isPlaying == true) {
             holder.videoPlayer?.pause()
         }
-        holder.videoPlayer?.removeOnStateChangeListener(onStateChangeListener)
+        onStateChangeListener?.let {
+            holder.videoPlayer?.removeOnStateChangeListener(it)
+        }
     }
 
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
@@ -88,7 +85,10 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
                 initDebugView()
             }
             if (holder.videoPlayer?.isPlaying == false) {
-                holder.videoPlayer?.addOnStateChangeListener(onStateChangeListener)
+                onStateChangeListener = getOnStateChangeListener(holder)
+                onStateChangeListener?.let {
+                    holder.videoPlayer?.addOnStateChangeListener(it)
+                }
                 if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
                     holder.videoPlayer?.resume()
                 } else {
@@ -98,10 +98,47 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }
     }
 
+    private fun getOnStateChangeListener(holder: Holder): OnStateChangeListener {
+        return object : OnStateChangeListener {
+            override fun onPlayerStateChanged(playerState: Int) {
+                debugInfoView?.onPlayerStateChanged(playerState)
+            }
+
+            override fun onPlayStateChanged(playState: Int) {
+                debugInfoView?.onPlayStateChanged(
+                    playState,
+                    item.video?.playAddr?.width,
+                    item.video?.playAddr?.height
+                )
+                if (playState > STATE_PREPARED) {
+                    holder.thumbView?.visibility = View.GONE
+                    holder.videoPlayer?.visibility = View.VISIBLE
+                } else {
+                    holder.thumbView?.visibility = View.VISIBLE
+                    holder.videoPlayer?.visibility = View.GONE
+                }
+            }
+        }
+    }
+
     override fun bind(holder: Holder) {
         super.bind(holder)
         debugInfoStatus =
             SpUtils.get(context, DataModel.ENABLE_VIDEO_TECH_DEBUG_INFO_SP, false) as Boolean
+        if (item.video?.cover?.urlList?.isNotEmpty() == true) {
+            holder.thumbView?.let {
+                val options = RequestOptions()
+                    .centerCrop()
+                    // .placeholder(R.drawable.ic_picture_loading) //预加载图片
+                    // .error(R.drawable.ic_picture_load_failed) //加载失败图片
+                    .priority(Priority.HIGH) //优先级
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC) //缓存
+                Glide.with(it.context)
+                    .load(item.video!!.cover!!.urlList[0]) // .transform(new GlideRoundTransform(48))
+                    .apply(options)
+                    .into(it)
+            }
+        }
         holder.videoPlayer?.setLooping(true)
         val controller = StandardVideoController(context)
         controller.addDefaultControlComponent(
@@ -158,5 +195,9 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         @JvmField
         @BindView(R.id.video_recommend_player)
         var videoPlayer: VideoView? = null
+
+        @JvmField
+        @BindView(R.id.video_recommend_cover_view)
+        var thumbView: AppCompatImageView? = null
     }
 }

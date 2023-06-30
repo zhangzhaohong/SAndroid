@@ -11,5 +11,6 @@ import java.io.Serializable
  */
 class VideoItemDataModel(
     @SerializedName("play_addr")
-    val playAddr: VideoPlayInfoModel? = VideoPlayInfoModel(ArrayList(), 0, 0)
-) : Serializable
+    val playAddr: VideoPlayInfoModel? = VideoPlayInfoModel(ArrayList(), 0, 0),
+    val cover: CoverDataModel?
+    ) : Serializable
