@@ -17,10 +17,12 @@ import com.blankj.utilcode.util.ObjectUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
 import com.tristana.sandroid.ui.components.LoadingDialog
+import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
 import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
 import com.tristana.sandroid.ui.video.recommend.listener.EndlessRecyclerOnScrollListener
 import xyz.doikki.videoplayer.player.BaseVideoView.STATE_PAUSED
 import xyz.doikki.videoplayer.player.VideoView
+import java.text.FieldPosition
 
 class VideoRecommendFragment : Fragment() {
 
@@ -28,6 +30,7 @@ class VideoRecommendFragment : Fragment() {
     private lateinit var videoRecommendController: VideoRecommendController
     private lateinit var layoutManager: QuickScrollLinearLayoutManager
     private lateinit var epoxyVisibilityTracker: EpoxyVisibilityTracker
+    private lateinit var mPreloadManager: PreloadManager
     private var lastPosition = -1
     private var revertSpace = 6F
     private var onScrollListener: RecyclerView.OnScrollListener =
@@ -84,6 +87,7 @@ class VideoRecommendFragment : Fragment() {
                                 layoutManager.smoothScrollToPosition(
                                     recyclerView, null, lastPosition
                                 )
+                                preloadManager(newState, lastPosition, getSlidingDirection())
                             }
                         } else {
                             // down
@@ -95,6 +99,7 @@ class VideoRecommendFragment : Fragment() {
                                 layoutManager.smoothScrollToPosition(
                                     recyclerView, null, firstPosition
                                 )
+                                preloadManager(newState, firstPosition, getSlidingDirection())
                             }
                         }
                     }
@@ -148,6 +153,7 @@ class VideoRecommendFragment : Fragment() {
         if (videoRecommendViewModel == null) videoRecommendViewModel =
             AndroidViewModelFactory.getInstance(requireActivity().application)
                 .create(VideoRecommendViewModel::class.java)
+        mPreloadManager = PreloadManager.getInstance(requireContext())
         videoRecommendViewModel?.loadNext(
             canLoadMore = true,
             resolveVidPath = true,
@@ -184,6 +190,14 @@ class VideoRecommendFragment : Fragment() {
             if (!it) {
                 loadingDialog.dismiss()
             }
+        }
+    }
+
+    private fun preloadManager(state: Int, position: Int, slidingDirection: Boolean) {
+        if (state == SCROLL_STATE_IDLE) {
+            mPreloadManager.resumePreload(position, !slidingDirection);
+        } else {
+            mPreloadManager.pausePreload(position, !slidingDirection);
         }
     }
 }
