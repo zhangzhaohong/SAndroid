@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.doOnDetach
 import butterknife.BindView
 import com.airbnb.epoxy.*
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
@@ -66,15 +67,15 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     }
 
     override fun onViewDetachedFromWindow(holder: Holder) {
-        debugInfoView?.let {
-            mManager?.removeView(it)
-        }
         super.onViewDetachedFromWindow(holder)
         if (holder.videoPlayer?.isPlaying == true) {
             holder.videoPlayer?.pause()
         }
         onStateChangeListener?.let {
             holder.videoPlayer?.removeOnStateChangeListener(it)
+        }
+        debugInfoView?.let {
+            mManager?.removeViewImmediate(it)
         }
     }
 
