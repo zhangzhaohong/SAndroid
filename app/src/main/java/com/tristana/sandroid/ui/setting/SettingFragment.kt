@@ -36,6 +36,7 @@ import com.tristana.sandroid.R
 import com.tristana.sandroid.dataModel.data.DataModel.*
 import com.tristana.sandroid.dataModel.data.SettingModel.*
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
+import com.tristana.sandroid.ui.video.recommend.cache.ProxyVideoCacheManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -74,6 +75,26 @@ class SettingFragment : Fragment() {
                         }
                         .setSkinManager(QMUISkinManager.defaultInstance(activity))
                         .create()
+                        .show()
+                }
+
+                VIDEO_CACHE_LOCAL_SIZE -> {
+                    MessageDialogBuilder(activity)
+                        .setTitle("提示")
+                        .setMessage("是否清空本地视频缓存目录？")
+                        .addAction(
+                            "取消"
+                        ) { dialog, _ -> dialog.dismiss() }
+                        .addAction(
+                            "确定"
+                        ) { dialog, _ ->
+                            run {
+                                dialog.dismiss()
+                                ProxyVideoCacheManager.clearAllCache(requireContext());
+                                refreshLogLocalSize(v)
+                                ToastUtils.showLong("清空视频缓存目录成功")
+                            }
+                        }
                         .show()
                 }
 
@@ -374,6 +395,8 @@ class SettingFragment : Fragment() {
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
         val videoTech: QMUICommonListItemView = createTextElement(VIDEO_TECH, height)
         videoTech.detailText = videoTechItems[SpUtils.get(context, VIDEO_TECH_SP, 0) as Int]
+        val videoCacheLocalSize: QMUICommonListItemView =
+            createTextElement(VIDEO_CACHE_LOCAL_SIZE, height)
         val videoTechDebugInfo =
             createSwitchElement(
                 ENABLE_VIDEO_TECH_DEBUG_INFO,
@@ -413,6 +436,7 @@ class SettingFragment : Fragment() {
             true,
             needRestart = true
         )
+        refreshVideoCacheLocalSize(videoCacheLocalSize)
         refreshLogLocalSize(logLocalSize)
         refreshDownloadLocalSize(downloadLocalSize)
 
@@ -428,6 +452,7 @@ class SettingFragment : Fragment() {
             .setDescription("")
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
             .addItemView(videoTech, onClickListener)
+            .addItemView(videoCacheLocalSize, onClickListener)
             .addItemView(videoTechDebugInfo, onClickListener)
             .setShowSeparator(true)
             .addTo(mGroupListView)
@@ -588,6 +613,19 @@ class SettingFragment : Fragment() {
             withContext(Dispatchers.IO) {
                 folderSize =
                     FileUtils.getSize(requireActivity().getExternalFilesDir("download")?.absolutePath)
+            }
+            withContext(Dispatchers.Main) {
+                item.detailText = folderSize
+            }
+        }
+    }
+
+    private fun refreshVideoCacheLocalSize(item: QMUICommonListItemView) {
+        MainScope().launch {
+            var folderSize: String?
+            withContext(Dispatchers.IO) {
+                folderSize =
+                    FileUtils.getSize(requireActivity().externalCacheDir?.absolutePath + "/video-cache")
             }
             withContext(Dispatchers.Main) {
                 item.detailText = folderSize
