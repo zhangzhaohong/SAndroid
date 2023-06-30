@@ -20,4 +20,5 @@ public class DataModel {
     public static final String ROUTER_WEB_VIEW_DEBUG_PATH_SP = "ROUTER_WEB_VIEW_DEBUG_PATH_SP";
     public static final String ROUTER_DEBUG_PATH_SP = "ROUTER_DEBUG_PATH_SP";
     public static final String VIDEO_TECH_SP = "VIDEO_TECH_SP";
+    public static final String ENABLE_VIDEO_TECH_DEBUG_INFO_SP = "ENABLE_VIDEO_TECH_DEBUG_INFO_SP";
 }

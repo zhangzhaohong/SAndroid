@@ -7,7 +7,9 @@ import android.view.WindowManager
 import butterknife.BindView
 import com.airbnb.epoxy.*
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
+import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
+import com.tristana.sandroid.dataModel.data.DataModel
 import com.tristana.sandroid.epoxy.holder.BaseEpoxyHolder
 import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
@@ -37,7 +39,9 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
     private var debugInfoView: DebugInfoView? = null
 
-    private val mControlWrapper: ControlWrapper? = null
+    private var mManager: WindowManager? = null
+
+    private var debugInfoStatus: Boolean = false
 
     private var onStateChangeListener = object : BaseVideoView.OnStateChangeListener {
         override fun onPlayerStateChanged(playerState: Int) {
@@ -45,7 +49,11 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }
 
         override fun onPlayStateChanged(playState: Int) {
-            debugInfoView?.onPlayStateChanged(playState, item.video?.playAddr?.width, item.video?.playAddr?.height)
+            debugInfoView?.onPlayStateChanged(
+                playState,
+                item.video?.playAddr?.width,
+                item.video?.playAddr?.height
+            )
         }
     }
 
@@ -65,13 +73,17 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         super.onViewDetachedFromWindow(holder)
         if (holder.videoPlayer?.isPlaying == true) {
             holder.videoPlayer?.pause()
-            holder.videoPlayer?.removeOnStateChangeListener(onStateChangeListener)
         }
+        holder.videoPlayer?.removeOnStateChangeListener(onStateChangeListener)
+        mManager?.removeView(debugInfoView)
     }
 
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
         super.onVisibilityStateChanged(visibilityState, holder)
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
+            if (debugInfoStatus) {
+                initDebugView()
+            }
             if (holder.videoPlayer?.isPlaying == false) {
                 holder.videoPlayer?.addOnStateChangeListener(onStateChangeListener)
                 if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
@@ -85,7 +97,8 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
     override fun bind(holder: Holder) {
         super.bind(holder)
-        initDebugView()
+        debugInfoStatus =
+            SpUtils.get(context, DataModel.ENABLE_VIDEO_TECH_DEBUG_INFO_SP, false) as Boolean
         holder.videoPlayer?.setLooping(true)
         val controller = StandardVideoController(context)
         controller.addDefaultControlComponent("标题", false)
@@ -97,7 +110,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
     private fun initDebugView() {
         debugInfoView = DebugInfoView(context)
-        val mManager =
+        mManager =
             context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val params = WindowManager.LayoutParams()
         //  设置悬浮type，不设置会报错
@@ -111,7 +124,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         params.gravity = Gravity.TOP;
         params.x = 0;
         params.y = 0;
-        mManager.addView(debugInfoView, params)
+        mManager!!.addView(debugInfoView, params)
     }
 
     override fun unbind(holder: Holder) {

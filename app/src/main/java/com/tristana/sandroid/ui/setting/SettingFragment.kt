@@ -56,7 +56,8 @@ class SettingFragment : Fragment() {
 
     private lateinit var mGroupListView: QMUIGroupListView
     private var na: String = "N/A"
-    private val videoTechItems = arrayOf("Default (Ijk Player)", "Ijk Player", "Exo Player", "Media Player")
+    private val videoTechItems =
+        arrayOf("Default (Ijk Player)", "Ijk Player", "Exo Player", "Media Player")
 
     private var onClickListener = View.OnClickListener { v ->
         if (v is QMUICommonListItemView) {
@@ -76,6 +77,7 @@ class SettingFragment : Fragment() {
                         .show()
                 }
 
+                ENABLE_VIDEO_TECH_DEBUG_INFO -> {}
                 X5_ALLOW_THIRD_PART_APP -> {}
                 X5_PRINT_DEBUG_INFO -> {}
                 X5_DEBUG -> {
@@ -372,6 +374,12 @@ class SettingFragment : Fragment() {
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
         val videoTech: QMUICommonListItemView = createTextElement(VIDEO_TECH, height)
         videoTech.detailText = videoTechItems[SpUtils.get(context, VIDEO_TECH_SP, 0) as Int]
+        val videoTechDebugInfo =
+            createSwitchElement(
+                ENABLE_VIDEO_TECH_DEBUG_INFO,
+                height,
+                ENABLE_VIDEO_TECH_DEBUG_INFO_SP
+            )
         val x5AllowThirdPartApp =
             createSwitchElement(X5_ALLOW_THIRD_PART_APP, height, X5_ALLOW_THIRD_PART_APP_SP)
         val x5DebugItem = createSwitchElement(X5_PRINT_DEBUG_INFO, height, X5_DEBUG_MODE_SP)
@@ -420,6 +428,7 @@ class SettingFragment : Fragment() {
             .setDescription("")
             .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
             .addItemView(videoTech, onClickListener)
+            .addItemView(videoTechDebugInfo, onClickListener)
             .setShowSeparator(true)
             .addTo(mGroupListView)
         QMUIGroupListView.newSection(requireContext())

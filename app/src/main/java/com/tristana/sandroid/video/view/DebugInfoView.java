@@ -113,7 +113,16 @@ public class DebugInfoView extends AppCompatTextView implements IControlComponen
         String player = "unknown";
         int videoTech;
         try {
-            videoTech = Integer.parseInt((String) Objects.requireNonNull(SpUtils.get(getContext(), DataModel.VIDEO_TECH_SP, "0")));
+            Object object = SpUtils.get(getContext(), DataModel.VIDEO_TECH_SP, 0);
+            if (Objects.isNull(object)) {
+                return String.format("player: %s ", player);
+            } else if (object instanceof String) {
+                videoTech = Integer.parseInt(String.valueOf(object));
+            } else if (object instanceof Integer) {
+                videoTech = (int) object;
+            } else {
+                return String.format("player: %s ", player);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return String.format("player: %s ", player);
