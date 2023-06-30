@@ -110,6 +110,9 @@ class VideoRecommendFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        if (videoRecommendViewModel?.isFirstLoad?.value == true && videoRecommendViewModel?.getTmpDataListSize() == 0) {
+            loadingDialog.show()
+        }
         videoRecommendView.post {
             if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
                 val itemView = layoutManager.getChildAt(lastPosition) ?: return@post
@@ -142,7 +145,6 @@ class VideoRecommendFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        loadingDialog.show()
         if (videoRecommendViewModel == null) videoRecommendViewModel =
             AndroidViewModelFactory.getInstance(requireActivity().application)
                 .create(VideoRecommendViewModel::class.java)
