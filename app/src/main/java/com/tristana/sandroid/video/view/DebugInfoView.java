@@ -13,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
+import com.tristana.library.tools.sharedPreferences.SpUtils;
+import com.tristana.sandroid.dataModel.data.DataModel;
 import com.tristana.sandroid.video.VideoInfoUtils;
+
+import java.util.Objects;
 
 import xyz.doikki.videoplayer.controller.ControlWrapper;
 import xyz.doikki.videoplayer.controller.IControlComponent;
@@ -71,6 +75,11 @@ public class DebugInfoView extends AppCompatTextView implements IControlComponen
         bringToFront();
     }
 
+    public void onPlayStateChanged(int playState, Integer width, Integer height) {
+        setText(getDebugString(playState, width, height));
+        bringToFront();
+    }
+
     /**
      * Returns the debugging information string to be shown by the target {@link TextView}.
      */
@@ -78,6 +87,12 @@ public class DebugInfoView extends AppCompatTextView implements IControlComponen
         return getCurrentPlayer() + VideoInfoUtils.playState2str(playState) + "\n"
                 + "video width: " + mControlWrapper.getVideoSize()[0] + " , height: " + mControlWrapper.getVideoSize()[1];
     }
+
+    protected String getDebugString(int playState, Integer width, Integer height) {
+        return getCurrentPlayerBySetting() + VideoInfoUtils.playState2str(playState) + "\n"
+                + "video width: " + width + " , height: " + height;
+    }
+
 
     protected String getCurrentPlayer() {
         String player;
@@ -91,6 +106,24 @@ public class DebugInfoView extends AppCompatTextView implements IControlComponen
         } else {
             player = "unknown";
         }
+        return String.format("player: %s ", player);
+    }
+
+    protected String getCurrentPlayerBySetting() {
+        String player = "unknown";
+        int videoTech;
+        try {
+            videoTech = Integer.parseInt((String) Objects.requireNonNull(SpUtils.get(getContext(), DataModel.VIDEO_TECH_SP, "0")));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return String.format("player: %s ", player);
+        }
+        player = switch (videoTech) {
+            case 0, 1 -> "IjkPlayer";
+            case 2 -> "ExoPlayer";
+            case 3 -> "MediaPlayer";
+            default -> "unknown";
+        };
         return String.format("player: %s ", player);
     }
 

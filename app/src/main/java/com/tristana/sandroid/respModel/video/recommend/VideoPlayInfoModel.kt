@@ -11,5 +11,7 @@ import java.io.Serializable
  */
 class VideoPlayInfoModel(
     @SerializedName("url_list")
-    val urlList: ArrayList<String>?
+    val urlList: ArrayList<String>?,
+    val width: Int?,
+    val height: Int?
 ) : Serializable
