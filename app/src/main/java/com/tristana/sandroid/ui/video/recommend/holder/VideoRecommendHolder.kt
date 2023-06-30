@@ -3,6 +3,7 @@ package com.tristana.sandroid.ui.video.recommend.holder
 import android.content.Context
 import android.graphics.PixelFormat
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import butterknife.BindView
 import com.airbnb.epoxy.*
@@ -103,11 +104,24 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
             SpUtils.get(context, DataModel.ENABLE_VIDEO_TECH_DEBUG_INFO_SP, false) as Boolean
         holder.videoPlayer?.setLooping(true)
         val controller = StandardVideoController(context)
-        controller.addDefaultControlComponent("标题", false)
+        controller.addDefaultControlComponent(
+            item.desc?.let { desc ->
+                desc.ifEmpty {
+                    item.author?.nickname?.let { it + "的作品" } ?: "无标题"
+                }
+            } ?: kotlin.run { item.author?.nickname?.let { it + "的作品" } ?: "无标题" }, false
+        )
         holder.videoPlayer?.setVideoController(controller) //设置控制器
         holder.videoPlayer?.setScreenScaleType(SCREEN_SCALE_CENTER_CROP)
         val cachePath = PreloadManager.getInstance(context).getPlayUrl(item.videoPath)
         holder.videoPlayer?.setUrl(cachePath)
+        holder.videoPlayer?.setOnClickListener {
+            if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
+                holder.videoPlayer?.resume()
+            } else {
+                holder.videoPlayer?.start()
+            }
+        }
     }
 
     private fun initDebugView() {

@@ -12,6 +12,8 @@ import java.io.Serializable
 data class AwemeDataModel(
     @SerializedName("aweme_id")
     val awemeId: String?,
+    val author: AuthorDataModel?,
+    val desc: String?,
     @SerializedName("cell_room")
     val cellRoom: Any?,
     val video: VideoItemDataModel?,
