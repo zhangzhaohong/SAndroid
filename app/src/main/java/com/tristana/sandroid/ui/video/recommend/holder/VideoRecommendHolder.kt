@@ -70,12 +70,14 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     }
 
     override fun onViewDetachedFromWindow(holder: Holder) {
+        debugInfoView?.let {
+            mManager?.removeView(it)
+        }
         super.onViewDetachedFromWindow(holder)
         if (holder.videoPlayer?.isPlaying == true) {
             holder.videoPlayer?.pause()
         }
         holder.videoPlayer?.removeOnStateChangeListener(onStateChangeListener)
-        mManager?.removeView(debugInfoView)
     }
 
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
