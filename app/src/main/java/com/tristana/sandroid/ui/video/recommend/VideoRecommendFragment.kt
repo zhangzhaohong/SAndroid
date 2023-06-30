@@ -195,9 +195,9 @@ class VideoRecommendFragment : Fragment() {
 
     private fun preloadManager(state: Int, position: Int, slidingDirection: Boolean) {
         if (state == SCROLL_STATE_IDLE) {
-            mPreloadManager.resumePreload(position, !slidingDirection);
+            mPreloadManager.resumePreload(position, !slidingDirection)
         } else {
-            mPreloadManager.pausePreload(position, !slidingDirection);
+            mPreloadManager.pausePreload(position, !slidingDirection)
         }
     }
 }
