@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
+import com.android.iplayer.widget.VideoPlayer
 import com.blankj.utilcode.util.ObjectUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
@@ -115,33 +116,31 @@ class VideoRecommendFragment : Fragment() {
         if (videoRecommendViewModel?.isFirstLoad?.value == true && videoRecommendViewModel?.getTmpDataListSize() == 0) {
             loadingDialog.show()
         }
-//        videoRecommendView.post {
-//            if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
-//                val itemView = layoutManager.getChildAt(lastPosition) ?: return@post
-//                val videoView =
-//                    itemView.findViewById<VideoView>(R.id.video_recommend_player)
-//                        ?: return@post
-//                if (videoView.currentPlayState == STATE_PAUSED) {
-//                    videoView.resume()
-//                } else {
-//                    videoView.start()
-//                }
-//            }
-//        }
+        videoRecommendView.post {
+            if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
+                val itemView = layoutManager.getChildAt(lastPosition) ?: return@post
+                val videoView =
+                    itemView.findViewById<VideoPlayer>(R.id.video_recommend_player)
+                        ?: return@post
+                if (!videoView.isPlaying) {
+                    videoView.startPlay()
+                }
+            }
+        }
     }
 
     override fun onPause() {
         super.onPause()
-//        for (index in 0 until layoutManager.childCount) {
-//            val itemView = layoutManager.getChildAt(index) ?: continue
-//            val videoView =
-//                itemView.findViewById<VideoView>(R.id.video_recommend_player) ?: continue
-//            if (videoView.isPlaying) {
-//                lastPosition = index
-//                videoView.pause()
-//                return
-//            }
-//        }
+        for (index in 0 until layoutManager.childCount) {
+            val itemView = layoutManager.getChildAt(index) ?: continue
+            val videoView =
+                itemView.findViewById<VideoPlayer>(R.id.video_recommend_player) ?: continue
+            if (videoView.isPlaying) {
+                lastPosition = index
+                videoView.pause()
+                return
+            }
+        }
     }
 
     override fun onCreateView(

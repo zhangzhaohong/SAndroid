@@ -52,7 +52,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     override fun onViewDetachedFromWindow(holder: Holder) {
         super.onViewDetachedFromWindow(holder)
         if (holder.videoPlayer?.isPlaying == true) {
-            holder.videoPlayer?.onStop()
+            holder.videoPlayer?.onPause()
         }
     }
 
@@ -123,6 +123,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
     override fun unbind(holder: Holder) {
         super.unbind(holder)
+        holder.videoPlayer?.onStop()
     }
 
     override fun hashCode(): Int {
