@@ -1,5 +1,6 @@
 package com.tristana.sandroid.ui.video.recommend.cache;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
 
 import java.io.BufferedInputStream;
@@ -9,8 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-
-import xyz.doikki.videoplayer.util.L;
 
 /**
  * 原理：主动去请求VideoCache生成的代理地址，触发VideoCache缓存机制
@@ -62,7 +61,7 @@ public class PreloadTask implements Runnable {
     private void start() {
         // 如果在小黑屋里不加载
         if (blackList.contains(mRawUrl)) return;
-        L.i("预加载开始：" + mPosition);
+        LogUtils.i("预加载开始：" + mPosition);
         HttpURLConnection connection = null;
         try {
             //获取HttpProxyCacheServer的代理地址
@@ -80,22 +79,22 @@ public class PreloadTask implements Runnable {
                 //预加载完成或者取消预加载
                 if (mIsCanceled || read >= PreloadManager.PRELOAD_LENGTH) {
                     if (mIsCanceled) {
-                        L.i("预加载取消：" + mPosition + " 读取数据：" + read + " Byte");
+                        LogUtils.i("预加载取消：" + mPosition + " 读取数据：" + read + " Byte");
                     } else {
-                        L.i("预加载成功：" + mPosition + " 读取数据：" + read + " Byte");
+                        LogUtils.i("预加载成功：" + mPosition + " 读取数据：" + read + " Byte");
                     }
                     break;
                 }
             }
         } catch (Exception e) {
-            L.i("预加载异常：" + mPosition + " 异常信息：" + e.getMessage());
+            LogUtils.i("预加载异常：" + mPosition + " 异常信息：" + e.getMessage());
             // 关入小黑屋
             blackList.add(mRawUrl);
         } finally {
             if (connection != null) {
                 connection.disconnect();
             }
-            L.i("预加载结束: " + mPosition);
+            LogUtils.i("预加载结束: " + mPosition);
         }
     }
 

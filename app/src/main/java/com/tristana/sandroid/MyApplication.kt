@@ -21,11 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory
-import xyz.doikki.videoplayer.ijk.IjkPlayerFactory
-import xyz.doikki.videoplayer.player.AndroidMediaPlayerFactory
-import xyz.doikki.videoplayer.player.VideoViewConfig
-import xyz.doikki.videoplayer.player.VideoViewManager
 
 class MyApplication : Application() {
 
@@ -66,33 +61,6 @@ class MyApplication : Application() {
             withContext(Dispatchers.IO) {
                 instance?.let { QMUISwipeBackActivityManager.init(it) }
             }
-            withContext(Dispatchers.IO) {
-                when (SpUtils.get(applicationContext, DataModel.VIDEO_TECH_SP, 0) as Int) {
-                    0, 1 -> {
-                        VideoViewManager.setConfig(
-                            VideoViewConfig.newBuilder()
-                                .setPlayerFactory(IjkPlayerFactory.create())
-                                .build()
-                        )
-                    }
-
-                    2 -> {
-                        VideoViewManager.setConfig(
-                            VideoViewConfig.newBuilder()
-                                .setPlayerFactory(ExoMediaPlayerFactory.create())
-                                .build()
-                        )
-                    }
-
-                    3 -> {
-                        VideoViewManager.setConfig(
-                            VideoViewConfig.newBuilder()
-                                .setPlayerFactory(AndroidMediaPlayerFactory.create())
-                                .build()
-                        )
-                    }
-                }
-            }
         }
         AppUtils.registerAppStatusChangedListener(appStatusChangeListener)
     }
@@ -130,7 +98,7 @@ class MyApplication : Application() {
     }
 
     companion object {
-        var host: String = "http://9hvnmc.natappfree.cc"
+        var host: String = "http://hcz3kv.natappfree.cc"
             private set
         var instance: Application? = null
             private set

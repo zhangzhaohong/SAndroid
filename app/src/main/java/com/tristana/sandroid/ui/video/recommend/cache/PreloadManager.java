@@ -2,6 +2,7 @@ package com.tristana.sandroid.ui.video.recommend.cache;
 
 import android.content.Context;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
 
 import java.io.File;
@@ -10,8 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import xyz.doikki.videoplayer.util.L;
 
 /**
  * 抖音预加载工具，使用AndroidVideoCache实现
@@ -68,7 +67,7 @@ public class PreloadManager {
         task.mRawUrl = rawUrl;
         task.mPosition = position;
         task.mCacheServer = mHttpProxyCacheServer;
-        L.i("addPreloadTask: " + position);
+        LogUtils.i("addPreloadTask: " + position);
         mPreloadTasks.put(rawUrl, task);
 
         if (mIsStartPreload) {
@@ -105,11 +104,11 @@ public class PreloadManager {
      * 暂停预加载
      * 根据是否反向滑动取消在position之下或之上的PreloadTask
      *
-     * @param position 当前滑到的位置
+     * @param position        当前滑到的位置
      * @param isReverseScroll 列表是否反向滑动
      */
     public void pausePreload(int position, boolean isReverseScroll) {
-        L.d("pausePreload：" + position + " isReverseScroll: " + isReverseScroll);
+        LogUtils.d("pausePreload：" + position + " isReverseScroll: " + isReverseScroll);
         mIsStartPreload = false;
         for (Map.Entry<String, PreloadTask> next : mPreloadTasks.entrySet()) {
             PreloadTask task = next.getValue();
@@ -133,7 +132,7 @@ public class PreloadManager {
      * @param isReverseScroll 列表是否反向滑动
      */
     public void resumePreload(int position, boolean isReverseScroll) {
-        L.d("resumePreload：" + position + " isReverseScroll: " + isReverseScroll);
+        LogUtils.d("resumePreload：" + position + " isReverseScroll: " + isReverseScroll);
         mIsStartPreload = true;
         for (Map.Entry<String, PreloadTask> next : mPreloadTasks.entrySet()) {
             PreloadTask task = next.getValue();

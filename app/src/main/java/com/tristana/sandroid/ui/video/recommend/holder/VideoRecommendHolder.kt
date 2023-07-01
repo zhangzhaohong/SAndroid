@@ -1,34 +1,25 @@
 package com.tristana.sandroid.ui.video.recommend.holder
 
 import android.content.Context
-import android.graphics.PixelFormat
-import android.graphics.drawable.Drawable
-import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.view.doOnDetach
 import butterknife.BindView
 import com.airbnb.epoxy.*
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
+import com.android.iplayer.listener.OnPlayerEventListener
+import com.android.iplayer.model.PlayerState
+import com.android.iplayer.widget.VideoPlayer
+import com.android.iplayer.widget.WidgetFactory
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
-import com.tristana.sandroid.dataModel.data.DataModel
 import com.tristana.sandroid.epoxy.holder.BaseEpoxyHolder
 import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
-import com.tristana.sandroid.video.view.DebugInfoView
-import xyz.doikki.videocontroller.StandardVideoController
-import xyz.doikki.videoplayer.player.BaseVideoView
-import xyz.doikki.videoplayer.player.BaseVideoView.OnStateChangeListener
-import xyz.doikki.videoplayer.player.BaseVideoView.SCREEN_SCALE_CENTER_CROP
-import xyz.doikki.videoplayer.player.BaseVideoView.STATE_PREPARED
-import xyz.doikki.videoplayer.player.VideoView
 
 
 /**
@@ -46,13 +37,9 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     @EpoxyAttribute
     lateinit var item: AwemeDataModel
 
-    private var debugInfoView: DebugInfoView? = null
-
     private var mManager: WindowManager? = null
 
-    private var debugInfoStatus: Boolean = false
-
-    private var onStateChangeListener: OnStateChangeListener? = null
+    private var onPlayerEventListener: OnPlayerEventListener? = null
 
     override fun getViewType(): Int {
         return 0
@@ -71,52 +58,37 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         if (holder.videoPlayer?.isPlaying == true) {
             holder.videoPlayer?.pause()
         }
-        onStateChangeListener?.let {
-            holder.videoPlayer?.removeOnStateChangeListener(it)
-        }
-        debugInfoView?.let {
-            mManager?.removeViewImmediate(it)
+        onPlayerEventListener?.let {
+            onPlayerEventListener = null
         }
     }
 
     override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
         super.onVisibilityStateChanged(visibilityState, holder)
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
-            if (debugInfoStatus) {
-                initDebugView()
-            }
             if (holder.videoPlayer?.isPlaying == false) {
-                onStateChangeListener = getOnStateChangeListener(holder)
-                onStateChangeListener?.let {
-                    holder.videoPlayer?.addOnStateChangeListener(it)
-                }
-                if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
-                    holder.videoPlayer?.resume()
-                } else {
-                    holder.videoPlayer?.start()
+                onPlayerEventListener = getOnStateChangeListener(holder)
+                onPlayerEventListener?.let {
+                    holder.videoPlayer?.setOnPlayerActionListener(it)
                 }
             }
         }
     }
 
-    private fun getOnStateChangeListener(holder: Holder): OnStateChangeListener {
-        return object : OnStateChangeListener {
-            override fun onPlayerStateChanged(playerState: Int) {
-                debugInfoView?.onPlayerStateChanged(playerState)
-            }
-
-            override fun onPlayStateChanged(playState: Int) {
-                debugInfoView?.onPlayStateChanged(
-                    playState,
-                    item.video?.playAddr?.width,
-                    item.video?.playAddr?.height
-                )
-                if (playState > STATE_PREPARED) {
-                    holder.thumbView?.visibility = View.GONE
-                    holder.videoPlayer?.visibility = View.VISIBLE
-                } else {
+    private fun getOnStateChangeListener(holder: Holder): OnPlayerEventListener {
+        val isFirstLoad = true
+        return object : OnPlayerEventListener() {
+            override fun onPlayerState(state: PlayerState?, message: String?) {
+                super.onPlayerState(state, message)
+                if (state == PlayerState.STATE_RESET || state == PlayerState.STATE_PREPARE || state == PlayerState.STATE_BUFFER) {
                     holder.thumbView?.visibility = View.VISIBLE
                     holder.videoPlayer?.visibility = View.GONE
+                } else {
+                    holder.thumbView?.visibility = View.GONE
+                    holder.videoPlayer?.visibility = View.VISIBLE
+                }
+                if (isFirstLoad && (state == PlayerState.STATE_ON_PAUSE || state == PlayerState.STATE_PAUSE)) {
+                    holder.videoPlayer?.onResume()
                 }
             }
         }
@@ -124,8 +96,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
     override fun bind(holder: Holder) {
         super.bind(holder)
-        debugInfoStatus =
-            SpUtils.get(context, DataModel.ENABLE_VIDEO_TECH_DEBUG_INFO_SP, false) as Boolean
         if (item.video?.cover?.urlList?.isNotEmpty() == true) {
             holder.thumbView?.let {
                 val options = RequestOptions()
@@ -140,49 +110,28 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
                     .into(it)
             }
         }
-        holder.videoPlayer?.setLooping(true)
-        val controller = StandardVideoController(context)
-        controller.addDefaultControlComponent(
-            item.desc?.let { desc ->
-                desc.ifEmpty {
-                    item.author?.nickname?.let { it + "的作品" } ?: "无标题"
-                }
-            } ?: kotlin.run { item.author?.nickname?.let { it + "的作品" } ?: "无标题" }, false
-        )
-        holder.videoPlayer?.setVideoController(controller) //设置控制器
-        holder.videoPlayer?.setScreenScaleType(SCREEN_SCALE_CENTER_CROP)
-        val cachePath = PreloadManager.getInstance(context).getPlayUrl(item.videoPath)
-        holder.videoPlayer?.setUrl(cachePath)
-        holder.videoPlayer?.setOnClickListener {
-            if (holder.videoPlayer?.currentPlayState == BaseVideoView.STATE_PAUSED) {
-                holder.videoPlayer?.resume()
-            } else {
-                holder.videoPlayer?.start()
+        holder.videoPlayer?.layoutParams?.height =
+            context.resources.displayMetrics.widthPixels * 16 / 9 //固定播放器高度，或高度设置为:match_parent
+        val controller = holder.videoPlayer?.initController()
+        WidgetFactory.bindDefaultControls(controller);
+        holder.videoPlayer?.controller = controller;
+        controller?.setTitle(item.desc?.let { desc ->
+            desc.ifEmpty {
+                item.author?.nickname?.let { it + "的作品" } ?: "无标题"
             }
-        }
-    }
-
-    private fun initDebugView() {
-        debugInfoView = DebugInfoView(context)
-        mManager =
-            context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val params = WindowManager.LayoutParams()
-        //  设置悬浮type，不设置会报错
-        // params.type = WindowManager.LayoutParams.TYPE_PHONE
-        //  设置背景透明
-        params.format = PixelFormat.TRANSPARENT;
-        //  设置不获取焦点，不设置会导致所有焦点分发不到底层界面
-        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.gravity = Gravity.TOP;
-        params.x = 0;
-        params.y = 0;
-        mManager!!.addView(debugInfoView, params)
+        } ?: kotlin.run {
+            item.author?.nickname?.let { it + "的作品" } ?: "无标题"
+        }) //视频标题(仅横屏状态可见)
+        holder.videoPlayer?.setLoop(true)
+        //设置播放源
+        val cachePath = PreloadManager.getInstance(context).getPlayUrl(item.videoPath)
+        holder.videoPlayer?.setDataSource(cachePath)
+        //异步开始准备播放
+        holder.videoPlayer?.prepareAsync()
     }
 
     override fun unbind(holder: Holder) {
-        holder.videoPlayer?.release()
+        holder.videoPlayer?.onRelease()
         super.unbind(holder)
     }
 
@@ -195,7 +144,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     class Holder : BaseEpoxyHolder() {
         @JvmField
         @BindView(R.id.video_recommend_player)
-        var videoPlayer: VideoView? = null
+        var videoPlayer: VideoPlayer? = null
 
         @JvmField
         @BindView(R.id.video_recommend_cover_view)
