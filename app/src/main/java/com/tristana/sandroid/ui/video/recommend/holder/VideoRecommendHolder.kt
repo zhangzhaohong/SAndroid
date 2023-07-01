@@ -2,7 +2,6 @@ package com.tristana.sandroid.ui.video.recommend.holder
 
 import android.content.Context
 import android.view.View
-import android.view.WindowManager
 import androidx.appcompat.widget.AppCompatImageView
 import butterknife.BindView
 import com.airbnb.epoxy.*
@@ -37,10 +36,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     @EpoxyAttribute
     lateinit var item: AwemeDataModel
 
-    private var mManager: WindowManager? = null
-
-    private var onPlayerEventListener: OnPlayerEventListener? = null
-
     override fun getViewType(): Int {
         return 0
     }
@@ -56,10 +51,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     override fun onViewDetachedFromWindow(holder: Holder) {
         super.onViewDetachedFromWindow(holder)
         if (holder.videoPlayer?.isPlaying == true) {
-            holder.videoPlayer?.pause()
-        }
-        onPlayerEventListener?.let {
-            onPlayerEventListener = null
+            holder.videoPlayer?.onStop()
         }
     }
 
@@ -67,35 +59,15 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         super.onVisibilityStateChanged(visibilityState, holder)
         if (visibilityState == FULL_IMPRESSION_VISIBLE) {
             if (holder.videoPlayer?.isPlaying == false) {
-                onPlayerEventListener = getOnStateChangeListener(holder)
-                onPlayerEventListener?.let {
-                    holder.videoPlayer?.setOnPlayerActionListener(it)
-                }
-            }
-        }
-    }
-
-    private fun getOnStateChangeListener(holder: Holder): OnPlayerEventListener {
-        val isFirstLoad = true
-        return object : OnPlayerEventListener() {
-            override fun onPlayerState(state: PlayerState?, message: String?) {
-                super.onPlayerState(state, message)
-                if (state == PlayerState.STATE_RESET || state == PlayerState.STATE_PREPARE || state == PlayerState.STATE_BUFFER) {
-                    holder.thumbView?.visibility = View.VISIBLE
-                    holder.videoPlayer?.visibility = View.GONE
-                } else {
-                    holder.thumbView?.visibility = View.GONE
-                    holder.videoPlayer?.visibility = View.VISIBLE
-                }
-                if (isFirstLoad && (state == PlayerState.STATE_ON_PAUSE || state == PlayerState.STATE_PAUSE)) {
-                    holder.videoPlayer?.onResume()
-                }
+                holder.videoPlayer?.startPlay()
             }
         }
     }
 
     override fun bind(holder: Holder) {
         super.bind(holder)
+        holder.thumbView?.visibility = View.VISIBLE
+        holder.videoPlayer?.visibility = View.GONE
         if (item.video?.cover?.urlList?.isNotEmpty() == true) {
             holder.thumbView?.let {
                 val options = RequestOptions()
@@ -126,12 +98,30 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         //设置播放源
         val cachePath = PreloadManager.getInstance(context).getPlayUrl(item.videoPath)
         holder.videoPlayer?.setDataSource(cachePath)
-        //异步开始准备播放
-        holder.videoPlayer?.prepareAsync()
+        holder.videoPlayer?.setOnPlayerActionListener(object : OnPlayerEventListener() {
+            override fun onPlayerState(state: PlayerState?, message: String?) {
+                super.onPlayerState(state, message)
+                when (state) {
+                    PlayerState.STATE_PREPARE, PlayerState.STATE_BUFFER -> {
+                        holder.thumbView?.visibility = View.VISIBLE
+                        holder.videoPlayer?.visibility = View.GONE
+                    }
+                    PlayerState.STATE_START, PlayerState.STATE_PLAY, PlayerState.STATE_ON_PLAY -> {
+                        holder.thumbView?.visibility = View.GONE
+                        holder.videoPlayer?.visibility = View.VISIBLE
+                    }
+                    PlayerState.STATE_MOBILE -> {}
+                    PlayerState.STATE_ON_PAUSE, PlayerState.STATE_PAUSE -> {}
+                    PlayerState.STATE_RESET, PlayerState.STATE_STOP, PlayerState.STATE_DESTROY -> {}
+                    PlayerState.STATE_COMPLETION -> {}
+                    PlayerState.STATE_ERROR -> {}
+                    else -> {}
+                }
+            }
+        })
     }
 
     override fun unbind(holder: Holder) {
-        holder.videoPlayer?.onRelease()
         super.unbind(holder)
     }
 
