@@ -15,7 +15,6 @@ import com.android.iplayer.media.core.ExoPlayerFactory
 import com.android.iplayer.media.core.IjkPlayerFactory
 import com.android.iplayer.model.PlayerState
 import com.android.iplayer.widget.VideoPlayer
-import com.android.iplayer.widget.WidgetFactory
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -27,6 +26,7 @@ import com.tristana.sandroid.epoxy.holder.BaseEpoxyHolder
 import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
+import com.tristana.sandroid.ui.video.recommend.factory.WidgetFactory
 
 
 /**
@@ -103,8 +103,8 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }
         holder.videoPlayer?.setZoomModel(IMediaPlayer.MODE_ZOOM_CROPPING)
         val controller = holder.videoPlayer?.initController()
-        WidgetFactory.bindDefaultControls(controller);
-        holder.videoPlayer?.controller = controller;
+         WidgetFactory.bindDefaultControls(controller)
+        holder.videoPlayer?.controller = controller
         controller?.setTitle(item.desc?.let { desc ->
             desc.ifEmpty {
                 item.author?.nickname?.let { it + "的作品" } ?: "无标题"
@@ -114,6 +114,8 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }) //视频标题(仅横屏状态可见)
         holder.videoPlayer?.setLoop(true)
         holder.videoPlayer?.setOnPlayerActionListener(object : OnPlayerEventListener() {
+            private val isFirstLoad = true
+
             override fun createMediaPlayer(): AbstractMediaPlayer {
                 return when (SpUtils.get(context, DataModel.VIDEO_TECH_SP, 0) as Int) {
                     0, 1 -> {
@@ -134,11 +136,14 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
                 super.onPlayerState(state, message)
                 when (state) {
                     PlayerState.STATE_PREPARE, PlayerState.STATE_BUFFER -> {
-                        holder.thumbView?.visibility = View.VISIBLE
-                        holder.videoPlayer?.visibility = View.GONE
+                        if (isFirstLoad) {
+                            holder.thumbView?.visibility = View.VISIBLE
+                            holder.videoPlayer?.visibility = View.GONE
+                        }
                     }
 
                     PlayerState.STATE_START, PlayerState.STATE_PLAY, PlayerState.STATE_ON_PLAY -> {
+                        this@VideoRecommendHolder.isFirstLoad = false
                         holder.thumbView?.visibility = View.GONE
                         holder.videoPlayer?.visibility = View.VISIBLE
                     }
