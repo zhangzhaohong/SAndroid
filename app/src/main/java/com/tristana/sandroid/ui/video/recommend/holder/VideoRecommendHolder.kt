@@ -1,5 +1,6 @@
 package com.tristana.sandroid.ui.video.recommend.holder
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
@@ -73,6 +74,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun bind(holder: Holder) {
         super.bind(holder)
         if (isFirstLoad) {

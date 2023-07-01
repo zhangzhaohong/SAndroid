@@ -196,4 +196,14 @@ class VideoRecommendFragment : Fragment() {
             mPreloadManager.pausePreload(position, !slidingDirection)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        for (index in 0 until layoutManager.childCount) {
+            val itemView = layoutManager.getChildAt(index) ?: continue
+            val videoView =
+                itemView.findViewById<VideoPlayer>(R.id.video_recommend_player) ?: continue
+            videoView.onDestroy()
+        }
+    }
 }

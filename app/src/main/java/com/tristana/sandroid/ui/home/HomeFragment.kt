@@ -37,6 +37,7 @@ class HomeFragment : Fragment() {
         // NavigationUI.setupActionBarWithNavController(requireActivity(), navController, mAppBarConfiguration!!)
         // NavigationUI.setupWithNavController(navigationView, navController)
         val viewpager: ViewPager2 = root.findViewById(R.id.bottom_nav_host_fragment_viewpager)
+        viewpager.isUserInputEnabled = false
         viewpager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
                 return 3
