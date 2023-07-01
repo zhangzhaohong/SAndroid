@@ -7,6 +7,7 @@ import butterknife.BindView
 import com.airbnb.epoxy.*
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
 import com.android.iplayer.listener.OnPlayerEventListener
+import com.android.iplayer.media.IMediaPlayer
 import com.android.iplayer.model.PlayerState
 import com.android.iplayer.widget.VideoPlayer
 import com.android.iplayer.widget.WidgetFactory
@@ -82,8 +83,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
                     .into(it)
             }
         }
-        holder.videoPlayer?.layoutParams?.height =
-            context.resources.displayMetrics.widthPixels * 16 / 9 //固定播放器高度，或高度设置为:match_parent
+        holder.videoPlayer?.setZoomModel(IMediaPlayer.MODE_ZOOM_CROPPING)
         val controller = holder.videoPlayer?.initController()
         WidgetFactory.bindDefaultControls(controller);
         holder.videoPlayer?.controller = controller;
