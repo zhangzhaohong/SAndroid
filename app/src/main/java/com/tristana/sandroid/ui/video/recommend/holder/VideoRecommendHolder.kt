@@ -101,6 +101,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     @SuppressLint("SetTextI18n")
     override fun bind(holder: Holder) {
         super.bind(holder)
+        holder.videoPlayer?.onReset()
         item.author?.nickname?.let {
             holder.authorView?.text = "@$it"
         }
