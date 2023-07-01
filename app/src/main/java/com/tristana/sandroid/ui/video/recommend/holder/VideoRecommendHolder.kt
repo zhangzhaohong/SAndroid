@@ -44,7 +44,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     @EpoxyAttribute
     lateinit var item: AwemeDataModel
 
-    private var isFirstLoad = true
+    private var isFirstRender = true
 
     override fun getViewType(): Int {
         return 0
@@ -74,13 +74,33 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }
     }
 
+    override fun onVisibilityChanged(
+        percentVisibleHeight: Float,
+        percentVisibleWidth: Float,
+        visibleHeight: Int,
+        visibleWidth: Int,
+        holder: Holder
+    ) {
+        super.onVisibilityChanged(
+            percentVisibleHeight,
+            percentVisibleWidth,
+            visibleHeight,
+            visibleWidth,
+            holder
+        )
+        if (percentVisibleHeight > 0 && percentVisibleHeight < 100) {
+            if (isFirstRender) {
+                if (holder.videoPlayer?.isPlaying == false) {
+                    holder.thumbView?.visibility = View.VISIBLE
+                    holder.videoPlayer?.visibility = View.GONE
+                }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     override fun bind(holder: Holder) {
         super.bind(holder)
-        if (isFirstLoad) {
-            holder.thumbView?.visibility = View.VISIBLE
-            holder.videoPlayer?.visibility = View.GONE
-        }
         item.author?.nickname?.let {
             holder.authorView?.text = "@$it"
         }
@@ -103,7 +123,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }
         holder.videoPlayer?.setZoomModel(IMediaPlayer.MODE_ZOOM_CROPPING)
         val controller = holder.videoPlayer?.initController()
-         WidgetFactory.bindDefaultControls(controller)
+        WidgetFactory.bindDefaultControls(controller)
         holder.videoPlayer?.controller = controller
         controller?.setTitle(item.desc?.let { desc ->
             desc.ifEmpty {
@@ -114,8 +134,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         }) //视频标题(仅横屏状态可见)
         holder.videoPlayer?.setLoop(true)
         holder.videoPlayer?.setOnPlayerActionListener(object : OnPlayerEventListener() {
-            private val isFirstLoad = true
-
             override fun createMediaPlayer(): AbstractMediaPlayer {
                 return when (SpUtils.get(context, DataModel.VIDEO_TECH_SP, 0) as Int) {
                     0, 1 -> {
@@ -136,14 +154,14 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
                 super.onPlayerState(state, message)
                 when (state) {
                     PlayerState.STATE_PREPARE, PlayerState.STATE_BUFFER -> {
-                        if (isFirstLoad) {
+                        if (isFirstRender) {
                             holder.thumbView?.visibility = View.VISIBLE
                             holder.videoPlayer?.visibility = View.GONE
                         }
                     }
 
                     PlayerState.STATE_START, PlayerState.STATE_PLAY, PlayerState.STATE_ON_PLAY -> {
-                        this@VideoRecommendHolder.isFirstLoad = false
+                        isFirstRender = false
                         holder.thumbView?.visibility = View.GONE
                         holder.videoPlayer?.visibility = View.VISIBLE
                     }
@@ -160,7 +178,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         //设置播放源
         val cachePath = PreloadManager.getInstance(context).getPlayUrl(item.videoPath)
         holder.videoPlayer?.setDataSource(cachePath)
-        isFirstLoad = false
     }
 
     override fun unbind(holder: Holder) {
@@ -185,10 +202,10 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
 
         @JvmField
         @BindView(R.id.video_recommend_author)
-        var authorView: AppCompatTextView?=null
+        var authorView: AppCompatTextView? = null
 
         @JvmField
         @BindView(R.id.video_recommend_desc)
-        var descView: AppCompatTextView?=null
+        var descView: AppCompatTextView? = null
     }
 }
