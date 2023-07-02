@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     private var mAppBarConfiguration: AppBarConfiguration? = null
     private var menu: Menu? = null
+
     // private lateinit var mHomeWatcher: HomeWatcher
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -299,12 +300,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
-        val navController: NavController = navHostFragment.navController
-        navController.currentBackStackEntry?.destination?.label?.let {
-            if (it != this.resources.getString(R.string.menu_space)) {
-                return super.onKeyDown(keyCode, event)
+        try {
+            var navHostFragment: NavHostFragment? = null
+            this.supportFragmentManager.fragments.first()?.let {
+                if (it is NavHostFragment) {
+                    navHostFragment = it
+                } else {
+                    return super.onKeyDown(keyCode, event)
+                }
+                val navController: NavController? = navHostFragment?.navController
+                navController?.currentBackStackEntry?.destination?.label?.let { label ->
+                    if (label != this.resources.getString(R.string.menu_space)) {
+                        return super.onKeyDown(keyCode, event)
+                    }
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return super.onKeyDown(keyCode, event)
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
