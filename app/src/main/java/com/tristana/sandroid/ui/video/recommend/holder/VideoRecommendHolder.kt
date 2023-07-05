@@ -58,22 +58,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         return item.viewPosition.toLong()
     }
 
-    override fun onViewDetachedFromWindow(holder: Holder) {
-        super.onViewDetachedFromWindow(holder)
-        if (holder.videoPlayer?.isPlaying == true) {
-            holder.videoPlayer?.onPause()
-        }
-    }
-
-    override fun onVisibilityStateChanged(visibilityState: Int, holder: Holder) {
-        super.onVisibilityStateChanged(visibilityState, holder)
-        if (visibilityState == FULL_IMPRESSION_VISIBLE) {
-            if (holder.videoPlayer?.isPlaying == false) {
-                holder.videoPlayer?.startPlay()
-            }
-        }
-    }
-
     override fun onVisibilityChanged(
         percentVisibleHeight: Float,
         percentVisibleWidth: Float,

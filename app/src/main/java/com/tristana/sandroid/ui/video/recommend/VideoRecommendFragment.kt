@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
 import com.android.iplayer.widget.VideoPlayer
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ObjectUtils
 import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.manager.QuickScrollLinearLayoutManager
@@ -29,7 +30,7 @@ class VideoRecommendFragment : Fragment() {
     private lateinit var layoutManager: QuickScrollLinearLayoutManager
     private lateinit var epoxyVisibilityTracker: EpoxyVisibilityTracker
     private lateinit var mPreloadManager: PreloadManager
-    private var lastPosition = -1
+    private var currentPosition = -1
     private var revertSpace = 6F
     private var onScrollListener: RecyclerView.OnScrollListener =
         object : EndlessRecyclerOnScrollListener() {
@@ -86,6 +87,7 @@ class VideoRecommendFragment : Fragment() {
                                     recyclerView, null, lastPosition
                                 )
                                 preloadManager(newState, lastPosition, getSlidingDirection())
+                                currentPosition = lastPosition
                             }
                         } else {
                             // down
@@ -98,6 +100,7 @@ class VideoRecommendFragment : Fragment() {
                                     recyclerView, null, firstPosition
                                 )
                                 preloadManager(newState, firstPosition, getSlidingDirection())
+                                currentPosition = firstPosition
                             }
                         }
                     }
@@ -117,8 +120,8 @@ class VideoRecommendFragment : Fragment() {
             loadingDialog.show()
         }
         videoRecommendView.post {
-            if (ObjectUtils.isNotEmpty(lastPosition) && lastPosition >= 0) {
-                val itemView = layoutManager.getChildAt(lastPosition) ?: return@post
+            if (ObjectUtils.isNotEmpty(currentPosition) && currentPosition >= 0) {
+                val itemView = layoutManager.getChildAt(currentPosition) ?: return@post
                 val videoView =
                     itemView.findViewById<VideoPlayer>(R.id.video_recommend_player)
                         ?: return@post
@@ -131,15 +134,12 @@ class VideoRecommendFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        for (index in 0 until layoutManager.childCount) {
-            val itemView = layoutManager.getChildAt(index) ?: continue
-            val videoView =
-                itemView.findViewById<VideoPlayer>(R.id.video_recommend_player) ?: continue
-            if (videoView.isPlaying) {
-                lastPosition = index
-                videoView.pause()
-                return
-            }
+        val itemView = layoutManager.getChildAt(currentPosition) ?: return
+        val videoView =
+            itemView.findViewById<VideoPlayer>(R.id.video_recommend_player) ?: return
+        if (videoView.isPlaying) {
+            videoView.pause()
+            return
         }
     }
 
@@ -160,7 +160,7 @@ class VideoRecommendFragment : Fragment() {
         epoxyVisibilityTracker = EpoxyVisibilityTracker()
         videoRecommendView = root.findViewById(R.id.video_recommend_view)
         epoxyVisibilityTracker.attach(videoRecommendView)
-        videoRecommendView.isNestedScrollingEnabled = true
+        videoRecommendView.isNestedScrollingEnabled = false
         layoutManager = QuickScrollLinearLayoutManager(
             requireContext(), RecyclerView.VERTICAL, false, 20f
         )
@@ -170,6 +170,19 @@ class VideoRecommendFragment : Fragment() {
         videoRecommendController = VideoRecommendController(requireContext())
         videoRecommendView.setControllerAndBuildModels(videoRecommendController)
         videoRecommendView.addOnScrollListener(onScrollListener)
+        videoRecommendView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewAttachedToWindow(view: View) {
+                view.post {
+                    LogUtils.i("onChildViewAttachedToWindow", videoRecommendView.getChildItemId(view), currentPosition)
+                }
+            }
+
+            override fun onChildViewDetachedFromWindow(view: View) {
+                view.post {
+                    LogUtils.i("onChildViewDetachedFromWindow", videoRecommendView.getChildItemId(view), currentPosition)
+                }
+            }
+        })
         initObserver()
         return root
     }
