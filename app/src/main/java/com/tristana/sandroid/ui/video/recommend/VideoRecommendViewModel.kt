@@ -1,14 +1,17 @@
 package com.tristana.sandroid.ui.video.recommend
 
 import android.content.Context
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.android.iplayer.widget.VideoPlayer
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ObjectUtils
 import com.blankj.utilcode.util.StringUtils
 import com.tristana.library.tools.http.OkHttpRequestGenerator
 import com.tristana.sandroid.MyApplication
+import com.tristana.sandroid.R
 import com.tristana.sandroid.http.PathCollection
 import com.tristana.sandroid.respModel.HttpResponsePublicModel
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
@@ -18,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -25,12 +29,16 @@ class VideoRecommendViewModel : ViewModel() {
 
     var isFirstLoad = MutableLiveData(true)
     var hasMore = MutableLiveData(true)
+    private var currentPosition = MutableLiveData(0)
     var videoRecommendDataList = MutableLiveData<MutableList<AwemeDataModel>?>(ArrayList())
+    private var videoPlayerInstanceViewList =
+        MutableLiveData<ConcurrentHashMap<Int, View>?>(ConcurrentHashMap())
     private var tmpVideoRecommendDataList: ArrayList<AwemeDataModel> = ArrayList()
     private var tmpHasMore: Boolean = true
 
     init {
         videoRecommendDataList.value = ArrayList()
+        videoPlayerInstanceViewList.value = ConcurrentHashMap()
     }
 
     private suspend fun requestData(isManual: Boolean, context: Context) {
@@ -111,7 +119,7 @@ class VideoRecommendViewModel : ViewModel() {
                     loadMore(context = context)
                 }
             } else {
-                val awemeData = tmpVideoRecommendDataList[0];
+                val awemeData = tmpVideoRecommendDataList[0]
                 if (resolveVidPath && StringUtils.isEmpty(awemeData.videoPath)) {
                     try {
                         var videoPath: String? = null
@@ -129,7 +137,7 @@ class VideoRecommendViewModel : ViewModel() {
                         PreloadManager.getInstance(context).addPreloadTask(
                             awemeData.videoPath,
                             videoRecommendDataList.value?.size ?: 0
-                        );
+                        )
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -156,6 +164,45 @@ class VideoRecommendViewModel : ViewModel() {
     fun loadMore(isManual: Boolean = false, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             requestData(isManual, context)
+        }
+    }
+
+    private fun setPosition(position: Int) {
+        currentPosition.value = position
+    }
+
+    fun getCurrentPosition(): Int {
+        return currentPosition.value ?: 0
+    }
+
+    fun onStartView(position: Int, view: View?) {
+        LogUtils.i("VideoRecommendViewModel: onStartView $position")
+        setPosition(position)
+        view?.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
+            if (!it.isWorking) {
+                it.prepareAsync()
+            } else if (!it.isPlaying) {
+                it.startPlay()
+            }
+            videoPlayerInstanceViewList.value?.put(position, view)
+        }
+    }
+
+    fun onStopView(position: Int, view: View?) {
+        LogUtils.i("VideoRecommendViewModel: onStopView $position")
+        view?.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
+            if (it.isPlaying) {
+                it.pause()
+            }
+            videoPlayerInstanceViewList.value?.put(position, view)
+        }
+    }
+    
+    fun onDestroyPlayer() {
+        LogUtils.i("VideoRecommendViewModel: onDestroy")
+        videoPlayerInstanceViewList.value?.forEach { (index, view) ->
+            view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.onDestroy()
+            videoPlayerInstanceViewList.value?.remove(index)
         }
     }
 

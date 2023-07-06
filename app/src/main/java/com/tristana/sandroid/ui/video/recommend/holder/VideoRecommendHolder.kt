@@ -165,11 +165,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
         holder.videoPlayer?.setDataSource(cachePath)
     }
 
-    override fun unbind(holder: Holder) {
-        super.unbind(holder)
-        holder.videoPlayer?.onStop()
-    }
-
     override fun hashCode(): Int {
         var result = super.hashCode()
         result = 31 * result + context.hashCode()
