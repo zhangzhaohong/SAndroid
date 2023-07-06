@@ -115,10 +115,12 @@ class VideoRecommendFragment : Fragment() {
         if (videoRecommendViewModel?.isFirstLoad?.value == true && videoRecommendViewModel?.getTmpDataListSize() == 0) {
             loadingDialog.show()
         }
+        videoRecommendViewModel?.onResumePlayer()
     }
 
     override fun onPause() {
         super.onPause()
+        videoRecommendViewModel?.onPausePlayer()
     }
 
     override fun onCreateView(

@@ -197,12 +197,38 @@ class VideoRecommendViewModel : ViewModel() {
             videoPlayerInstanceViewList.value?.put(position, view)
         }
     }
-    
+
     fun onDestroyPlayer() {
         LogUtils.i("VideoRecommendViewModel: onDestroy")
         videoPlayerInstanceViewList.value?.forEach { (index, view) ->
             view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.onDestroy()
             videoPlayerInstanceViewList.value?.remove(index)
+        }
+    }
+
+    fun onResumePlayer() {
+        LogUtils.i("VideoRecommendViewModel: onResumePlayer")
+        videoPlayerInstanceViewList.value?.get(getCurrentPosition())?.let { view ->
+            view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
+                if (!it.isWorking) {
+                    it.prepareAsync()
+                } else if (!it.isPlaying) {
+                    it.startPlay()
+                }
+                videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
+            }
+        }
+    }
+
+    fun onPausePlayer() {
+        LogUtils.i("VideoRecommendViewModel: onPausePlayer")
+        videoPlayerInstanceViewList.value?.get(getCurrentPosition())?.let { view ->
+            view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
+                if (it.isPlaying) {
+                    it.pause()
+                }
+                videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
+            }
         }
     }
 
