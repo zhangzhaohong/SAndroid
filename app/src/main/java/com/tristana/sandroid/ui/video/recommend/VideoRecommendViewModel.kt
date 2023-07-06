@@ -216,9 +216,9 @@ class VideoRecommendViewModel : ViewModel() {
         videoPlayerInstanceViewList.value?.get(getCurrentPosition())?.let { view ->
             view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
                 if (!it.isWorking) {
-                    it.prepareAsync()
-                } else if (!it.isPlaying) {
                     it.startPlay()
+                } else if (!it.isPlaying) {
+                    it.onResume()
                 }
                 videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
             }
@@ -230,7 +230,7 @@ class VideoRecommendViewModel : ViewModel() {
         videoPlayerInstanceViewList.value?.get(getCurrentPosition())?.let { view ->
             view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
                 if (it.isPlaying) {
-                    it.pause()
+                    it.onPause()
                 }
                 videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
             }

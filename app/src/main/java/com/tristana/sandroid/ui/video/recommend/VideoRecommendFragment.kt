@@ -30,6 +30,17 @@ class VideoRecommendFragment : Fragment() {
     private lateinit var epoxyVisibilityTracker: EpoxyVisibilityTracker
     private lateinit var mPreloadManager: PreloadManager
     private var revertSpace = 6F
+    private var onViewPagerListener: OnViewPagerListener = object : OnViewPagerListener {
+        override fun onPageRelease(view: View?, isNext: Boolean, position: Int) {
+            LogUtils.i("onPageRelease: $isNext, $position")
+            videoRecommendViewModel?.onStopView(position, view)
+        }
+
+        override fun onPageSelected(view: View?, position: Int, isBottom: Boolean) {
+            LogUtils.i("onPageSelected: $position, $isBottom")
+            videoRecommendViewModel?.onStartView(position, view)
+        }
+    }
     private var onScrollListener: RecyclerView.OnScrollListener =
         object : EndlessRecyclerOnScrollListener() {
             override fun onLoadMore(isSingle: Boolean) {
@@ -142,18 +153,7 @@ class VideoRecommendFragment : Fragment() {
         epoxyVisibilityTracker.attach(videoRecommendView)
         videoRecommendView.isNestedScrollingEnabled = false
         layoutManager = ViewPagerLayoutManager(context)
-        layoutManager.setOnViewPagerListener(object : OnViewPagerListener {
-            override fun onPageRelease(view: View?, isNext: Boolean, position: Int) {
-               LogUtils.i("onPageRelease: $isNext, $position")
-                videoRecommendViewModel?.onStopView(position, view)
-            }
-
-            override fun onPageSelected(view: View?, position: Int, isBottom: Boolean) {
-                LogUtils.i("onPageSelected: $position, $isBottom")
-                videoRecommendViewModel?.onStartView(position, view)
-            }
-
-        })
+        layoutManager.setOnViewPagerListener(onViewPagerListener)
         videoRecommendView.layoutManager = layoutManager
         videoRecommendView.setHasFixedSize(true)
         layoutManager.stackFromEnd = false
