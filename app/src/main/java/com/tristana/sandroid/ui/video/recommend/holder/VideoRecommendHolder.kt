@@ -85,7 +85,6 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
     @SuppressLint("SetTextI18n")
     override fun bind(holder: Holder) {
         super.bind(holder)
-        holder.videoPlayer?.onReset()
         item.author?.nickname?.let {
             holder.authorView?.text = "@$it"
         }
@@ -106,6 +105,7 @@ abstract class VideoRecommendHolder : CustomEpoxyModelWithHolder<VideoRecommendH
                     .into(it)
             }
         }
+        holder.videoPlayer?.onReset()
         holder.videoPlayer?.setZoomModel(IMediaPlayer.MODE_ZOOM_CROPPING)
         val controller = holder.videoPlayer?.initController()
         WidgetFactory.bindDefaultControls(controller)

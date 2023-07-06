@@ -171,7 +171,7 @@ class VideoRecommendViewModel : ViewModel() {
         currentPosition.value = position
     }
 
-    fun getCurrentPosition(): Int {
+    private fun getCurrentPosition(): Int {
         return currentPosition.value ?: 0
     }
 
@@ -180,11 +180,16 @@ class VideoRecommendViewModel : ViewModel() {
         setPosition(position)
         view?.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
             if (!it.isWorking) {
-                it.prepareAsync()
-            } else if (!it.isPlaying) {
                 it.startPlay()
+            } else if (!it.isPlaying) {
+                it.onResume()
             }
             videoPlayerInstanceViewList.value?.put(position, view)
+        }
+        videoPlayerInstanceViewList.value?.forEach { (viewPosition, itemView) ->
+            if (viewPosition < position - 2 || viewPosition > position + 2) {
+                videoPlayerInstanceViewList.value?.remove(position, itemView)
+            }
         }
     }
 
@@ -192,7 +197,7 @@ class VideoRecommendViewModel : ViewModel() {
         LogUtils.i("VideoRecommendViewModel: onStopView $position")
         view?.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
             if (it.isPlaying) {
-                it.pause()
+                it.onPause()
             }
             videoPlayerInstanceViewList.value?.put(position, view)
         }
