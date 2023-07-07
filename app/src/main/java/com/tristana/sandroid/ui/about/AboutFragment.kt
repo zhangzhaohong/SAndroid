@@ -22,32 +22,36 @@ import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.R
-import com.tristana.sandroid.model.data.AboutModel.ABIS
-import com.tristana.sandroid.model.data.AboutModel.ANDROID_ID
-import com.tristana.sandroid.model.data.AboutModel.APP_BUILD_INFO
-import com.tristana.sandroid.model.data.AboutModel.APP_DEBUG_MODE
-import com.tristana.sandroid.model.data.AboutModel.APP_NAME
-import com.tristana.sandroid.model.data.AboutModel.APP_PACKAGE_NAME
-import com.tristana.sandroid.model.data.AboutModel.APP_PATH_NAME
-import com.tristana.sandroid.model.data.AboutModel.APP_ROOT_MODE
-import com.tristana.sandroid.model.data.AboutModel.APP_SIGNATURE_NAME_MD5
-import com.tristana.sandroid.model.data.AboutModel.APP_SIGNATURE_NAME_SHA1
-import com.tristana.sandroid.model.data.AboutModel.APP_SIGNATURE_NAME_SHA256
-import com.tristana.sandroid.model.data.AboutModel.APP_VERSION_CODE
-import com.tristana.sandroid.model.data.AboutModel.APP_VERSION_NAME
-import com.tristana.sandroid.model.data.AboutModel.DEVICE_ADB_MODE
-import com.tristana.sandroid.model.data.AboutModel.DEVICE_ROOT_MODE
-import com.tristana.sandroid.model.data.AboutModel.IS_EMULATOR
-import com.tristana.sandroid.model.data.AboutModel.IS_TABLET
-import com.tristana.sandroid.model.data.AboutModel.MAC_ADDRESS
-import com.tristana.sandroid.model.data.AboutModel.MANU_FACTURER
-import com.tristana.sandroid.model.data.AboutModel.MODEL
-import com.tristana.sandroid.model.data.AboutModel.SDK_VERSION_CODE
-import com.tristana.sandroid.model.data.AboutModel.SDK_VERSION_NAME
-import com.tristana.sandroid.model.data.AboutModel.SYSTEM_APP_MODE
-import com.tristana.sandroid.model.data.AboutModel.SYSTEM_VERSION_NAME
-import com.tristana.sandroid.model.data.AboutModel.UNIQUE_DEVICE_ID
-import com.tristana.sandroid.model.data.DataModel.ENABLE_SHOW_LAB_SP
+import com.tristana.sandroid.dataModel.data.AboutModel.ABIS
+import com.tristana.sandroid.dataModel.data.AboutModel.ANDROID_ID
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_BUILD_INFO
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_DEBUG_MODE
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_NAME
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_PACKAGE_NAME
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_PATH_NAME
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_ROOT_MODE
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_SIGNATURE_NAME_MD5
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_SIGNATURE_NAME_SHA1
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_SIGNATURE_NAME_SHA256
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_VERSION_CODE
+import com.tristana.sandroid.dataModel.data.AboutModel.APP_VERSION_NAME
+import com.tristana.sandroid.dataModel.data.AboutModel.DEVICE_ADB_MODE
+import com.tristana.sandroid.dataModel.data.AboutModel.DEVICE_ROOT_MODE
+import com.tristana.sandroid.dataModel.data.AboutModel.IS_EMULATOR
+import com.tristana.sandroid.dataModel.data.AboutModel.IS_TABLET
+import com.tristana.sandroid.dataModel.data.AboutModel.MAC_ADDRESS
+import com.tristana.sandroid.dataModel.data.AboutModel.MANU_FACTURER
+import com.tristana.sandroid.dataModel.data.AboutModel.MODEL
+import com.tristana.sandroid.dataModel.data.AboutModel.SDK_VERSION_CODE
+import com.tristana.sandroid.dataModel.data.AboutModel.SDK_VERSION_NAME
+import com.tristana.sandroid.dataModel.data.AboutModel.SERVER_BUILD_TIME
+import com.tristana.sandroid.dataModel.data.AboutModel.SERVER_ENV
+import com.tristana.sandroid.dataModel.data.AboutModel.SERVER_HOST
+import com.tristana.sandroid.dataModel.data.AboutModel.SERVER_VERSION
+import com.tristana.sandroid.dataModel.data.AboutModel.SYSTEM_APP_MODE
+import com.tristana.sandroid.dataModel.data.AboutModel.SYSTEM_VERSION_NAME
+import com.tristana.sandroid.dataModel.data.AboutModel.UNIQUE_DEVICE_ID
+import com.tristana.sandroid.dataModel.data.DataModel.ENABLE_SHOW_LAB_SP
 import java.util.Optional
 
 class AboutFragment : Fragment() {
@@ -125,6 +129,7 @@ class AboutFragment : Fragment() {
             QMUIResHelper.getAttrDimen(context, com.qmuiteam.qmui.R.attr.qmui_list_item_height)
         initAppInfoSection(aboutViewModel!!, height)
         initDeviceInfoSection(aboutViewModel!!, height)
+        initServerInfo(aboutViewModel!!, height)
         return root
     }
 
@@ -282,6 +287,41 @@ class AboutFragment : Fragment() {
         }
         aboutViewModel.appSignatureNameMD5.observe(viewLifecycleOwner) { text: String? ->
             updateElement(appSignatureNameMD5, text)
+        }
+    }
+
+    private fun initServerInfo(aboutViewModel: AboutViewModel, height: Int) {
+        val serverHost = createElement(SERVER_HOST, height)
+        val serverEnv = createElement(SERVER_ENV, height)
+        val serverVersion = createElement(SERVER_VERSION, height)
+        val serverBuildTime = createElement(SERVER_BUILD_TIME, height)
+
+        val size = QMUIDisplayHelper.dp2px(context, 20)
+        QMUIGroupListView.newSection(requireContext())
+            .setTitle("Server信息")
+            .setDescription("")
+            .setLeftIconSize(size, ViewGroup.LayoutParams.WRAP_CONTENT)
+            .addItemView(serverHost, onClickListener)
+            .addItemView(serverEnv, onClickListener)
+            .addItemView(serverVersion, onClickListener)
+            .addItemView(serverBuildTime, onClickListener)
+            .setShowSeparator(true)
+            .addTo(mGroupListView)
+
+        aboutViewModel.serverHost.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverHost, text)
+        }
+
+        aboutViewModel.serverEnv.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverEnv, text)
+        }
+
+        aboutViewModel.serverVersion.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverVersion, text)
+        }
+
+        aboutViewModel.serverBuildTime.observe(viewLifecycleOwner) { text: String? ->
+            updateElement(serverBuildTime, text)
         }
     }
 

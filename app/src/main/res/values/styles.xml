@@ -31,4 +31,12 @@
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
+    <style name="BottomDialogStyle" parent="@style/Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--EditText光标颜色-->
+        <item name="android:colorControlActivated">@color/c_1</item>
+        <item name="colorAccent">@color/c_1</item>
+    </style>
+
 </resources>

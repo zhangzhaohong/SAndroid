@@ -8,4 +8,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="view_splash_bottom">60dp</dimen>
     <dimen name="webView_bottom_icon">18dip</dimen>
+    <dimen name="dialog_size">76dp</dimen>
+    <dimen name="dialog_download_width">138dp</dimen>
+    <dimen name="dialog_download_height">146dp</dimen>
 </resources>

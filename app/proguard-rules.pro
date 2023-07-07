@@ -77,3 +77,14 @@
 -keepclasseswithmembers class * {
     @com.therouter.router.Autowired <fields>;
 }
+
+-keep class xyz.doikki.videoplayer.** { *; }
+-dontwarn xyz.doikki.videoplayer.**
+
+# IjkPlayer
+-keep class tv.danmaku.ijk.** { *; }
+-dontwarn tv.danmaku.ijk.**
+
+# ExoPlayer
+-keep class com.google.android.exoplayer2.** { *; }
+-dontwarn com.google.android.exoplayer2.**

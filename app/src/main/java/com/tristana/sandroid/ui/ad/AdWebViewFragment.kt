@@ -17,7 +17,6 @@ import com.tristana.sandroid.MainActivity
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
-import com.tristana.sandroid.ui.webview.X5WebViewFragment
 
 @Route(path = AdWebViewFragment.ROUTE)
 class AdWebViewFragment : Fragment(), IOnBackPressedInterface, IOnPageFinishedInterface {

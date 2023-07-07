@@ -26,13 +26,13 @@ import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
-import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_PATH_SP
-import com.tristana.sandroid.model.data.DataModel.ROUTER_DEBUG_STATUS_SP
-import com.tristana.sandroid.model.data.DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP
-import com.tristana.sandroid.model.data.SettingModel.ROUTER_CUSTOM_PATH
-import com.tristana.sandroid.model.data.SettingModel.ROUTER_DEBUG_STATUS
-import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_ACTIVITY
-import com.tristana.sandroid.model.data.SettingModel.ROUTER_WEB_VIEW_CUSTOM_PATH
+import com.tristana.sandroid.dataModel.data.DataModel.ROUTER_DEBUG_PATH_SP
+import com.tristana.sandroid.dataModel.data.DataModel.ROUTER_DEBUG_STATUS_SP
+import com.tristana.sandroid.dataModel.data.DataModel.ROUTER_WEB_VIEW_DEBUG_PATH_SP
+import com.tristana.sandroid.dataModel.data.SettingModel.ROUTER_CUSTOM_PATH
+import com.tristana.sandroid.dataModel.data.SettingModel.ROUTER_DEBUG_STATUS
+import com.tristana.sandroid.dataModel.data.SettingModel.ROUTER_WEB_VIEW_ACTIVITY
+import com.tristana.sandroid.dataModel.data.SettingModel.ROUTER_WEB_VIEW_CUSTOM_PATH
 import com.tristana.sandroid.ui.router.RouterWebActivity
 import utils.router.RouterUtils
 

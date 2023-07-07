@@ -70,4 +70,8 @@
     <string name="no_more_data">暂无更多内容</string>
     <string name="menu_setting_lab">开发人员选项</string>
     <string name="action_settings_lab">开发人员选项</string>
+    <string name="menu_bottom_video_recommend">视频推荐</string>
+    <string name="bottom_navigation_video_recommend">视频推荐</string>
+    <string name="is_refreshing">正在刷新</string>
+    <string name="is_loading">正在加载</string>
 </resources>

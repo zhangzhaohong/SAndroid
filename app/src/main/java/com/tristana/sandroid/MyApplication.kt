@@ -15,8 +15,8 @@ import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import com.tristana.library.tools.sharedPreferences.SpUtils
-import com.tristana.sandroid.model.data.DataModel
-import com.tristana.sandroid.model.data.SettingModel
+import com.tristana.sandroid.dataModel.data.DataModel
+import com.tristana.sandroid.dataModel.data.SettingModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -98,6 +98,8 @@ class MyApplication : Application() {
     }
 
     companion object {
+        var host: String = "http://prykrz.natappfree.cc"
+            private set
         var instance: Application? = null
             private set
         var appStatusChangeListener = object : OnAppStatusChangedListener {

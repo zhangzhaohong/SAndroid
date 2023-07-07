@@ -12,7 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnClickBannerInterface
-import com.tristana.sandroid.model.bannerModel.BannerDataModel
+import com.tristana.sandroid.dataModel.bannerModel.BannerDataModel
 import com.tristana.sandroid.ui.main.transform.GlideRoundTransform
 import com.tristana.sandroid.ui.main.viewHolder.ImageViewHolder
 

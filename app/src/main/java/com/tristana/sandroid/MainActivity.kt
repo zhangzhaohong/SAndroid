@@ -20,6 +20,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ObjectUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
@@ -41,8 +42,10 @@ import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
+import com.tristana.library.tools.watcher.HomeWatcher
+import com.tristana.library.tools.watcher.HomeWatcher.OnHomePressedListener
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
-import com.tristana.sandroid.model.data.DataModel
+import com.tristana.sandroid.dataModel.data.DataModel
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -50,6 +53,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.reflect.Field
 import java.util.*
+
 
 @Route(path = MainActivity.ROUTE)
 class MainActivity : AppCompatActivity() {
@@ -68,10 +72,25 @@ class MainActivity : AppCompatActivity() {
 
     private var mExitTime: Long = 0
 
+    private var onHomePressedListener = object : OnHomePressedListener {
+        override fun onHomeLongPressed() {
+            LogUtils.i("onHomeLongPressed")
+        }
+
+        override fun onHomePressed() {
+            LogUtils.i("onHomePressed")
+        }
+    }
+
     private var mAppBarConfiguration: AppBarConfiguration? = null
     private var menu: Menu? = null
+
+    // private lateinit var mHomeWatcher: HomeWatcher
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // mHomeWatcher = HomeWatcher(this)
+        // mHomeWatcher.setOnHomePressedListener(onHomePressedListener)
+        // mHomeWatcher.startWatch()
         TheRouter.inject(this)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -102,19 +121,21 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration!!)
         NavigationUI.setupWithNavController(navigationView, navController)
         initNavigationOnChangeListener(navController)
-        onBackPressedDispatcher.addCallback(this@MainActivity, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val fragment = getFragment(X5WebViewFragment::class.java)
-                if (fragment == null) {
-                    navController.popBackStack()
-                } else {
-                    if ((fragment as IOnBackPressedInterface?)!!.onBackPressed()) {
+        onBackPressedDispatcher.addCallback(
+            this@MainActivity,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val fragment = getFragment(X5WebViewFragment::class.java)
+                    if (fragment == null) {
                         navController.popBackStack()
-                        supportActionBar?.show()
+                    } else {
+                        if ((fragment as IOnBackPressedInterface?)!!.onBackPressed()) {
+                            navController.popBackStack()
+                            supportActionBar?.show()
+                        }
                     }
                 }
-            }
-        })
+            })
         XXPermissions.with(this)
             .permission(Permission.READ_PHONE_STATE)
             .permission(Permission.WRITE_EXTERNAL_STORAGE)
@@ -279,12 +300,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        val navHostFragment = this.supportFragmentManager.fragments.first() as NavHostFragment
-        val navController: NavController = navHostFragment.navController
-        navController.backQueue.last().destination.label?.let {
-            if (it != this.resources.getString(R.string.menu_space)) {
-                return super.onKeyDown(keyCode, event)
+        try {
+            var navHostFragment: NavHostFragment? = null
+            this.supportFragmentManager.fragments.first()?.let {
+                if (it is NavHostFragment) {
+                    navHostFragment = it
+                } else {
+                    return super.onKeyDown(keyCode, event)
+                }
+                val navController: NavController? = navHostFragment?.navController
+                navController?.currentBackStackEntry?.destination?.label?.let { label ->
+                    if (label != this.resources.getString(R.string.menu_space)) {
+                        return super.onKeyDown(keyCode, event)
+                    }
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return super.onKeyDown(keyCode, event)
         }
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
@@ -302,6 +335,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onExit() {
+        // if (ObjectUtils.isNotEmpty(mHomeWatcher)) {
+        //     mHomeWatcher.stopWatch()
+        // }
         MyApplication.fetch?.close()
         MyApplication.eventTrackerInstance?.stopTracker()
         AppUtils.unregisterAppStatusChangedListener(MyApplication.appStatusChangeListener)

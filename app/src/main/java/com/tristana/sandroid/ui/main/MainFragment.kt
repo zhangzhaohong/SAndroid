@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.StringUtils
 import com.google.common.base.Splitter
 import com.to.aboomy.pager2banner.Banner
 import com.to.aboomy.pager2banner.IndicatorView
@@ -18,10 +17,12 @@ import com.to.aboomy.pager2banner.ScaleInTransformer
 import com.tristana.sandroid.FragmentDirector
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnClickBannerInterface
-import com.tristana.sandroid.model.bannerModel.BannerDataModel
+import com.tristana.sandroid.dataModel.bannerModel.BannerDataModel
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.main.adapter.ImageAdapter
+import com.tristana.sandroid.ui.scheme.SchemeFilterActivity
 import net.lucode.hackware.magicindicator.buildins.UIUtil
+import utils.router.RouterUtils
 
 
 class MainFragment : Fragment(), IOnClickBannerInterface {
@@ -92,23 +93,16 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
 
     override fun onClick(view: View?, directionPath: String) {
         LogUtils.i("onClick: $directionPath")
+        val navController =
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         if (directionPath.isNotEmpty()) {
             if (directionPath.startsWith("router://")) {
                 val direct = getParam(directionPath, "direct")
                 val extra = getParam(directionPath, "extra")
-                val navController =
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                 FragmentDirector.doDirect(navController, direct, extra)
             } else {
-                val bundle = Bundle()
-                bundle.putString("url", directionPath)
-                val fragment = AdWebViewFragment()
-                fragment.arguments = bundle
-                val fragmentTransaction =
-                    requireActivity().supportFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.nav_host_fragment, fragment)
-                fragmentTransaction.addToBackStack(fragment.tag)
-                fragmentTransaction.commit()
+                val direct = AdWebViewFragment.ROUTE
+                FragmentDirector.doDirect(navController, direct, directionPath)
             }
         }
     }
