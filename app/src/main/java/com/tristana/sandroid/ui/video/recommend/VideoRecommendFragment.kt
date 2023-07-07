@@ -190,5 +190,6 @@ class VideoRecommendFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         videoRecommendViewModel?.onDestroyPlayer()
+        mPreloadManager.removeAllPreloadTask()
     }
 }

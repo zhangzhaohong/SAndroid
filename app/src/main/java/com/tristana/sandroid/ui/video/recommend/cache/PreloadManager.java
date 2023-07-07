@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  */
 public class PreloadManager {
 
-    private static PreloadManager sPreloadManager;
+    private static volatile PreloadManager sPreloadManager;
 
     /**
      * 单线程池，按照添加顺序依次执行{@link PreloadTask}
@@ -37,9 +37,9 @@ public class PreloadManager {
     private final HttpProxyCacheServer mHttpProxyCacheServer;
 
     /**
-     * 预加载的大小，每个视频预加载1M，这个参数可根据实际情况调整
+     * 预加载的大小，每个视频预加载4*1M，这个参数可根据实际情况调整
      */
-    public static final int PRELOAD_LENGTH = 1024 * 1024;
+    public static final int PRELOAD_LENGTH = 4 * 1024 * 1024;
 
     private PreloadManager(Context context) {
         mHttpProxyCacheServer = ProxyVideoCacheManager.getProxy(context);
