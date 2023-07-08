@@ -95,7 +95,7 @@ class VideoRecommendFragment : Fragment() {
                                 layoutManager.smoothScrollToPosition(
                                     recyclerView, null, lastPosition
                                 )
-                                preloadManager(newState, lastPosition, getSlidingDirection())
+                                preloadManager(newState, firstPosition, getSlidingDirection())
                             }
                         } else {
                             // down
@@ -107,7 +107,7 @@ class VideoRecommendFragment : Fragment() {
                                 layoutManager.smoothScrollToPosition(
                                     recyclerView, null, firstPosition
                                 )
-                                preloadManager(newState, firstPosition, getSlidingDirection())
+                                preloadManager(newState, lastPosition, getSlidingDirection())
                             }
                         }
                     }
