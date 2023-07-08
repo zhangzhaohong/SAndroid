@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.about.AboutFragment
 import com.tristana.sandroid.ui.main.MainFragment
+import com.tristana.sandroid.ui.music.area.MusicAreaFragment
 import com.tristana.sandroid.ui.video.recommend.VideoRecommendFragment
 
 class HomeFragment : Fragment() {
@@ -40,13 +41,13 @@ class HomeFragment : Fragment() {
         viewpager.isUserInputEnabled = false
         viewpager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
-                return 3
+                return 4
             }
 
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
                     0 -> MainFragment()
-                    1 -> HomeFragment()
+                    1 -> MusicAreaFragment()
                     2 -> VideoRecommendFragment()
                     3 -> AboutFragment()
                     else -> MainFragment()
