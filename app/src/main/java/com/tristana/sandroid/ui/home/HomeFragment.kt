@@ -46,8 +46,9 @@ class HomeFragment : Fragment() {
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
                     0 -> MainFragment()
-                    1 -> VideoRecommendFragment()
-                    2 -> AboutFragment()
+                    1 -> HomeFragment()
+                    2 -> VideoRecommendFragment()
+                    3 -> AboutFragment()
                     else -> MainFragment()
                 }
             }
@@ -61,8 +62,8 @@ class HomeFragment : Fragment() {
                 }
                 when (position) {
                     0 -> toolbar?.visibility = View.VISIBLE
-                    1 -> toolbar?.visibility = View.GONE
-                    2 -> toolbar?.visibility = View.VISIBLE
+                    1, 2 -> toolbar?.visibility = View.GONE
+                    3 -> toolbar?.visibility = View.VISIBLE
                     else -> toolbar?.visibility = View.VISIBLE
                 }
             }
@@ -73,12 +74,16 @@ class HomeFragment : Fragment() {
                     viewpager.setCurrentItem(0, true)
                 }
 
-                R.id.bottom_navigation_video_recommend -> {
+                R.id.bottom_navigation_music_area -> {
                     viewpager.setCurrentItem(1, true)
                 }
 
-                R.id.bottom_navigation_about -> {
+                R.id.bottom_navigation_video_recommend -> {
                     viewpager.setCurrentItem(2, true)
+                }
+
+                R.id.bottom_navigation_about -> {
+                    viewpager.setCurrentItem(3, true)
                 }
 
                 else -> {

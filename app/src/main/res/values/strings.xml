@@ -74,4 +74,6 @@
     <string name="bottom_navigation_video_recommend">视频推荐</string>
     <string name="is_refreshing">正在刷新</string>
     <string name="is_loading">正在加载</string>
+    <string name="menu_bottom_music_area">音乐广场</string>
+    <string name="bottom_navigation_music_area">音乐广场</string>
 </resources>
