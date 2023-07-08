@@ -29,7 +29,7 @@ class MusicAreaFragment : Fragment() {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.music_area_container_view)
     lateinit var containerView: ViewPager2
-    private lateinit var musicAreaViewAdapter: MusicAreaViewAdapter
+    private lateinit var musicAreaViewAdapter: FragmentStateAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -39,32 +39,33 @@ class MusicAreaFragment : Fragment() {
                 .create(
                     MusicAreaViewModel::class.java
                 )
-        musicAreaViewAdapter = MusicAreaViewAdapter(this)
+        musicAreaViewAdapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount(): Int = 2
+
+            override fun createFragment(position: Int): Fragment {
+                // Return a NEW fragment instance in createFragment(int)
+                return when (position) {
+                    0 -> MusicRecommendFragment()
+                    1 -> MusicSearchFragment()
+                    else -> MusicRecommendFragment()
+                }
+                // fragment.arguments = Bundle().apply {
+                //     // Our object is just an integer :-P
+                //     putInt(argObject, position + 1)
+                // }
+            }
+        }
         val root = inflater.inflate(R.layout.fragment_music_area, container, false)
         ButterKnife.bind(this, root)
         containerView.adapter = musicAreaViewAdapter
-        containerView.isUserInputEnabled = false
+        containerView.isUserInputEnabled = true
         TabLayoutMediator(tabView, containerView) { tabItem, position ->
-            tabItem.text = "OBJECT ${position + 1}"
+            tabItem.text = when (position) {
+                0 -> requireContext().resources.getString(R.string.title_music_area_recommend)
+                1 -> requireContext().resources.getString(R.string.title_music_area_search)
+                else -> requireContext().resources.getString(R.string.title_music_area_recommend)
+            }
         }.attach()
         return root
     }
-
-    class MusicAreaViewAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-        override fun getItemCount(): Int = 2
-
-        override fun createFragment(position: Int): Fragment {
-            // Return a NEW fragment instance in createFragment(int)
-            return when (position) {
-                0 -> MusicRecommendFragment()
-                1 -> MusicSearchFragment()
-                else -> MusicRecommendFragment()
-            }
-            // fragment.arguments = Bundle().apply {
-            //     // Our object is just an integer :-P
-            //     putInt(argObject, position + 1)
-            // }
-        }
-    }
-
 }

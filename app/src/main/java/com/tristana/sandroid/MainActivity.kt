@@ -18,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ObjectUtils
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         // mHomeWatcher.setOnHomePressedListener(onHomePressedListener)
         // mHomeWatcher.startWatch()
         TheRouter.inject(this)
+        BarUtils.transparentStatusBar(this)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
