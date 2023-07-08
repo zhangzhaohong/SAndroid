@@ -167,17 +167,16 @@ class VideoRecommendViewModel : ViewModel() {
         }
     }
 
-    private fun setPosition(position: Int) {
+    fun setPosition(position: Int) {
         currentPosition.value = position
     }
 
-    private fun getCurrentPosition(): Int {
+    fun getCurrentPosition(): Int {
         return currentPosition.value ?: 0
     }
 
     fun onStartView(position: Int, view: View?) {
         LogUtils.i("VideoRecommendViewModel: onStartView $position")
-        setPosition(position)
         view?.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
             if (!it.isWorking) {
                 it.startPlay()
@@ -199,6 +198,8 @@ class VideoRecommendViewModel : ViewModel() {
             if (it.isPlaying) {
                 it.onPause()
             }
+        }
+        view?.let {
             videoPlayerInstanceViewList.value?.put(position, view)
         }
     }
@@ -220,20 +221,16 @@ class VideoRecommendViewModel : ViewModel() {
                 } else if (!it.isPlaying) {
                     it.onResume()
                 }
-                videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
             }
+            videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
         }
     }
 
     fun onPausePlayer() {
         LogUtils.i("VideoRecommendViewModel: onPausePlayer")
         videoPlayerInstanceViewList.value?.get(getCurrentPosition())?.let { view ->
-            view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.let {
-                if (it.isPlaying) {
-                    it.onPause()
-                }
-                videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
-            }
+            view.findViewById<VideoPlayer>(R.id.video_recommend_player)?.onPause()
+            videoPlayerInstanceViewList.value?.put(getCurrentPosition(), view)
         }
     }
 

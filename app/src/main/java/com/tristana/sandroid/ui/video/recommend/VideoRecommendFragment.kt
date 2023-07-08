@@ -96,6 +96,7 @@ class VideoRecommendFragment : Fragment() {
                                     recyclerView, null, lastPosition
                                 )
                                 preloadManager(newState, firstPosition, getSlidingDirection())
+                                videoRecommendViewModel?.setPosition(lastPosition)
                             }
                         } else {
                             // down
@@ -108,6 +109,7 @@ class VideoRecommendFragment : Fragment() {
                                     recyclerView, null, firstPosition
                                 )
                                 preloadManager(newState, lastPosition, getSlidingDirection())
+                                videoRecommendViewModel?.setPosition(firstPosition)
                             }
                         }
                     }
@@ -125,6 +127,14 @@ class VideoRecommendFragment : Fragment() {
         super.onResume()
         if (videoRecommendViewModel?.isFirstLoad?.value == true && videoRecommendViewModel?.getTmpDataListSize() == 0) {
             loadingDialog.show()
+        }
+        val lastPosition = layoutManager.findLastVisibleItemPosition()
+        if (lastPosition != videoRecommendViewModel?.getCurrentPosition()) {
+            layoutManager.smoothScrollToPosition(
+                videoRecommendView,
+                null,
+                videoRecommendViewModel?.getCurrentPosition() ?: 0
+            )
         }
         videoRecommendViewModel?.onResumePlayer()
     }
