@@ -7,7 +7,7 @@ buildscript {
     ext.main_version_name = '1.0.1'
     ext.expand_version_name = 'C01E04R21P24'
     ext.kotlin_version = '1.8.21'
-    ext.therouter_version='1.1.4-rc2'
+    ext.therouter_version='1.1.4-rc6'
     repositories {
         gradlePluginPortal()
         google()

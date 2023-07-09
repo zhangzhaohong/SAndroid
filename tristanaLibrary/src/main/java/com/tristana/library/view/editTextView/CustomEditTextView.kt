@@ -220,6 +220,20 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         initStatus = true
     }
 
+    fun updateIconResId(iconResId: Int = 0) {
+        initIcon(iconResId)
+        updateIcon()
+    }
+
+    private fun updateIcon() {
+        if (iconResId != 0) {
+            this.inputIcon.visibility = View.VISIBLE
+            this.inputIcon.background = BitmapDrawable(context.resources, getBitmap(iconResId))
+        } else {
+            this.inputIcon.visibility = View.GONE
+        }
+    }
+
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
     }

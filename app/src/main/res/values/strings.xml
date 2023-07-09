@@ -78,4 +78,5 @@
     <string name="bottom_navigation_music_area">音乐广场</string>
     <string name="title_music_area_recommend">音乐推荐</string>
     <string name="title_music_area_search">音乐搜索</string>
+    <string name="action_music_area">音乐广场</string>
 </resources>

@@ -20,9 +20,7 @@ import com.tristana.sandroid.customizeInterface.IOnClickBannerInterface
 import com.tristana.sandroid.dataModel.bannerModel.BannerDataModel
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.main.adapter.ImageAdapter
-import com.tristana.sandroid.ui.scheme.SchemeFilterActivity
 import net.lucode.hackware.magicindicator.buildins.UIUtil
-import utils.router.RouterUtils
 
 
 class MainFragment : Fragment(), IOnClickBannerInterface {
@@ -91,7 +89,7 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         return root
     }
 
-    override fun onClick(view: View?, directionPath: String) {
+    override fun onClick(it: View?, directionPath: String) {
         LogUtils.i("onClick: $directionPath")
         val navController =
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
