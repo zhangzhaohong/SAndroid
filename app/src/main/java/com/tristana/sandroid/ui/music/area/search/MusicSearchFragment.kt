@@ -11,12 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.blankj.utilcode.util.ToastUtils
 import com.tristana.library.view.editTextView.CustomEditTextView
 import com.tristana.sandroid.R
+
 
 class MusicSearchFragment : Fragment() {
 
     private var viewModel: MusicSearchViewModel? = null
+
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.music_search_content)
     lateinit var searchContentView: CustomEditTextView
@@ -29,6 +32,7 @@ class MusicSearchFragment : Fragment() {
     @BindView(R.id.music_search_test_2)
     lateinit var test2: AppCompatButton
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -52,6 +56,13 @@ class MusicSearchFragment : Fragment() {
             R.drawable.ic_clear,
             false
         )
+        searchContentView.getEditTextView().let {
+            it.setOnClickListener {
+                ToastUtils.showLong("On Click: Search")
+            }
+            it.isFocusableInTouchMode = false
+        }
+        searchContentView.updateText("我们的18岁")
         test1.setOnClickListener {
             searchContentView.updateIconResId(R.drawable.ic_music_kugou)
         }
