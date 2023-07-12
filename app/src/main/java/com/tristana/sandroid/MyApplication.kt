@@ -92,13 +92,13 @@ class MyApplication : Application() {
     private fun getEventTrackerInstance(): TrackerInstance? {
         if (eventTrackerInstance == null) {
             eventTrackerInstance = TrackerInstance.get()
-            eventTrackerInstance?.initContext(this)
+            eventTrackerInstance?.initContext(this, host)
         }
         return eventTrackerInstance
     }
 
     companion object {
-        var host: String = "http://q7rve6.natappfree.cc"
+        var host: String = "http://h9g6xt.natappfree.cc"
             private set
         var instance: Application? = null
             private set
