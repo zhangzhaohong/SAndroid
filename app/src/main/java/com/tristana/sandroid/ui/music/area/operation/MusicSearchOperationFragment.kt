@@ -7,11 +7,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import butterknife.ButterKnife
+import com.therouter.router.Route
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
+import com.tristana.sandroid.ui.music.area.MusicAreaFragment
+import com.tristana.sandroid.ui.music.area.MusicAreaViewModel
 
+@Route(path = MusicSearchOperationFragment.ROUTE)
 class MusicSearchOperationFragment : Fragment() {
 
+    companion object {
+        const val ROUTE = "/app/music/search/operation"
+    }
+
     private var viewModel: MusicSearchOperationViewModel? = null
+    private var musicAreaViewModel: MusicAreaViewModel? = MyApplication.viewModelStore[MusicAreaFragment.ROUTE] as MusicAreaViewModel?
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,6 +34,7 @@ class MusicSearchOperationFragment : Fragment() {
                 )
         val root = inflater.inflate(R.layout.fragment_music_search_operation, container, false)
         ButterKnife.bind(this, root)
+        musicAreaViewModel?.searchMusicName?.value = "我们的18岁"
         return root
     }
 

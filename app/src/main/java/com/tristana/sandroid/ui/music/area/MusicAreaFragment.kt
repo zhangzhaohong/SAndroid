@@ -13,12 +13,17 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.music.area.recommend.MusicRecommendFragment
 import com.tristana.sandroid.ui.music.area.search.MusicSearchFragment
 import com.tristana.sandroid.ui.music.area.search.MusicSearchViewModel
 
 class MusicAreaFragment : Fragment() {
+
+    companion object {
+        const val ROUTE = "/app/music/search/operation"
+    }
 
     private var viewModel: MusicAreaViewModel? = null
 
@@ -39,6 +44,9 @@ class MusicAreaFragment : Fragment() {
                 .create(
                     MusicAreaViewModel::class.java
                 )
+        viewModel?.let {
+            MyApplication.viewModelStore.put(ROUTE, it)
+        }
         musicAreaViewAdapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 2
 

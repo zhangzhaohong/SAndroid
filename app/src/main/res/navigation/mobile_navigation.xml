@@ -65,4 +65,10 @@
         android:label="@string/menu_download_manager"
         tools:layout="@layout/fragment_download_manager" />
 
+    <fragment
+        android:id="@+id/nav_music_search_operation"
+        android:name="com.tristana.sandroid.ui.music.area.operation.MusicSearchOperationFragment"
+        android:label="@string/menu_music_search_uperation"
+        tools:layout="@layout/fragment_music_search_operation" />
+
 </navigation>

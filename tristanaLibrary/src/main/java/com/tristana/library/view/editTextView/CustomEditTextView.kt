@@ -247,8 +247,10 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) :
         updateIcon()
     }
 
-    fun updateText(input: String) {
-        this.inputEditText.text = Editable.Factory.getInstance().newEditable(input)
+    fun updateText(input: String?) {
+        input?.let {
+            this.inputEditText.text = Editable.Factory.getInstance().newEditable(it)
+        }
     }
 
     fun getEditTextView(): AppCompatEditText {
