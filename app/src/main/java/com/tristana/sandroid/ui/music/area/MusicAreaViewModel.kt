@@ -6,5 +6,6 @@ import androidx.lifecycle.ViewModel
 class MusicAreaViewModel : ViewModel() {
 
     var searchMusicName = MutableLiveData<String>(null)
+    var searchMusicServiceId = MutableLiveData(0)
 
 }

@@ -31,14 +31,6 @@ class MusicSearchFragment : Fragment() {
     @BindView(R.id.music_search_content)
     lateinit var searchContentView: CustomEditTextView
 
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.music_search_test_1)
-    lateinit var test1: AppCompatButton
-
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.music_search_test_2)
-    lateinit var test2: AppCompatButton
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,18 +62,28 @@ class MusicSearchFragment : Fragment() {
             }
             it.isFocusableInTouchMode = false
         }
-        test1.setOnClickListener {
-            searchContentView.updateIconResId(R.drawable.ic_music_kugou)
+        musicAreaViewModel?.searchMusicName?.observe(viewLifecycleOwner) {
+            searchContentView.updateText(it)
         }
-        test2.setOnClickListener {
-            searchContentView.updateIconResId(R.drawable.ic_music_netease)
+        musicAreaViewModel?.searchMusicServiceId?.observe(viewLifecycleOwner) {
+            when (it) {
+                1 -> {
+                    searchContentView.updateIconResId(R.drawable.ic_music_kugou)
+                }
+                2 -> {
+                    searchContentView.updateIconResId(R.drawable.ic_music_netease)
+                }
+                else -> {
+                    searchContentView.updateIconResId(R.drawable.ic_music_search)
+                }
+            }
+
         }
         return root
     }
 
     override fun onResume() {
         super.onResume()
-        searchContentView.updateText(musicAreaViewModel?.searchMusicName?.value)
     }
 
 }
