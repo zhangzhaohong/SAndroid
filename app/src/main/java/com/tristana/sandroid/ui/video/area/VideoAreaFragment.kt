@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.music.area
+package com.tristana.sandroid.ui.video.area
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -17,24 +17,23 @@ import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.music.area.recommend.MusicRecommendFragment
 import com.tristana.sandroid.ui.music.area.search.MusicSearchFragment
-import com.tristana.sandroid.ui.music.area.search.MusicSearchViewModel
 
-class MusicAreaFragment : Fragment() {
+class VideoAreaFragment : Fragment() {
 
     companion object {
-        const val ROUTE = "/app/music/area"
+        const val ROUTE = "/app/video/area"
     }
 
-    private var viewModel: MusicAreaViewModel? = null
+    private var viewModel: VideoAreaViewModel? = null
 
     @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.music_area_tab_view)
+    @BindView(R.id.video_area_tab_view)
     lateinit var tabView: TabLayout
 
     @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.music_area_container_view)
+    @BindView(R.id.video_area_container_view)
     lateinit var containerView: ViewPager2
-    private lateinit var musicAreaViewAdapter: FragmentStateAdapter
+    private lateinit var videoAreaViewAdapter: FragmentStateAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -42,12 +41,12 @@ class MusicAreaFragment : Fragment() {
         if (viewModel == null) viewModel =
             ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
                 .create(
-                    MusicAreaViewModel::class.java
+                    VideoAreaViewModel::class.java
                 )
         viewModel?.let {
             MyApplication.viewModelStore.put(ROUTE, it)
         }
-        musicAreaViewAdapter = object : FragmentStateAdapter(this) {
+        videoAreaViewAdapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 2
 
             override fun createFragment(position: Int): Fragment {
@@ -63,9 +62,9 @@ class MusicAreaFragment : Fragment() {
                 // }
             }
         }
-        val root = inflater.inflate(R.layout.fragment_music_area, container, false)
+        val root = inflater.inflate(R.layout.fragment_video_area, container, false)
         ButterKnife.bind(this, root)
-        containerView.adapter = musicAreaViewAdapter
+        containerView.adapter = videoAreaViewAdapter
         containerView.isUserInputEnabled = true
         TabLayoutMediator(tabView, containerView) { tabItem, position ->
             tabItem.text = when (position) {

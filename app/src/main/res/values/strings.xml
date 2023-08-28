@@ -80,4 +80,6 @@
     <string name="title_music_area_search">音乐搜索</string>
     <string name="action_music_area">音乐广场</string>
     <string name="menu_music_search_uperation">音乐搜索</string>
+    <string name="bottom_navigation_video_area">视频广场</string>
+    <string name="menu_bottom_video_area">视频广场</string>
 </resources>

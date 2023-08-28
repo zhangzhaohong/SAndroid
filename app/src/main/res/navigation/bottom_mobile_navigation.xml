@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_music_area" />
 
     <fragment
+        android:id="@+id/bottom_navigation_video_area"
+        android:name="com.tristana.sandroid.ui.video.area.VideoAreaFragment"
+        android:label="@string/menu_bottom_video_area"
+        tools:layout="@layout/fragment_video_area" />
+
+    <fragment
         android:id="@+id/bottom_navigation_video_recommend"
         android:name="com.tristana.sandroid.ui.video.recommend.VideoRecommendFragment"
         android:label="@string/menu_bottom_video_recommend"

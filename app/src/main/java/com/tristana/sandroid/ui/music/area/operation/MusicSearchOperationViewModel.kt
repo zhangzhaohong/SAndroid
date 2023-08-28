@@ -2,9 +2,11 @@ package com.tristana.sandroid.ui.music.area.operation
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.blankj.utilcode.util.GsonUtils
 import com.tristana.library.tools.http.OkHttpRequestGenerator
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.http.PathCollection
+import com.tristana.sandroid.respModel.HttpResponsePublicModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +25,12 @@ class MusicSearchOperationViewModel : ViewModel() {
                 .addParam("text", text)
                 .get().sync()?.let { response ->
                     run {
+                        GsonUtils.fromJson(
+                            response,
+                            HttpResponsePublicModel::class.java
+                        )?.let {
 
+                        }
                     }
                 }
         }

@@ -15,6 +15,7 @@ import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.about.AboutFragment
 import com.tristana.sandroid.ui.main.MainFragment
 import com.tristana.sandroid.ui.music.area.MusicAreaFragment
+import com.tristana.sandroid.ui.video.area.VideoAreaFragment
 import com.tristana.sandroid.ui.video.recommend.VideoRecommendFragment
 
 class HomeFragment : Fragment() {
@@ -41,15 +42,16 @@ class HomeFragment : Fragment() {
         viewpager.isUserInputEnabled = false
         viewpager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
-                return 4
+                return 5
             }
 
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
                     0 -> MainFragment()
                     1 -> MusicAreaFragment()
-                    2 -> VideoRecommendFragment()
-                    3 -> AboutFragment()
+                    2 -> VideoAreaFragment()
+                    3 -> VideoRecommendFragment()
+                    4 -> AboutFragment()
                     else -> MainFragment()
                 }
             }
@@ -63,8 +65,8 @@ class HomeFragment : Fragment() {
                 }
                 when (position) {
                     0 -> toolbar?.visibility = View.VISIBLE
-                    1, 2 -> toolbar?.visibility = View.GONE
-                    3 -> toolbar?.visibility = View.VISIBLE
+                    1, 2, 3 -> toolbar?.visibility = View.GONE
+                    4 -> toolbar?.visibility = View.VISIBLE
                     else -> toolbar?.visibility = View.VISIBLE
                 }
             }
@@ -79,12 +81,16 @@ class HomeFragment : Fragment() {
                     viewpager.setCurrentItem(1, true)
                 }
 
-                R.id.bottom_navigation_video_recommend -> {
+                R.id.bottom_navigation_video_area -> {
                     viewpager.setCurrentItem(2, true)
                 }
 
-                R.id.bottom_navigation_about -> {
+                R.id.bottom_navigation_video_recommend -> {
                     viewpager.setCurrentItem(3, true)
+                }
+
+                R.id.bottom_navigation_about -> {
+                    viewpager.setCurrentItem(4, true)
                 }
 
                 else -> {
