@@ -68,9 +68,9 @@ class VideoAreaFragment : Fragment() {
         containerView.isUserInputEnabled = true
         TabLayoutMediator(tabView, containerView) { tabItem, position ->
             tabItem.text = when (position) {
-                0 -> requireContext().resources.getString(R.string.title_music_area_recommend)
-                1 -> requireContext().resources.getString(R.string.title_music_area_search)
-                else -> requireContext().resources.getString(R.string.title_music_area_recommend)
+                0 -> requireContext().resources.getString(R.string.title_video_area_search)
+                1 -> requireContext().resources.getString(R.string.title_video_area_live_search)
+                else -> requireContext().resources.getString(R.string.title_video_area_search)
             }
         }.attach()
         return root
