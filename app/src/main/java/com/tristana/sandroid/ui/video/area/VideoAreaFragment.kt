@@ -15,9 +15,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
-import com.tristana.sandroid.ui.music.area.recommend.MusicRecommendFragment
-import com.tristana.sandroid.ui.music.area.search.MusicSearchFragment
 import com.tristana.sandroid.ui.video.area.recommend.VideoRecommendFragment
+import com.tristana.sandroid.ui.video.area.resolver.VideoResolverFragment
 
 class VideoAreaFragment : Fragment() {
 
@@ -65,9 +64,9 @@ class VideoAreaFragment : Fragment() {
             override fun createFragment(position: Int): Fragment {
                 // Return a NEW fragment instance in createFragment(int)
                 return when (position) {
-                    0 -> MusicRecommendFragment()
+                    0 -> VideoResolverFragment()
                     1 -> VideoRecommendFragment()
-                    else -> MusicRecommendFragment()
+                    else -> VideoResolverFragment()
                 }
                 // fragment.arguments = Bundle().apply {
                 //     // Our object is just an integer :-P
