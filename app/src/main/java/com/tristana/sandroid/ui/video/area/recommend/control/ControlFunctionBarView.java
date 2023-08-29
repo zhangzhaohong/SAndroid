@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend.control;
+package com.tristana.sandroid.ui.video.area.recommend.control;
 
 import android.content.Context;
 import android.view.View;

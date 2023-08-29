@@ -16,7 +16,7 @@ import com.tristana.sandroid.ui.about.AboutFragment
 import com.tristana.sandroid.ui.main.MainFragment
 import com.tristana.sandroid.ui.music.area.MusicAreaFragment
 import com.tristana.sandroid.ui.video.area.VideoAreaFragment
-import com.tristana.sandroid.ui.video.recommend.VideoRecommendFragment
+import com.tristana.sandroid.ui.video.area.recommend.VideoRecommendFragment
 
 class HomeFragment : Fragment() {
     private var homeViewModel: HomeViewModel? = null

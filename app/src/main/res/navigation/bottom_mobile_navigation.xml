@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/bottom_navigation_video_recommend"
-        android:name="com.tristana.sandroid.ui.video.recommend.VideoRecommendFragment"
+        android:name="com.tristana.sandroid.ui.video.area.recommend.VideoRecommendFragment"
         android:label="@string/menu_bottom_video_recommend"
         tools:layout="@layout/fragment_video_recommend" />
 

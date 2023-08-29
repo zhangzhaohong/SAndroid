@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend
+package com.tristana.sandroid.ui.video.area.recommend
 
 import android.content.Context
 import android.view.View
@@ -16,7 +16,7 @@ import com.tristana.sandroid.http.PathCollection
 import com.tristana.sandroid.respModel.HttpResponsePublicModel
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
 import com.tristana.sandroid.respModel.video.recommend.VideoRespDataModel
-import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
+import com.tristana.sandroid.ui.video.area.recommend.cache.PreloadManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

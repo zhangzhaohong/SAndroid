@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend
+package com.tristana.sandroid.ui.video.area.recommend
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,9 +18,9 @@ import com.tristana.sandroid.R
 import com.tristana.sandroid.epoxy.interfaces.OnViewPagerListener
 import com.tristana.sandroid.epoxy.manager.ViewPagerLayoutManager
 import com.tristana.sandroid.ui.components.LoadingDialog
-import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
-import com.tristana.sandroid.ui.video.recommend.controller.VideoRecommendController
-import com.tristana.sandroid.ui.video.recommend.listener.EndlessRecyclerOnScrollListener
+import com.tristana.sandroid.ui.video.area.recommend.cache.PreloadManager
+import com.tristana.sandroid.ui.video.area.recommend.controller.VideoRecommendController
+import com.tristana.sandroid.ui.video.area.recommend.listener.EndlessRecyclerOnScrollListener
 
 class VideoRecommendFragment : Fragment() {
 

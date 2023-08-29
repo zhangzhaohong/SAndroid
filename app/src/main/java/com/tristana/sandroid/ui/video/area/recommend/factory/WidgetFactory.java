@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend.factory;
+package com.tristana.sandroid.ui.video.area.recommend.factory;
 
 import com.android.iplayer.base.BaseController;
 import com.android.iplayer.interfaces.IVideoController;
@@ -8,7 +8,7 @@ import com.android.iplayer.widget.controls.ControlGestureView;
 import com.android.iplayer.widget.controls.ControlLoadingView;
 import com.android.iplayer.widget.controls.ControlStatusView;
 import com.android.iplayer.widget.controls.ControlToolBarView;
-import com.tristana.sandroid.ui.video.recommend.control.ControlFunctionBarView;
+import com.tristana.sandroid.ui.video.area.recommend.control.ControlFunctionBarView;
 
 /**
  * created by hty

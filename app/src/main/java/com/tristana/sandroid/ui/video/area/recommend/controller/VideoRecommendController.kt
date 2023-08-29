@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend.controller
+package com.tristana.sandroid.ui.video.area.recommend.controller
 
 import android.content.Context
 import com.airbnb.epoxy.EpoxyController

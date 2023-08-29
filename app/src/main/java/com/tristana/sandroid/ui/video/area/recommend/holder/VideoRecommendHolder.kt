@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend.holder
+package com.tristana.sandroid.ui.video.area.recommend.holder
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,7 +7,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import butterknife.BindView
 import com.airbnb.epoxy.*
-import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
 import com.android.iplayer.base.AbstractMediaPlayer
 import com.android.iplayer.listener.OnPlayerEventListener
 import com.android.iplayer.media.IMediaPlayer
@@ -25,8 +24,8 @@ import com.tristana.sandroid.dataModel.data.DataModel
 import com.tristana.sandroid.epoxy.holder.BaseEpoxyHolder
 import com.tristana.sandroid.epoxy.holder.CustomEpoxyModelWithHolder
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
-import com.tristana.sandroid.ui.video.recommend.cache.PreloadManager
-import com.tristana.sandroid.ui.video.recommend.factory.WidgetFactory
+import com.tristana.sandroid.ui.video.area.recommend.cache.PreloadManager
+import com.tristana.sandroid.ui.video.area.recommend.factory.WidgetFactory
 
 
 /**

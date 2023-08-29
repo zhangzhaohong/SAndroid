@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend.cache;
+package com.tristana.sandroid.ui.video.area.recommend.cache;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.danikula.videocache.HttpProxyCacheServer;

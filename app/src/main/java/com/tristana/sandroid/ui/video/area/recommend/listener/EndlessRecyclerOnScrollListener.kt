@@ -1,4 +1,4 @@
-package com.tristana.sandroid.ui.video.recommend.listener
+package com.tristana.sandroid.ui.video.area.recommend.listener
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
