@@ -84,5 +84,5 @@
     <string name="menu_bottom_video_area">视频广场</string>
     <string name="title_video_area_search">抖音解析</string>
     <string name="title_video_area_recommend">视频推荐</string>
-    <string name="notice_copy_awesome_link">请粘贴抖音内容的分享链接</string>
+    <string name="notice_copy_awesome_link">请点击下方按钮从剪贴板粘贴抖音内容的分享链接</string>
 </resources>
