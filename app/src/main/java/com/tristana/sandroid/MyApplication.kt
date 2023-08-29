@@ -29,6 +29,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         host = getServerHost()
+        cdnHost = getCdnServerHost()
         instance = this
         eventTrackerInstance = getEventTrackerInstance()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -115,8 +116,25 @@ class MyApplication : Application() {
         return "http://0.0.0.0"
     }
 
+    private fun getCdnServerHost(): String {
+        try {
+            val props = Properties()
+            props.load(this.assets.open("config.properties"))
+            props.getProperty("server_cdn_host")?.let {
+                return it
+            } ?: kotlin.run {
+                return "http://0.0.0.0"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return "http://0.0.0.0"
+    }
+
     companion object {
         var host: String = "http://0.0.0.0"
+            private set
+        var cdnHost: String = "http://0.0.0.0"
             private set
         var instance: Application? = null
             private set
