@@ -21,7 +21,6 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ObjectUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
@@ -43,7 +42,6 @@ import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
 import com.tristana.library.tools.sharedPreferences.SpUtils
-import com.tristana.library.tools.watcher.HomeWatcher
 import com.tristana.library.tools.watcher.HomeWatcher.OnHomePressedListener
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 import com.tristana.sandroid.dataModel.data.DataModel

@@ -1,6 +1,5 @@
 package com.tristana.sandroid.ui.video.area.resolver
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import butterknife.ButterKnife
-import com.blankj.utilcode.util.LogUtils
-import com.tristana.library.tools.clipBoard.ClipboardUtil
 import com.tristana.sandroid.R
 
 class VideoResolverFragment : Fragment() {
