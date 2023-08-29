@@ -17,6 +17,7 @@ import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.ui.music.area.recommend.MusicRecommendFragment
 import com.tristana.sandroid.ui.music.area.search.MusicSearchFragment
+import com.tristana.sandroid.ui.video.area.recommend.VideoRecommendFragment
 
 class VideoAreaFragment : Fragment() {
 
@@ -65,7 +66,7 @@ class VideoAreaFragment : Fragment() {
                 // Return a NEW fragment instance in createFragment(int)
                 return when (position) {
                     0 -> MusicRecommendFragment()
-                    1 -> MusicSearchFragment()
+                    1 -> VideoRecommendFragment()
                     else -> MusicRecommendFragment()
                 }
                 // fragment.arguments = Bundle().apply {

@@ -82,7 +82,6 @@
     <string name="menu_music_search_uperation">音乐搜索</string>
     <string name="bottom_navigation_video_area">视频广场</string>
     <string name="menu_bottom_video_area">视频广场</string>
-    <string name="title_video_area_search">视频解析</string>
-    <string name="title_video_area_live_search">直播解析</string>
+    <string name="title_video_area_search">抖音解析</string>
     <string name="title_video_area_recommend">视频推荐</string>
 </resources>

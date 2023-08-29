@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
         viewpager.isUserInputEnabled = false
         viewpager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
-                return 5
+                return 4
             }
 
             override fun createFragment(position: Int): Fragment {
@@ -50,8 +50,7 @@ class HomeFragment : Fragment() {
                     0 -> MainFragment()
                     1 -> MusicAreaFragment()
                     2 -> VideoAreaFragment()
-                    3 -> VideoRecommendFragment()
-                    4 -> AboutFragment()
+                    3 -> AboutFragment()
                     else -> MainFragment()
                 }
             }
@@ -65,8 +64,8 @@ class HomeFragment : Fragment() {
                 }
                 when (position) {
                     0 -> toolbar?.visibility = View.VISIBLE
-                    1, 2, 3 -> toolbar?.visibility = View.GONE
-                    4 -> toolbar?.visibility = View.VISIBLE
+                    1, 2 -> toolbar?.visibility = View.GONE
+                    3 -> toolbar?.visibility = View.VISIBLE
                     else -> toolbar?.visibility = View.VISIBLE
                 }
             }
@@ -85,12 +84,8 @@ class HomeFragment : Fragment() {
                     viewpager.setCurrentItem(2, true)
                 }
 
-                R.id.bottom_navigation_video_recommend -> {
-                    viewpager.setCurrentItem(3, true)
-                }
-
                 R.id.bottom_navigation_about -> {
-                    viewpager.setCurrentItem(4, true)
+                    viewpager.setCurrentItem(3, true)
                 }
 
                 else -> {
