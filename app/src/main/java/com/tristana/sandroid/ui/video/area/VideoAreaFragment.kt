@@ -34,6 +34,18 @@ class VideoAreaFragment : Fragment() {
     @BindView(R.id.video_area_container_view)
     lateinit var containerView: ViewPager2
     private lateinit var videoAreaViewAdapter: FragmentStateAdapter
+
+    private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            tabView.visibility = when (position) {
+                0 -> View.VISIBLE
+                1 -> View.GONE
+                else -> View.VISIBLE
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -69,10 +81,16 @@ class VideoAreaFragment : Fragment() {
         TabLayoutMediator(tabView, containerView) { tabItem, position ->
             tabItem.text = when (position) {
                 0 -> requireContext().resources.getString(R.string.title_video_area_search)
-                1 -> requireContext().resources.getString(R.string.title_video_area_live_search)
+                1 -> requireContext().resources.getString(R.string.title_video_area_recommend)
                 else -> requireContext().resources.getString(R.string.title_video_area_search)
             }
         }.attach()
+        containerView.registerOnPageChangeCallback(onPageChangeCallback)
         return root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        containerView.unregisterOnPageChangeCallback(onPageChangeCallback)
     }
 }
