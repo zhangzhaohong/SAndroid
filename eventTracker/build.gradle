@@ -5,8 +5,7 @@ plugins {
 
 android {
     namespace 'com.event.tracker'
-    compileSdk 34
-    buildToolsVersion '34.0.0'
+    compileSdk 33
     ndkVersion '24.0.8215888'
 
     defaultConfig {
