@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
@@ -34,7 +34,7 @@ android {
         jvmTarget = '17'
     }
 
-    buildToolsVersion '32.1.0 rc1'
+    buildToolsVersion '34.0.0'
     ndkVersion '24.0.8215888'
     namespace 'com.tristana.library'
 }

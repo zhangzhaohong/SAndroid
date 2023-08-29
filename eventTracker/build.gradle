@@ -5,13 +5,13 @@ plugins {
 
 android {
     namespace 'com.event.tracker'
-    compileSdk 33
-    buildToolsVersion '32.1.0 rc1'
+    compileSdk 34
+    buildToolsVersion '34.0.0'
     ndkVersion '24.0.8215888'
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
