@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.KeyEvent
 import android.view.Menu
+import android.view.MotionEvent
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -41,6 +43,7 @@ import com.tencent.smtt.sdk.TbsListener
 import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
+import com.tristana.library.tools.keyboard.KeyboardsUtils
 import com.tristana.library.tools.sharedPreferences.SpUtils
 import com.tristana.library.tools.watcher.HomeWatcher.OnHomePressedListener
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
@@ -332,6 +335,17 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    @CallSuper
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_DOWN) {
+            val view = currentFocus
+            if (KeyboardsUtils.isShouldHideKeyBord(view, ev)) {
+                KeyboardsUtils.hintKeyBoards(view)
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun onExit() {

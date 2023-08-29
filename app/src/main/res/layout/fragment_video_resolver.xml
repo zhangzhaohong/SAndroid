@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
-                android:background="@drawable/custom_edit_text_background"
+                android:background="@drawable/custom_video_resolver_background"
                 android:padding="12dp">
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -39,18 +39,30 @@
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/video_resolver_from_clipboard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
                     android:layout_weight="1"
-                    android:textAlignment="center" />
+                    android:background="@drawable/custom_video_resolver_button_background"
+                    android:text="@string/video_resolver_paste"
+                    android:textAlignment="center"
+                    android:textColor="@color/red_8B475D"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/video_resolver_operation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
                     android:layout_weight="1"
-                    android:textAlignment="center" />
+                    android:background="@drawable/custom_video_resolver_button_background"
+                    android:text="@string/video_resolver_operation"
+                    android:textAlignment="center"
+                    android:textColor="@color/red_8B475D"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
