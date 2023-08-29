@@ -5,7 +5,7 @@ import com.airbnb.epoxy.EpoxyController
 import com.tristana.sandroid.epoxy.common.CommonFooter
 import com.tristana.sandroid.epoxy.common.CommonFooter_
 import com.tristana.sandroid.respModel.video.recommend.AwemeDataModel
-import com.tristana.sandroid.ui.video.recommend.holder.VideoRecommendHolder_
+import com.tristana.sandroid.ui.video.area.recommend.holder.VideoRecommendHolder_
 
 /**
  * @author koala
