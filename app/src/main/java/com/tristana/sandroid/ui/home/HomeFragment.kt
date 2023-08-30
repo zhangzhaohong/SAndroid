@@ -20,6 +20,8 @@ import com.tristana.sandroid.ui.video.area.recommend.VideoRecommendFragment
 
 class HomeFragment : Fragment() {
     private var homeViewModel: HomeViewModel? = null
+    private var currentPosition = 0
+    private var toolbar: Toolbar? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
@@ -30,7 +32,7 @@ class HomeFragment : Fragment() {
                     HomeViewModel::class.java
                 )
         val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val toolbar = activity?.findViewById<Toolbar>(R.id.toolbar)
+        toolbar = activity?.findViewById(R.id.toolbar)
         val navigationView = root.findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         //1、先拿NavHostFragment
         // val navHostFragment = childFragmentManager.findFragmentById(R.id.bottom_nav_host_fragment) as NavHostFragment
@@ -62,6 +64,7 @@ class HomeFragment : Fragment() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     toolbar?.title = navigationView.menu.getItem(position).title
                 }
+                currentPosition = position
                 when (position) {
                     0 -> toolbar?.visibility = View.VISIBLE
                     1, 2 -> toolbar?.visibility = View.GONE
@@ -98,5 +101,15 @@ class HomeFragment : Fragment() {
             true
         }
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        when (currentPosition) {
+            0 -> toolbar?.visibility = View.VISIBLE
+            1, 2 -> toolbar?.visibility = View.GONE
+            3 -> toolbar?.visibility = View.VISIBLE
+            else -> toolbar?.visibility = View.VISIBLE
+        }
     }
 }
