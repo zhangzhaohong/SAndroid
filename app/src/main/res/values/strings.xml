@@ -87,4 +87,5 @@
     <string name="notice_copy_awesome_link">请点击下方按钮从剪贴板粘贴抖音内容的分享链接</string>
     <string name="video_resolver_paste">从剪贴板导入</string>
     <string name="video_resolver_operation">链接解析</string>
+    <string name="video_resolver_clear">清空</string>
 </resources>
