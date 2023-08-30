@@ -71,6 +71,7 @@ android {
         jniLibs {
             useLegacyPackaging true
         }
+        exclude 'META-INF/DEPENDENCIES'
     }
 }
 
@@ -152,6 +153,8 @@ dependencies {
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     implementation 'com.jakewharton:butterknife:10.2.3'
     kapt 'com.jakewharton:butterknife-compiler:10.2.3'
+    //noinspection DuplicatePlatformClasses
+    implementation 'cz.msebera.android:httpclient:4.5.8'
 }
 
 static String getBuildTime() {

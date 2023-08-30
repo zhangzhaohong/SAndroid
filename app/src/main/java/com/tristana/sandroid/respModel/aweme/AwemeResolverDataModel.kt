@@ -10,8 +10,10 @@ import java.io.Serializable
  */
 data class AwemeResolverDataModel(
     var mockPreviewPicturePath: String?,
+    var realMusicPath: String?,
     var mockPreviewMusicPath: String?,
     var mockDownloadMusicPath: String?,
+    var realVideoPath: String?,
     var mockPreviewVideoPath: String?,
     var mockDownloadVideoPath: String?,
     var mockPreviewLivePath: ArrayList<String?>?,

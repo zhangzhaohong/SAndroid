@@ -24,79 +24,68 @@ class VideoResolverViewModel : ViewModel() {
         return withContext(Dispatchers.IO) {
             OkHttpRequestGenerator.create(MyApplication.host, PathCollection.VIDEO_TIKTOK_API)
                 .addParam("link", link.value).get().sync()?.let { response ->
-                    try {
-                        if (StringUtils.isEmpty(response)) return@withContext
-                        val respData = GsonUtils.fromJson(response, HttpResponsePublicModel::class.java)
-                        val itemInfoData = GsonUtils.fromJson(
-                            GsonUtils.toJson(respData.data),
-                            Map::class.java
-                        )["item_info_data"]
-                        val awemeDetailData = GsonUtils.fromJson(
-                            GsonUtils.toJson(itemInfoData),
-                            Map::class.java
-                        )["aweme_detail"]
-                        val resolverDataInfo =
-                            AwemeResolverDataModel(null, null, null, null, null, null)
-                        GsonUtils.fromJson(
-                            GsonUtils.toJson(awemeDetailData),
-                            Map::class.java
-                        )?.let { detailData ->
-                            detailData["mock_preview_picture_path"]?.let {
-                                resolverDataInfo.mockPreviewPicturePath = it.toString()
+                    if (StringUtils.isEmpty(response)) return@withContext
+                    val respData = GsonUtils.fromJson(response, HttpResponsePublicModel::class.java)
+                    val itemInfoData = getMap(respData.data)?.get("item_info_data")
+                    val awemeDetailData = getMap(itemInfoData)?.get("aweme_detail")
+                    val resolverDataInfo =
+                        AwemeResolverDataModel(null, null, null, null, null, null, null, null)
+                    getMap(awemeDetailData)?.let { detailData ->
+                        detailData["mock_preview_picture_path"]?.let {
+                            resolverDataInfo.mockPreviewPicturePath = it.toString()
+                        }
+                        getMap(detailData["video"])?.let { videoItemData ->
+                            videoItemData["real_path"]?.let {
+                                resolverDataInfo.realVideoPath = it.toString()
                             }
-                            GsonUtils.fromJson(
-                                GsonUtils.toJson(detailData["video"]),
-                                Map::class.java
-                            )?.let { videoItemData ->
-                                videoItemData["mock_preview_vid_path"]?.let {
-                                    resolverDataInfo.mockPreviewVideoPath = it.toString()
-                                }
-                                videoItemData["mock_download_vid_path"]?.let {
-                                    resolverDataInfo.mockDownloadVideoPath = it.toString()
-                                }
+                            videoItemData["mock_preview_vid_path"]?.let {
+                                resolverDataInfo.mockPreviewVideoPath = it.toString()
+                            }
+                            videoItemData["mock_download_vid_path"]?.let {
+                                resolverDataInfo.mockDownloadVideoPath = it.toString()
                             }
                         }
-                        val musicItemInfoData = GsonUtils.fromJson(
-                            GsonUtils.toJson(respData.data),
-                            Map::class.java
-                        )["music_item_info_data"]
-                        GsonUtils.fromJson(
-                            GsonUtils.toJson(musicItemInfoData),
-                            MusicListInfoDataModel::class.java
-                        )?.let {
-                            if (it.awemeList?.isNotEmpty() == true) {
-                                resolverDataInfo.mockPreviewMusicPath =
-                                    it.awemeList[0]?.mockPreviewMusicPath
-                                resolverDataInfo.mockDownloadMusicPath =
-                                    it.awemeList[0]?.mockDownloadMusicPath
+                    }
+                    val musicItemInfoData = getMap(respData.data)?.get("music_item_info_data")
+                    GsonUtils.fromJson(
+                        GsonUtils.toJson(musicItemInfoData), MusicListInfoDataModel::class.java
+                    )?.let {
+                        if (it.awemeList?.isNotEmpty() == true) {
+                            resolverDataInfo.realMusicPath = it.awemeList[0]?.realPath
+                            resolverDataInfo.mockPreviewMusicPath =
+                                it.awemeList[0]?.mockPreviewMusicPath
+                            resolverDataInfo.mockDownloadMusicPath =
+                                it.awemeList[0]?.mockDownloadMusicPath
+                        }
+                    }
+                    val liveItemInfoData = getMap(respData.data)?.get("room_item_info_data")
+                    GsonUtils.fromJson(
+                        GsonUtils.toJson(liveItemInfoData), LiveRespDataModel::class.java
+                    )?.let {
+                        if (it.data?.data?.isNotEmpty() == true) {
+                            val pathList = kotlin.collections.ArrayList<String?>().apply {
+                                add(it.data.data[0]?.streamUrl?.mockPreviewLivePath)
+                                add(it.data.data[0]?.streamUrl?.mockPreviewBackupLivePath)
                             }
+                            resolverDataInfo.mockPreviewLivePath = pathList
                         }
-                        val liveItemInfoData = GsonUtils.fromJson(
-                            GsonUtils.toJson(respData.data),
-                            Map::class.java
-                        )["room_item_info_data"]
-                        GsonUtils.fromJson(
-                            GsonUtils.toJson(liveItemInfoData),
-                            LiveRespDataModel::class.java
-                        )?.let {
-                            if (it.data?.data?.isNotEmpty() == true) {
-                                val pathList = kotlin.collections.ArrayList<String?>().apply {
-                                    add(it.data.data[0]?.streamUrl?.mockPreviewLivePath)
-                                    add(it.data.data[0]?.streamUrl?.mockPreviewBackupLivePath)
-                                }
-                                resolverDataInfo.mockPreviewLivePath = pathList
-                            }
-                        }
-                        withContext(Dispatchers.Main) {
-                            resolverData.value = resolverDataInfo
-                        }
-                    } catch (e: Exception) {
-                        withContext(Dispatchers.Main) {
-                            resolverData.value = null
-                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        resolverData.value = resolverDataInfo
                     }
                 }
         }
+    }
+
+    private fun getMap(model: Any?): Map<*, *>? {
+        try {
+            return GsonUtils.fromJson(
+                GsonUtils.toJson(model), Map::class.java
+            )
+        } catch (ignore: Exception) {
+
+        }
+        return null
     }
 
 }

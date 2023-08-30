@@ -92,4 +92,5 @@
     <string name="video_resolver_operation_preview">预览</string>
     <string name="video_resolver_operation_download">下载</string>
     <string name="video_resolver_operation_preview_backup">预览(备用通道)</string>
+    <string name="video_resolver_operation_download_browser">第三方下载</string>
 </resources>
