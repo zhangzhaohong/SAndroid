@@ -16,6 +16,10 @@ import butterknife.ButterKnife
 import com.blankj.utilcode.util.ClipboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.tristana.sandroid.R
+import com.tristana.sandroid.ui.components.LoadingDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class VideoResolverFragment : Fragment() {
 
@@ -37,6 +41,10 @@ class VideoResolverFragment : Fragment() {
     @BindView(R.id.video_resolver_operation)
     lateinit var buttonResolverOperation: AppCompatButton
 
+    private val loadingDialog by lazy {
+        LoadingDialog(requireContext(), getString(R.string.is_resolving), false)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -47,11 +55,7 @@ class VideoResolverFragment : Fragment() {
                 )
         val root = inflater.inflate(R.layout.fragment_video_resolver, container, false)
         ButterKnife.bind(this, root)
-        viewModel?.link?.observe(viewLifecycleOwner) { input ->
-            input?.let {
-                inputLink.text = SpannableStringBuilder(it)
-            }
-        }
+        initObserver()
         buttonClear.setOnClickListener {
             viewModel?.link?.value = ""
         }
@@ -65,11 +69,25 @@ class VideoResolverFragment : Fragment() {
                 if (input.isEmpty()) {
                     ToastUtils.showLong("分享链接不可为空")
                 } else {
-
+                    loadingDialog.show()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        viewModel?.doRequest()
+                    }
                 }
             }
         }
         return root
+    }
+
+    private fun initObserver() {
+        viewModel?.link?.observe(viewLifecycleOwner) { input ->
+            input?.let {
+                inputLink.text = SpannableStringBuilder(it)
+            }
+        }
+        viewModel?.resolverData?.observe(viewLifecycleOwner) { resolverData ->
+            loadingDialog.dismiss()
+        }
     }
 
 }

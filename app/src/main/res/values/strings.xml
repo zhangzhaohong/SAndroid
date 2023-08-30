@@ -88,4 +88,5 @@
     <string name="video_resolver_paste">从剪贴板导入</string>
     <string name="video_resolver_operation">链接解析</string>
     <string name="video_resolver_clear">清空</string>
+    <string name="is_resolving">正在解析</string>
 </resources>
