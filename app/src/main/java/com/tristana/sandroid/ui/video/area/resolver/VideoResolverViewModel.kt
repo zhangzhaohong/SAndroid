@@ -48,10 +48,10 @@ class VideoResolverViewModel : ViewModel() {
                                 GsonUtils.toJson(detailData["video"]),
                                 Map::class.java
                             )?.let { videoItemData ->
-                                detailData["mock_preview_vid_path"]?.let {
+                                videoItemData["mock_preview_vid_path"]?.let {
                                     resolverDataInfo.mockPreviewVideoPath = it.toString()
                                 }
-                                detailData["mock_download_vid_path"]?.let {
+                                videoItemData["mock_download_vid_path"]?.let {
                                     resolverDataInfo.mockDownloadVideoPath = it.toString()
                                 }
                             }

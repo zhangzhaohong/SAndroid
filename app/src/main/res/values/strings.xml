@@ -89,4 +89,7 @@
     <string name="video_resolver_operation">链接解析</string>
     <string name="video_resolver_clear">清空</string>
     <string name="is_resolving">正在解析</string>
+    <string name="video_resolver_operation_preview">预览</string>
+    <string name="video_resolver_operation_download">下载</string>
+    <string name="video_resolver_operation_preview_backup">预览(备用通道)</string>
 </resources>
