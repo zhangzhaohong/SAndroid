@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableStringBuilder
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,6 +92,26 @@ class VideoResolverFragment : Fragment() {
         LoadingDialog(requireContext(), getString(R.string.is_resolving), false)
     }
 
+    private val textWatcher: TextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable) {
+            // TODO Auto-generated method stub
+        }
+
+        override fun beforeTextChanged(
+            s: CharSequence, start: Int, count: Int,
+            after: Int
+        ) {
+            // TODO Auto-generated method stub
+        }
+
+        override fun onTextChanged(
+            s: CharSequence, start: Int, before: Int,
+            count: Int
+        ) {
+            viewModel?.link?.value = s.toString()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -102,9 +124,7 @@ class VideoResolverFragment : Fragment() {
         ButterKnife.bind(this, root)
         fetch = MyApplication().getFetchInstance(MyApplication.instance!!)
         initObserver()
-        inputLink.doOnTextChanged { text, _, _, _ ->
-            viewModel?.link?.value = text.toString()
-        }
+        inputLink.addTextChangedListener(textWatcher)
         buttonClear.setOnClickListener {
             viewModel?.link?.value = ""
         }
