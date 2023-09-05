@@ -73,7 +73,7 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         )
         bannerData.add(
             BannerDataModel(
-                MyApplication.cdnHost + "/sandroid/banner-main/20230829_170000_5.png",
+                MyApplication.cdnHost + "/sandroid/banner-main/20230829_170000_5.webp",
                 "router://m.sandroid.com/app/activity/scheme?direct=/app/browser/ad&extra=https://www.douyin.com/"
             )
         )

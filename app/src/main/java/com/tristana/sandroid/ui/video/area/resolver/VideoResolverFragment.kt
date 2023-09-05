@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class VideoResolverFragment : Fragment() {
+class VideoResolverFragment : Fragment(), TextWatcher {
 
     private var viewModel: VideoResolverViewModel? = null
 
@@ -92,26 +92,6 @@ class VideoResolverFragment : Fragment() {
         LoadingDialog(requireContext(), getString(R.string.is_resolving), false)
     }
 
-    private val textWatcher: TextWatcher = object : TextWatcher {
-        override fun afterTextChanged(s: Editable) {
-            // TODO Auto-generated method stub
-        }
-
-        override fun beforeTextChanged(
-            s: CharSequence, start: Int, count: Int,
-            after: Int
-        ) {
-            // TODO Auto-generated method stub
-        }
-
-        override fun onTextChanged(
-            s: CharSequence, start: Int, before: Int,
-            count: Int
-        ) {
-            viewModel?.link?.value = s.toString()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -124,7 +104,7 @@ class VideoResolverFragment : Fragment() {
         ButterKnife.bind(this, root)
         fetch = MyApplication().getFetchInstance(MyApplication.instance!!)
         initObserver()
-        inputLink.addTextChangedListener(textWatcher)
+        inputLink.addTextChangedListener(this)
         buttonClear.setOnClickListener {
             viewModel?.link?.value = ""
         }
@@ -156,7 +136,7 @@ class VideoResolverFragment : Fragment() {
     private fun initObserver() {
         viewModel?.link?.observe(viewLifecycleOwner) { input ->
             input?.let {
-                inputLink.text = SpannableStringBuilder(it)
+                if (it != inputLink.text.toString()) inputLink.text = SpannableStringBuilder(it)
             }
         }
         viewModel?.resolverData?.observe(viewLifecycleOwner) { resolverData ->
@@ -297,6 +277,21 @@ class VideoResolverFragment : Fragment() {
             e.printStackTrace()
         }
         return location
+    }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+    }
+
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        viewModel?.link?.value = p0.toString()
+    }
+
+    override fun afterTextChanged(p0: Editable?) {
+    }
+
+    override fun onDestroyView() {
+        inputLink.removeTextChangedListener(this)
+        super.onDestroyView()
     }
 
 }
