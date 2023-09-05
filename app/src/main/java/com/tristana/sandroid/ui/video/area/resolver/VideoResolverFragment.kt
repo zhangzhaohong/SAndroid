@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -101,6 +102,9 @@ class VideoResolverFragment : Fragment() {
         ButterKnife.bind(this, root)
         fetch = MyApplication().getFetchInstance(MyApplication.instance!!)
         initObserver()
+        inputLink.doOnTextChanged { text, _, _, _ ->
+            viewModel?.link?.value = text.toString()
+        }
         buttonClear.setOnClickListener {
             viewModel?.link?.value = ""
         }
