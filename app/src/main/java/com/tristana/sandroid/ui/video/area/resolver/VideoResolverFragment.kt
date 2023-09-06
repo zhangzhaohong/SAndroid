@@ -200,7 +200,6 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockPreviewLivePath?.let { path ->
-                if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 if (path.size == 2) {
                     if (path[0]?.isEmpty() == true && path[1]?.isEmpty() == true) {
