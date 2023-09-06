@@ -141,12 +141,9 @@ class VideoResolverFragment : Fragment(), TextWatcher {
         }
         viewModel?.resolverData?.observe(viewLifecycleOwner) { resolverData ->
             loadingDialog.dismiss()
+            var hasButton = false
             if (resolverData?.mockPreviewPicturePath == null && resolverData?.realMusicPath == null && resolverData?.mockPreviewMusicPath == null && resolverData?.mockDownloadMusicPath == null && resolverData?.realVideoPath == null && resolverData?.mockPreviewVideoPath == null && resolverData?.mockDownloadVideoPath == null && resolverData?.mockPreviewLivePath?.isEmpty() == true) {
-                imageResolverEmpty.visibility = View.VISIBLE
-                buttonResolverPreview.visibility = View.GONE
-                buttonResolverPreviewBackup.visibility = View.GONE
-                buttonResolverDownload.visibility = View.GONE
-                buttonResolverDownloadBrowser.visibility = View.GONE
+                setEmptyStatus()
             }
 //            resolverData?.realMusicPath?.let { path ->
 //                imageResolverEmpty.visibility = View.GONE
@@ -156,6 +153,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
 //                }
 //            }
             resolverData?.mockPreviewPicturePath?.let { path ->
+                if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverPreview.visibility = View.VISIBLE
                 buttonResolverPreview.setOnClickListener {
@@ -163,6 +161,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockPreviewMusicPath?.let { path ->
+                if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverPreview.visibility = View.VISIBLE
                 buttonResolverPreview.setOnClickListener {
@@ -177,6 +176,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
 //                }
 //            }
             resolverData?.mockDownloadMusicPath?.let { path ->
+                if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverDownloadBrowser.visibility = View.VISIBLE
                 buttonResolverDownloadBrowser.setOnClickListener {
@@ -184,6 +184,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockPreviewVideoPath?.let { path ->
+                if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverPreview.visibility = View.VISIBLE
                 buttonResolverPreview.setOnClickListener {
@@ -191,6 +192,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockDownloadVideoPath?.let { path ->
+                if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverDownloadBrowser.visibility = View.VISIBLE
                 buttonResolverDownloadBrowser.setOnClickListener {
@@ -198,6 +200,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockPreviewLivePath?.let { path ->
+                if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 if (path.size == 2) {
                     buttonResolverPreview.visibility = View.VISIBLE
@@ -215,7 +218,18 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                     }
                 }
             }
+            if (!hasButton) {
+                setEmptyStatus()
+            }
         }
+    }
+
+    private fun setEmptyStatus() {
+        imageResolverEmpty.visibility = View.VISIBLE
+        buttonResolverPreview.visibility = View.GONE
+        buttonResolverPreviewBackup.visibility = View.GONE
+        buttonResolverDownload.visibility = View.GONE
+        buttonResolverDownloadBrowser.visibility = View.GONE
     }
 
     private fun doDirect(directionPath: String?) {
