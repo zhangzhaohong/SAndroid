@@ -203,6 +203,11 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 if (path.isEmpty()) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 if (path.size == 2) {
+                    if (path[0]?.isEmpty() == true && path[1]?.isEmpty() == true) {
+                        return@let
+                    } else {
+                        hasButton = true
+                    }
                     buttonResolverPreview.visibility = View.VISIBLE
                     buttonResolverPreviewBackup.visibility = View.VISIBLE
                     buttonResolverPreview.setOnClickListener {
@@ -212,6 +217,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                         doDirect(path[1])
                     }
                 } else if (path.size == 1) {
+                    if (path[0]?.isEmpty() == true) return@let else hasButton = true
                     buttonResolverPreview.visibility = View.VISIBLE
                     buttonResolverPreview.setOnClickListener {
                         doDirect(path[0])
