@@ -153,7 +153,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
 //                }
 //            }
             resolverData?.mockPreviewPicturePath?.let { path ->
-                if (path.isEmpty()) return@let else hasButton = true
+                if (checkEmpty(path)) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverPreview.visibility = View.VISIBLE
                 buttonResolverPreview.setOnClickListener {
@@ -161,7 +161,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockPreviewMusicPath?.let { path ->
-                if (path.isEmpty()) return@let else hasButton = true
+                if (checkEmpty(path)) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverPreview.visibility = View.VISIBLE
                 buttonResolverPreview.setOnClickListener {
@@ -176,7 +176,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
 //                }
 //            }
             resolverData?.mockDownloadMusicPath?.let { path ->
-                if (path.isEmpty()) return@let else hasButton = true
+                if (checkEmpty(path)) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverDownloadBrowser.visibility = View.VISIBLE
                 buttonResolverDownloadBrowser.setOnClickListener {
@@ -184,7 +184,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockPreviewVideoPath?.let { path ->
-                if (path.isEmpty()) return@let else hasButton = true
+                if (checkEmpty(path)) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverPreview.visibility = View.VISIBLE
                 buttonResolverPreview.setOnClickListener {
@@ -192,7 +192,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                 }
             }
             resolverData?.mockDownloadVideoPath?.let { path ->
-                if (path.isEmpty()) return@let else hasButton = true
+                if (checkEmpty(path)) return@let else hasButton = true
                 imageResolverEmpty.visibility = View.GONE
                 buttonResolverDownloadBrowser.visibility = View.VISIBLE
                 buttonResolverDownloadBrowser.setOnClickListener {
@@ -202,7 +202,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
             resolverData?.mockPreviewLivePath?.let { path ->
                 imageResolverEmpty.visibility = View.GONE
                 if (path.size == 2) {
-                    if (path[0]?.isEmpty() == true && path[1]?.isEmpty() == true) {
+                    if (checkEmpty(path[0]) && checkEmpty(path[1])) {
                         return@let
                     } else {
                         hasButton = true
@@ -216,7 +216,7 @@ class VideoResolverFragment : Fragment(), TextWatcher {
                         doDirect(path[1])
                     }
                 } else if (path.size == 1) {
-                    if (path[0]?.isEmpty() == true) return@let else hasButton = true
+                    if (checkEmpty(path[0])) return@let else hasButton = true
                     buttonResolverPreview.visibility = View.VISIBLE
                     buttonResolverPreview.setOnClickListener {
                         doDirect(path[0])
@@ -235,6 +235,13 @@ class VideoResolverFragment : Fragment(), TextWatcher {
         buttonResolverPreviewBackup.visibility = View.GONE
         buttonResolverDownload.visibility = View.GONE
         buttonResolverDownloadBrowser.visibility = View.GONE
+    }
+
+    private fun checkEmpty(path: Any?): Boolean {
+        if (path == null || path.toString().isEmpty()) {
+            return true
+        }
+        return false
     }
 
     private fun doDirect(directionPath: String?) {
