@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId "com.tristana.sandroid"
-        minSdkVersion 21
+        minSdkVersion 27
         targetSdkVersion 34
         versionCode rootProject.ext.main_version_code
         versionName rootProject.ext.version_name
