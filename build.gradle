@@ -9,9 +9,9 @@ buildscript {
     ext.app_version_code = 1000001001004021025
     ext.main_version_name = '1.0.1'
     ext.expand_version_name = 'C01E04R21P25'
-    ext.kotlin_version = '1.9.10'
+    ext.kotlin_version = '1.9.20'
     ext.ksp_version = '1.9.10-1.0.13'
-    ext.therouter_version= '1.2.0-rc5'
+    ext.therouter_version= '1.2.1'
     repositories {
         gradlePluginPortal()
         google()
