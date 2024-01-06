@@ -74,4 +74,23 @@
     <string name="bottom_navigation_video_recommend">视频推荐</string>
     <string name="is_refreshing">正在刷新</string>
     <string name="is_loading">正在加载</string>
+    <string name="menu_bottom_music_area">音乐广场</string>
+    <string name="bottom_navigation_music_area">音乐广场</string>
+    <string name="title_music_area_recommend">音乐推荐</string>
+    <string name="title_music_area_search">音乐搜索</string>
+    <string name="action_music_area">音乐广场</string>
+    <string name="menu_music_search_uperation">音乐搜索</string>
+    <string name="bottom_navigation_video_area">视频广场</string>
+    <string name="menu_bottom_video_area">视频广场</string>
+    <string name="title_video_area_search">抖音解析</string>
+    <string name="title_video_area_recommend">视频推荐</string>
+    <string name="notice_copy_awesome_link">请点击下方按钮从剪贴板粘贴抖音内容的分享链接</string>
+    <string name="video_resolver_paste">从剪贴板导入</string>
+    <string name="video_resolver_operation">链接解析</string>
+    <string name="video_resolver_clear">清空</string>
+    <string name="is_resolving">正在解析</string>
+    <string name="video_resolver_operation_preview">预览</string>
+    <string name="video_resolver_operation_download">下载</string>
+    <string name="video_resolver_operation_preview_backup">预览(备用通道)</string>
+    <string name="video_resolver_operation_download_browser">第三方下载</string>
 </resources>

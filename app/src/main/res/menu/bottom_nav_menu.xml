@@ -7,9 +7,14 @@
         android:title="@string/bottom_navigation_main" />
 
     <item
-        android:id="@+id/bottom_navigation_video_recommend"
-        android:icon="@drawable/bottom_navigation_video_icon_icon"
-        android:title="@string/bottom_navigation_video_recommend" />
+        android:id="@+id/bottom_navigation_music_area"
+        android:icon="@drawable/bottom_navigation_music_area_icon"
+        android:title="@string/bottom_navigation_music_area" />
+
+    <item
+        android:id="@+id/bottom_navigation_video_area"
+        android:icon="@drawable/bottom_navigation_video_area_icon"
+        android:title="@string/bottom_navigation_video_area" />
 
     <item
         android:id="@+id/bottom_navigation_about"

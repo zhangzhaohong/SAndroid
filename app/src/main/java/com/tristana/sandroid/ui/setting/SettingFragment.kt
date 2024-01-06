@@ -8,8 +8,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
@@ -23,7 +21,6 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog.MenuDialogBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.MessageDialogBuilder
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
@@ -36,7 +33,7 @@ import com.tristana.sandroid.R
 import com.tristana.sandroid.dataModel.data.DataModel.*
 import com.tristana.sandroid.dataModel.data.SettingModel.*
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
-import com.tristana.sandroid.ui.video.recommend.cache.ProxyVideoCacheManager
+import com.tristana.sandroid.ui.video.area.recommend.cache.ProxyVideoCacheManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

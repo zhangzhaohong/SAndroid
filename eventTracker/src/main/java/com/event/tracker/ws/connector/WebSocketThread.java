@@ -26,7 +26,7 @@ public class WebSocketThread extends Thread {
 
     public static final String TAG = "EventTrackerWebSocket";
     // public static final String WEB_SOCKET_URL = "ws://192.168.2.250:8080/websocket/v1/connection/" + TrackerInstance.Companion.get().getTrackerId();
-    public static final String WEB_SOCKET_URL = "ws://192.168.2.250/websocket/v1/connection/" + TrackerInstance.Companion.get().getTrackerId();
+    public static final String WEB_SOCKET_URL = TrackerInstance.Companion.get().getHost().replaceFirst("http://", "ws://") + "/websocket/v1/connection/" + TrackerInstance.Companion.get().getTrackerId();
     private final Map<String, String> headerMap = new HashMap<>();
     private Request request;
     private final WebSocketHandler webSocketHandler;

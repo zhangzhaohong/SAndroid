@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import com.blankj.utilcode.util.LogUtils
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.downloader.DownloadManagerFragment
+import com.tristana.sandroid.ui.music.area.operation.MusicSearchOperationFragment
 import com.tristana.sandroid.ui.setting.LabFragment
 import com.tristana.sandroid.ui.setting.SettingFragment
 import com.tristana.sandroid.ui.webview.X5WebViewFragment
@@ -21,6 +22,10 @@ class FragmentDirector {
             direct?.let {
                 LogUtils.i("found direct: $it, extra: $extra")
                 when (direct) {
+                    MusicSearchOperationFragment.ROUTE -> {
+                        navController.navigate(R.id.nav_music_search_operation)
+                        return true
+                    }
                     SettingFragment.ROUTE -> {
                         navController.navigate(R.id.nav_setting)
                         return true

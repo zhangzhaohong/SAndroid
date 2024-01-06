@@ -15,14 +15,13 @@ import com.to.aboomy.pager2banner.Banner
 import com.to.aboomy.pager2banner.IndicatorView
 import com.to.aboomy.pager2banner.ScaleInTransformer
 import com.tristana.sandroid.FragmentDirector
+import com.tristana.sandroid.MyApplication
 import com.tristana.sandroid.R
 import com.tristana.sandroid.customizeInterface.IOnClickBannerInterface
 import com.tristana.sandroid.dataModel.bannerModel.BannerDataModel
 import com.tristana.sandroid.ui.ad.AdWebViewFragment
 import com.tristana.sandroid.ui.main.adapter.ImageAdapter
-import com.tristana.sandroid.ui.scheme.SchemeFilterActivity
 import net.lucode.hackware.magicindicator.buildins.UIUtil
-import utils.router.RouterUtils
 
 
 class MainFragment : Fragment(), IOnClickBannerInterface {
@@ -50,31 +49,31 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         val bannerData = ArrayList<BannerDataModel>()
         bannerData.add(
             BannerDataModel(
-                "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F0122065754e97832f875a4291747d7.jpg%401280w_1l_2o_100sh.jpg&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652351410&t=6ba9e8ef4f9086e19e86152cb6af5bbf",
+                MyApplication.cdnHost + "/sandroid/banner-main/20230829_170000_1.webp",
                 "https://www.baidu.com"
             )
         )
         bannerData.add(
             BannerDataModel(
-                "https://img0.baidu.com/it/u=2591738758,810788141&fm=253&fmt=auto&app=138&f=JPEG?w=2000&h=400",
+                MyApplication.cdnHost + "/sandroid/banner-main/20230829_170000_2.webp",
                 "https://www.csdn.net"
             )
         )
         bannerData.add(
             BannerDataModel(
-                "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01e669572bfe806ac725381234430c.jpg%402o.jpg&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652358999&t=3fde581da2bc2b53a4e134daec92992b",
+                MyApplication.cdnHost + "/sandroid/banner-main/20230829_170000_3.webp",
                 "https://www.bilibili.com"
             )
         )
         bannerData.add(
             BannerDataModel(
-                "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01d56b5542d8bc0000019ae98da289.jpg%401280w_1l_2o_100sh.jpg&refer=http%3A%2F%2Fimg.zcool.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1652358999&t=031988bfab0c774b34ea31ce207a1e36",
+                MyApplication.cdnHost + "/sandroid/banner-main/20230829_170000_4.webp",
                 "http://192.168.2.70:8080/tools/DouYin/player/video?vid=v0200fg10000c5v5ha3c77u5r9jepv6g&ratio=540p&isDownload=0"
             )
         )
         bannerData.add(
             BannerDataModel(
-                "https://img1.baidu.com/it/u=2780823041,991952778&fm=253&fmt=auto&app=138&f=JPG?w=1280&h=453",
+                MyApplication.cdnHost + "/sandroid/banner-main/20230829_170000_5.webp",
                 "router://m.sandroid.com/app/activity/scheme?direct=/app/browser/ad&extra=https://www.douyin.com/"
             )
         )
@@ -91,7 +90,7 @@ class MainFragment : Fragment(), IOnClickBannerInterface {
         return root
     }
 
-    override fun onClick(view: View?, directionPath: String) {
+    override fun onClick(it: View?, directionPath: String) {
         LogUtils.i("onClick: $directionPath")
         val navController =
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)

@@ -6,10 +6,9 @@ import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.event.tracker.ws.EventTrackerCenter
 import com.event.tracker.ws.connector.EventTrackerWebSocketBackgroundService
-import com.event.tracker.ws.connector.EventTrackerWebSocketService
-import com.event.tracker.ws.connector.WebSocketServiceManager
-import com.event.tracker.ws.model.EventTrackerDataModel
 import com.event.tracker.ws.model.WebSocketDataModel
+import java.security.cert.PKIXRevocationChecker.Option
+import java.util.Optional
 import java.util.UUID
 
 /**
@@ -20,8 +19,14 @@ import java.util.UUID
  */
 class TrackerInstance private constructor() {
 
+    private lateinit var host: String
+
     fun getTrackerId(): String? {
         return uuid
+    }
+
+    fun getHost(): String {
+        return host
     }
 
     fun getApplication(): Application? {
@@ -48,7 +53,8 @@ class TrackerInstance private constructor() {
         )
     }
 
-    fun initContext(myApplication: Application) {
+    fun initContext(myApplication: Application, host: String) {
+        this.host = host
         application = myApplication
         uuid = UUID.randomUUID().toString()
         EventTrackerCenter.EventTrackerStart(application)

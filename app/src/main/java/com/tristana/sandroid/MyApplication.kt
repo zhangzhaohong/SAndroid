@@ -3,6 +3,7 @@ package com.tristana.sandroid
 import android.app.Activity
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModelStore
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.LogUtils
@@ -21,11 +22,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Properties
 
 class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        host = getServerHost()
+        cdnHost = getCdnServerHost()
         instance = this
         eventTrackerInstance = getEventTrackerInstance()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -92,13 +96,45 @@ class MyApplication : Application() {
     private fun getEventTrackerInstance(): TrackerInstance? {
         if (eventTrackerInstance == null) {
             eventTrackerInstance = TrackerInstance.get()
-            eventTrackerInstance?.initContext(this)
+            eventTrackerInstance?.initContext(this, host)
         }
         return eventTrackerInstance
     }
 
+    private fun getServerHost(): String {
+        try {
+            val props = Properties()
+            props.load(this.assets.open("config.properties"))
+            props.getProperty("server_host")?.let {
+                return it
+            } ?: kotlin.run {
+                return "http://0.0.0.0"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return "http://0.0.0.0"
+    }
+
+    private fun getCdnServerHost(): String {
+        try {
+            val props = Properties()
+            props.load(this.assets.open("config.properties"))
+            props.getProperty("server_cdn_host")?.let {
+                return it
+            } ?: kotlin.run {
+                return "http://0.0.0.0"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return "http://0.0.0.0"
+    }
+
     companion object {
-        var host: String = "http://prykrz.natappfree.cc"
+        var host: String = "http://0.0.0.0"
+            private set
+        var cdnHost: String = "http://0.0.0.0"
             private set
         var instance: Application? = null
             private set
@@ -114,5 +150,6 @@ class MyApplication : Application() {
             private set
         var fetch: Fetch? = null
         var eventTrackerInstance: TrackerInstance? = null
+        var viewModelStore = ViewModelStore()
     }
 }

@@ -69,7 +69,7 @@ class SplashActivity : AppCompatActivity() {
                     ActivityUtils.finishActivity(this@SplashActivity)
                 }
             },
-            "https://storage.tracup.com/o_1end7rie71g391kuel4r13j33opa.jpg",
+            MyApplication.cdnHost + "/sandroid/splash/20230829_170000_1.webp",
             false
         )
         fullscreenCustomSplash.setOnClickListener { hideSystemUI() }

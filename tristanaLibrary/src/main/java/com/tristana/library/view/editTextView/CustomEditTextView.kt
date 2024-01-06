@@ -24,7 +24,8 @@ import com.tristana.library.R
 import com.tristana.library.view.popupWindow.PopupWindowView
 
 
-class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutCompat(context, attrs), TextWatcher {
+class CustomEditTextView(context: Context, attrs: AttributeSet?) :
+    LinearLayoutCompat(context, attrs), TextWatcher {
 
     private lateinit var inputWarning: AppCompatImageView
     private var hint: String = ""
@@ -60,7 +61,11 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         val bitmap: Bitmap
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             val drawable = ContextCompat.getDrawable(context, resId) ?: return null
-            bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
             val canvas = Canvas(bitmap)
             drawable.setBounds(0, 0, canvas.width, canvas.height)
             drawable.draw(canvas)
@@ -79,13 +84,22 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         this.enableClearEditText = enableClearEditText
     }
 
-    private fun initShowPassWordIcon(resId_1: Int = 0, resId_2: Int = 0, enableShowPassword: Boolean = false) {
+    private fun initShowPassWordIcon(
+        resId_1: Int = 0,
+        resId_2: Int = 0,
+        enableShowPassword: Boolean = false
+    ) {
         this.showPasswordIcon = resId_1
         this.hidePasswordIcon = resId_2
         this.enableShowPassword = enableShowPassword
     }
 
-    private fun initEditText(inputType: Int, maxSize: Int = 20, maxLines: Int = 1, hint: String = "") {
+    private fun initEditText(
+        inputType: Int,
+        maxSize: Int = 20,
+        maxLines: Int = 1,
+        hint: String = "",
+    ) {
         this.inputType = inputType
         this.maxSize = maxSize
         this.maxLines = maxLines
@@ -112,7 +126,8 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         }
         if (this.clearIconResId != 0) {
             this.inputClearIcon.visibility = View.GONE
-            this.inputClearIcon.background = BitmapDrawable(context.resources, getBitmap(this.clearIconResId))
+            this.inputClearIcon.background =
+                BitmapDrawable(context.resources, getBitmap(this.clearIconResId))
         }
         this.inputEditText.addTextChangedListener(this)
     }
@@ -125,22 +140,28 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         when (this.inputType) {
             InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT -> {
                 this.inputShowPassword.visibility = View.VISIBLE
-                this.inputShowPassword.background = BitmapDrawable(context.resources, getBitmap(this.showPasswordIcon))
+                this.inputShowPassword.background =
+                    BitmapDrawable(context.resources, getBitmap(this.showPasswordIcon))
                 this.inputShowPassword.setOnClickListener {
-                    this.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_CLASS_TEXT
+                    this.inputType =
+                        InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_CLASS_TEXT
                     this.inputEditText.inputType = this.inputType
                     refreshShowPasswordIcon()
                 }
             }
+
             InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or InputType.TYPE_CLASS_TEXT -> {
                 this.inputShowPassword.visibility = View.VISIBLE
-                this.inputShowPassword.background = BitmapDrawable(context.resources, getBitmap(this.hidePasswordIcon))
+                this.inputShowPassword.background =
+                    BitmapDrawable(context.resources, getBitmap(this.hidePasswordIcon))
                 this.inputShowPassword.setOnClickListener {
-                    this.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
+                    this.inputType =
+                        InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
                     this.inputEditText.inputType = this.inputType
                     refreshShowPasswordIcon()
                 }
             }
+
             else -> {
                 this.inputShowPassword.visibility = View.GONE
             }
@@ -176,14 +197,15 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
     }
 
     private fun initPopWindow(msg: String, view: View) {
-        val popupView: View = LayoutInflater.from(context).inflate(R.layout.item_popup_window, this, false)
+        val popupView: View =
+            LayoutInflater.from(context).inflate(R.layout.item_popup_window, this, false)
         val tipsTextView: AppCompatTextView = popupView.findViewById(R.id.tips_text)
         //构造popupWindow
         val popupWindow = PopupWindow(
-                popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                true
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
         )
         popupWindow.animationStyle = R.anim.anim_pop
         popupWindow.isOutsideTouchable = true
@@ -201,16 +223,16 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
     }
 
     fun initParameter(
-            iconResId: Int = 0,//左侧图标，为0则不会显示
-            inputType: Int = InputType.TYPE_CLASS_TEXT,//输入框类型
-            maxSize: Int = 20,//最大输入长度
-            maxLines: Int = 1,//最大行数
-            hint: String = "",//输入框提示，为空字符串则不显示
-            showPasswordIcon: Int = 0,//显示密码图标
-            hidePasswordIcon: Int = 0,//不显示密码图标
-            enableShowPassword: Boolean = false,//是否允许显示密码（只在输入密码时有用）
-            clearIconResId: Int = 0,//清空输入框内容图标
-            enableClearEditText: Boolean = false//是否允许清空输入框
+        iconResId: Int = 0,//左侧图标，为0则不会显示
+        inputType: Int = InputType.TYPE_CLASS_TEXT,//输入框类型
+        maxSize: Int = 20,//最大输入长度
+        maxLines: Int = 1,//最大行数
+        hint: String = "",//输入框提示，为空字符串则不显示
+        showPasswordIcon: Int = 0,//显示密码图标
+        hidePasswordIcon: Int = 0,//不显示密码图标
+        enableShowPassword: Boolean = false,//是否允许显示密码（只在输入密码时有用）
+        clearIconResId: Int = 0,//清空输入框内容图标
+        enableClearEditText: Boolean = false//是否允许清空输入框
     ) {
         initIcon(iconResId)
         initEditText(inputType, maxSize, maxLines, hint)
@@ -218,6 +240,30 @@ class CustomEditTextView(context: Context, attrs: AttributeSet?) : LinearLayoutC
         initClearIcon(clearIconResId, enableClearEditText)
         initView()
         initStatus = true
+    }
+
+    fun updateIconResId(iconResId: Int = 0) {
+        initIcon(iconResId)
+        updateIcon()
+    }
+
+    fun updateText(input: String?) {
+        input?.let {
+            this.inputEditText.text = Editable.Factory.getInstance().newEditable(it)
+        }
+    }
+
+    fun getEditTextView(): AppCompatEditText {
+        return this.inputEditText
+    }
+
+    private fun updateIcon() {
+        if (iconResId != 0) {
+            this.inputIcon.visibility = View.VISIBLE
+            this.inputIcon.background = BitmapDrawable(context.resources, getBitmap(iconResId))
+        } else {
+            this.inputIcon.visibility = View.GONE
+        }
     }
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

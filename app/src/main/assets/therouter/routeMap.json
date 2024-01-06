@@ -35,6 +35,13 @@
     "params": {}
   },
   {
+    "path": "/app/music/search/operation",
+    "className": "com.tristana.sandroid.ui.music.area.operation.MusicSearchOperationFragment",
+    "action": "",
+    "description": "",
+    "params": {}
+  },
+  {
     "path": "/app/downloader",
     "className": "com.tristana.sandroid.ui.downloader.DownloadManagerFragment",
     "action": "",

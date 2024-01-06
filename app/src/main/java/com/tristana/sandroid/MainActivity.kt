@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.KeyEvent
 import android.view.Menu
+import android.view.MotionEvent
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,9 +20,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ObjectUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.event.tracker.ws.Constants
 import com.event.tracker.ws.Constants.EVENT_ON_OPENED_ACTIVITY
@@ -41,8 +43,8 @@ import com.tencent.smtt.sdk.TbsListener
 import com.therouter.TheRouter
 import com.therouter.router.Autowired
 import com.therouter.router.Route
+import com.tristana.library.tools.keyboard.KeyboardsUtils
 import com.tristana.library.tools.sharedPreferences.SpUtils
-import com.tristana.library.tools.watcher.HomeWatcher
 import com.tristana.library.tools.watcher.HomeWatcher.OnHomePressedListener
 import com.tristana.sandroid.customizeInterface.IOnBackPressedInterface
 import com.tristana.sandroid.dataModel.data.DataModel
@@ -92,6 +94,7 @@ class MainActivity : AppCompatActivity() {
         // mHomeWatcher.setOnHomePressedListener(onHomePressedListener)
         // mHomeWatcher.startWatch()
         TheRouter.inject(this)
+        BarUtils.transparentStatusBar(this)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -332,6 +335,17 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    @CallSuper
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_DOWN) {
+            val view = currentFocus
+            if (KeyboardsUtils.isShouldHideKeyBord(view, ev)) {
+                KeyboardsUtils.hintKeyBoards(view)
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun onExit() {

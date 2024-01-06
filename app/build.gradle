@@ -22,8 +22,8 @@ android {
 
     defaultConfig {
         applicationId "com.tristana.sandroid"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdkVersion 27
+        targetSdkVersion 34
         versionCode rootProject.ext.main_version_code
         versionName rootProject.ext.version_name
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -60,14 +60,18 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-
-    compileSdkVersion 33
-    buildToolsVersion '32.1.0 rc1'
+    compileSdk 34
     ndkVersion '24.0.8215888'
     namespace 'com.tristana.sandroid'
     lint {
         abortOnError false
         checkReleaseBuilds false
+    }
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+        exclude 'META-INF/DEPENDENCIES'
     }
 }
 
@@ -75,15 +79,15 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation project(path: ':tristanaLibrary')
     implementation project(path: ':eventTracker')
-    implementation "androidx.core:core-ktx:1.10.1"
+    implementation 'androidx.core:core-ktx:1.12.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.6'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     testImplementation 'junit:junit:4.13.2'
@@ -91,7 +95,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.11'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.12'
     implementation 'com.github.getActivity:XXPermissions:18.2'
     def qmui_version = '2.1.0'
     implementation 'com.qmuiteam:qmuilint:1.0.1'
@@ -101,8 +105,8 @@ dependencies {
     implementation 'com.tencent.tbs:tbssdk:44286'
     implementation 'com.blankj:utilcodex:1.31.1'
     implementation 'io.github.zguop:pager2Banner:1.0.5'
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    ksp 'com.github.bumptech.glide:compiler:4.15.1'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    ksp 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'com.github.hackware1993:MagicIndicator:1.7.0'
     // downloader 1
     implementation "com.github.Heart-Beats:Downloader:v1.0.6"
@@ -119,7 +123,7 @@ dependencies {
     ksp "com.airbnb.android:epoxy-processor:$epoxy_version"
     implementation "com.airbnb.android:epoxy-databinding:$epoxy_version"
     // lottie
-    implementation 'com.airbnb.android:lottie:6.0.1'
+    implementation 'com.airbnb.android:lottie:6.3.0'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     // therouter
     kapt "cn.therouter:apt:$therouter_version"
@@ -138,17 +142,19 @@ dependencies {
     implementation "com.github.hty527.iPlayer:exo:$iplayer_version"
     //选择exo音视频解码器时需引用
     //以下为必须项，SDK内部已引用，集成时无需引用
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.7'//（必需）
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.18.7'//核心功能（必需）
-    implementation "com.google.android.exoplayer:extension-rtmp:2.18.7"//rtmp直播流解码协议//（必需）
+    implementation 'com.google.android.exoplayer:exoplayer:2.19.1'//（必需）
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'//核心功能（必需）
+    implementation 'com.google.android.exoplayer:extension-rtmp:2.19.1'//rtmp直播流解码协议//（必需）
     //以下为exo解码器可选依赖，请根据需要实现
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.7'//支持DASH内容
-    implementation "com.google.android.exoplayer:exoplayer-hls:2.18.7"//支持HLS内容
-    implementation "com.google.android.exoplayer:exoplayer-rtsp:2.18.7"//rtsp直播流解码协议
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.19.1'//支持DASH内容
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.19.1'//支持HLS内容
+    implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.19.1'//rtsp直播流解码协议
     // anko
     implementation 'org.jetbrains.anko:anko-commons:0.10.8'
     implementation 'com.jakewharton:butterknife:10.2.3'
     kapt 'com.jakewharton:butterknife-compiler:10.2.3'
+    //noinspection DuplicatePlatformClasses
+    implementation 'cz.msebera.android:httpclient:4.5.8'
 }
 
 static String getBuildTime() {
