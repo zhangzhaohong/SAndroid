@@ -83,11 +83,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.5'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.6'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     testImplementation 'junit:junit:4.13.2'
@@ -95,7 +95,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.11'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.12'
     implementation 'com.github.getActivity:XXPermissions:18.2'
     def qmui_version = '2.1.0'
     implementation 'com.qmuiteam:qmuilint:1.0.1'
@@ -123,7 +123,7 @@ dependencies {
     ksp "com.airbnb.android:epoxy-processor:$epoxy_version"
     implementation "com.airbnb.android:epoxy-databinding:$epoxy_version"
     // lottie
-    implementation 'com.airbnb.android:lottie:6.1.0'
+    implementation 'com.airbnb.android:lottie:6.3.0'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
     // therouter
     kapt "cn.therouter:apt:$therouter_version"
